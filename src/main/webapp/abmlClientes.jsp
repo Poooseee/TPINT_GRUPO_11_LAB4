@@ -12,7 +12,7 @@
       background: linear-gradient(
         0deg,
         rgba(44, 144, 170, 1) 0%,
-        #cfcdcd 70%
+        rgba(113, 190, 196, 0.616) 70%
       );
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
@@ -22,8 +22,6 @@
     main {
       width: 100%;
       margin: 0 auto;
-      padding-top: 8em;
-
     }
 
     
