@@ -146,6 +146,29 @@
     h2{
         text-align: center;
     }
+    
+    #div-filtrar{
+     width: 80%;
+      margin: 0 auto 5em auto;
+    }
+      #div-filtrar form div {
+      width: 100%;
+    }
+    #div-filtrar form {
+      display: grid;
+      max-width: 100%;
+      /*grid-template-columns: 1fr 1fr 1fr;*/
+      grid-template-rows: 1fr;
+      gap: 1em;
+      padding: 1em;
+     background-color: white;
+     box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+    }
+    .form-filter{
+     display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1em;
+    }
   </style>
 
 </head>
@@ -256,7 +279,79 @@
         </form>
       </div>
 
-      <h2>LISTADO Y MODIFICACION</h2>
+      <h2>FILTRAR CLIENTES</h2>
+      <div id="div-filtrar">
+        <form>
+          <div class="form-filter">
+            <div>
+              <label for="txtDni">DNI</label>
+              <input type="text" id="txtDni" name="txtDni" />
+            </div>
+
+            <div>
+              <label for="txtCuil">CUIL</label>
+              <input type="text" id="txtCuil" name="txtCuil" />
+            </div>
+
+            <div>
+              <label for="txtNombre">Nombre</label>
+              <input type="text" id="txtNombre" name="txtNombre" />
+            </div>
+
+            <div>
+              <label for="txtApellido">Apellido</label>
+              <input type="text" id="txtApellido" name="txtApellido" />
+            </div>
+
+            <div>
+              <label for="ddlSexo">Sexo</label>
+              <select id="ddlSexo" name="ddlSexo">
+                <option selected>Todos</option>
+                <option>Masculino</option>
+                <option>Femenino</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="ddlNacionalidad">Nacionalidad</label>
+              <select id="ddlNacionalidad" name="ddlNacionalidad">
+                <option selected>Todas</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="ddlProvincia">Provincia</label>
+              <select id="ddlProvincia" name="ddlProvincia">
+                <option selected>Todas</option>
+              </select>
+            </div>
+
+          
+            <div>
+              <label for="ddlLocalidad">Localidad</label>
+              <select id="ddlLocalidad" name="ddlLocalidad">
+                <option selected>Todas</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
+              <input
+                type="date"
+                id="txtFechaDeNacimiento"
+                name="txtFechaDeNacimiento"
+              />
+            </div>
+          </div>
+           
+          
+
+          <div class="form-submit">
+            <button type="submit">Filtrar</button>
+          </div>
+        </form>
+      </div>
+       <h2>LISTADO Y MODIFICACION</h2>
       <div class="contenedor-tabla">
         <table>
           <thead>
