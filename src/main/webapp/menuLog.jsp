@@ -9,17 +9,28 @@
 <style>
     body{
         text-align: center;
-        background-color: rgb(219, 220, 221);
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(
+        0deg,
+        rgba(44, 144, 170, 1) 0%,
+        rgba(113, 190, 196, 0.616) 70%
+      );
+      
+       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    main{
+      min-height: 98dvh;
+      display:flex;
+      flex-direction: column;
+      justify-content:center;
     }
     h1{
-        color: rgba(49, 49, 49, 0.527);
+        color: black;
     }
     #form-login{
         background-color: rgb(255, 255, 255);
         width: 30%;
         margin: 0 auto;
-        box-shadow: 15px 20px 10px rgb(211, 211, 211);
+        box-shadow: 15px 20px 10px rgba(32, 32, 32, 0.212);
         text-align: left;
         display: flex;
         flex-direction: column;
@@ -58,6 +69,7 @@
     }
 </style>
 <body>
+<main>
 	<h1>Login</h1>
     <form id="form-login" action="">
         <div id="div-form">
@@ -72,5 +84,6 @@
     </form>
     <br>
     <a href="">¿No tiene una cuenta? Registrese aquí</a>
+</main>
 </body>
 </html>
