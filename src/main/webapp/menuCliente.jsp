@@ -109,7 +109,7 @@
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
-                <a href="movimientosClientes.jsp">Ir a movimientos</a>
+                <a href="movimientosCliente.jsp">Ir a movimientos</a>
             </div>
             <div class="saldoInferior">
                 <p>*Ingresar saldo de la cuenta en la BD*</p>
