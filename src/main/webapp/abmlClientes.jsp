@@ -22,17 +22,19 @@
     main {
       width: 100%;
       margin: 0 auto;
-      padding: 1em;
       padding-top: 8em;
 
     }
 
     
     .contenedor-tabla {
+    	width:90%;
+    	margin: 0 auto;
         overflow-x: auto;
         padding: 1em;
         background: #fff;
-        border-radius: .5em;
+        margin-bottom:5em;
+        box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
     }
 
     table {
@@ -282,10 +284,10 @@
           <tbody>
             <tr>
               <td>
-                <input type="text" name="dni" value="123456789" />
+                <input type="text" name="dni" value="123456789" disabled/>
               </td>
               <td>
-                <input type="text" name="cuil" value="0123456789" />
+                <input type="text" name="cuil" value="0123456789" disabled />
               </td>
               <td>
                 <input type="text" name="nombre" value="nombre" />
@@ -318,7 +320,7 @@
                 <input type="text" name="telefono" value="telefono" />
               </td>
               <td>
-                <input type="text" name="usuario" value="nombreUsuario" />
+                <input type="text" name="usuario" value="nombreUsuario" disabled />
               </td>
               <td>
                 <input type="text" name="contraseña" value="contraseña" />
