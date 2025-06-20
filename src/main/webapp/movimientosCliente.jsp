@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="imgs/logo_Honse-nombre.png" type="image/png">
     <title>Movimientos - Banco Honse</title>
 </head>
 <style>
@@ -84,11 +85,11 @@
 <body>
     <header>
         <div class="inicio">
-            <a href="vistaCliente.html"><img src="D:/PC/Desktop/UTN/Lab. de comp 4/TP INTEGRADOR/REPOSITORIO/TPINT_GRUPO_11_LAB4/src/main/webapp/imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
+            <a href="vistaCliente.html"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
             <p>Hola, *introducir nombre*</p>    
         </div>
         <div class="perfil">
-            <a href="vistaPerfil.html"><img src="D:/PC/Desktop/UTN/Lab. de comp 4/TP INTEGRADOR/REPOSITORIO/TPINT_GRUPO_11_LAB4/src/main/webapp/imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
+            <a href="vistaPerfil.html"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
         </div>
     </header>
     <a href="vistaCliente.html" id="volver">🡠 Volver</a>
@@ -97,7 +98,7 @@
             <h1>Movimientos</h1>
             <div class="filtrado">
                 <p>Filtrar por:</p>
-                <form action="movimientosCliente.jsp" method="post">
+                <form action="movimientosCliente.jsp" method="get">
                     <label for="fecha">Fecha:</label>
                     <input type="date" id="fecha" name="fecha">
                     <label for="nCta">Número de cuenta:</label>
