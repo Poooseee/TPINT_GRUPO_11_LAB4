@@ -61,7 +61,7 @@
     .pedir{    
         height: 80%;
         width: fit-content;
-        margin: 5% auto;
+        margin: 4% auto;
     }
     .formulario {
         display: flex;
@@ -69,22 +69,22 @@
         gap: 3em;
     }
     .formulario .agrupar {
-    display: flex;
-    align-items: center;
-    gap: 1em;
+        display: flex;
+        align-items: center;
+        gap: 1em;
     }
 
     .formulario label {
-    width: 10em;
-    font-weight: bold;
+        width: 10em;
+        font-weight: bold;
     }
     .formulario input[type="text"] {
-    width: 25em;
-    height: 2em;
+        width: 25em;
+        height: 3em;
     }
     .formulario input{
         width: 25em;
-        height: 2em;
+        height: 2.5em;
         margin: auto;
     }
 </style>
@@ -103,7 +103,7 @@
             <div class="prestamos">
                 <h1>Préstamo</h1>
                 <div class="pedir">
-                    <form action="prestamosCliente.jsp" method="post" class="formulario">
+                    <form action="transferenciasCliente.jsp" method="post" class="formulario">
                         <div class="agrupar">
                             <label for="montoPedido">*Hasta $75.000.000*</label>
                             <input type="text" id="montoPedido" name="montoPedido" placeholder="Monto a pedir">
@@ -114,11 +114,11 @@
                         </div>
                         <div class="agrupar">
                             <label for="totalDevolver">Total a pagar</label>
-                            <input type="text" id="totalDevolver" name="totalDevolver" placeholder="*Insertar total a pagar*">
+                            <input type="text" id="totalDevolver" name="totalDevolver" placeholder="*Insertar total a pagar*" disabled>
                         </div>
                         <div class="agrupar">
                             <label for="montoCuotas">Monto por cuota</label>
-                            <input type="text" id="montoCuotas" name="montoCuotas" placeholder="*Insertar valor de cada cuota*">
+                            <input type="text" id="montoCuotas" name="montoCuotas" placeholder="*Insertar valor de cada cuota*" disabled>
                         </div>
                         <input type="submit" value="Pedir préstamo" name="btnPedir" id="btnPedir">
                     </form> 

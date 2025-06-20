@@ -85,14 +85,14 @@
 <body>
     <header>
         <div class="inicio">
-            <a href="vistaCliente.html"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
+            <a href="menuCliente.jsp"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
             <p>Hola, *introducir nombre*</p>    
         </div>
         <div class="perfil">
-            <a href="vistaPerfil.html"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
+            <a href="perfilCliente.jsp"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
         </div>
     </header>
-    <a href="vistaCliente.html" id="volver">🡠 Volver</a>
+    <a href="menuCliente.jsp" id="volver">🡠 Volver</a>
     <main>
         <div class="movimientos">
             <h1>Movimientos</h1>

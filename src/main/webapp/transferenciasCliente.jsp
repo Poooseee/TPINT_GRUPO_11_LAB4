@@ -69,8 +69,8 @@
         gap: 3em;
     }
     .formulario input{
-        width: 25em;
-        height: 2em;
+        width: 30em;
+        height: 3em;
     }
 </style>
 <body>
