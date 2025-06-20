@@ -1,78 +1,110 @@
 <style>
   header {
-    width: 100%;
-    margin: 0;
-    background-color: rgb(219, 220, 221);
-    font-family: system-ui;
-    height: 7em;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+  width: 100%;
+  margin: 0;
+  background: #ffffff;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 1) 21%, rgba(77, 180, 187, 1) 100%);
+  font-family: system-ui;
+  height: 8em;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid rgba(77, 180, 187, 1);
   }
 
-  #div-h2 {
-    margin: 0 auto;
-    height: 100%;
-    place-content: center;
-  }
+#informacion {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+  width: 30%;
+  padding: 0 1em;
+  
+}
 
-  #nav-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 0;
-    margin-top: auto;
-  }
+#logo img {
+  height: 5em;
+  width: auto;
+  margin-right: 1em;
+}
 
-  header a {
-    text-decoration: none;
-    width: 100%;
-    text-align: center;
-  }
+#admin-interaccion {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3em;
+}
 
-  #div-h2 h2 {
-    text-align: center;
-    margin: 0;
-    color: rgba(49, 49, 49, 0.527);
-    transition: all 0.15s ease-in-out;
-    font-size: xx-large;
-  }
+#nombre-admin {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
 
-  .a-nav-header {
-    color: rgba(49, 49, 49, 0.76);
-    background-color: rgb(219, 220, 221);
-    transition: all 0.2s ease-in-out;
-    padding: 0.7em;
-    border-right: 1px solid rgb(190, 187, 187);
-    font-weight: 600;
-    font-size: medium;
-  }
+#nombre-admin a,
+#nombre-admin p {
+  margin: 0;
+  font-size: 1em;
+  color: #333;
+  text-decoration: none;
+}
 
-  .a-nav-header:last-child {
-    border-right: none;
-  }
+#nombre-admin a:hover, #cerrarSesion:hover {
+  text-decoration: underline;
+}
 
-  .a-nav-header:hover {
-    color: white;
-    background-color: rgba(77, 180, 187, 0.637);
-  }
+#nombre-admin {
+  display: flex;
+  gap: 0.5em;
+}
 
-  #div-h2 h2:hover {
-    color: rgba(77, 180, 187, 0.637);
-  }
+
+#div-nav {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 2em;
+  gap: 2em;
+}
+
+#nav-header {
+  display: flex;
+  gap: 1.5em;
+}
+
+#nav-header a {
+  text-decoration: none;
+  color: black;
+  font-weight: 400;
+  font-size: large;
+}
+#admin-interaccion a{
+  text-decoration: none;
+  color: black;
+}
+  
 </style>
 
-<header>
-  <div id="div-h2">
-    <a href="menuAdmin.jsp"><h2>Administrador</h2></a>
-  </div>
-  <nav id="nav-header">
-    <a class="a-nav-header" href="abmlClientes.jsp">Clientes</a>
-    <a class="a-nav-header" href="abmlCuentas.jsp">Cuentas</a>
-    <a class="a-nav-header" href="autorizacionPrest.jsp">Préstamos</a>
-    <a class="a-nav-header" href="reporte.jsp">Reportes</a>
-  </nav>
-</header>
+    <header>
+      <div id="informacion">
+        <div id="logo">
+          <img src="./imgs/logo_Honse-sinNombre.png" alt="Logo">
+        </div>
+        <div id="admin-interaccion">
+          <div id="nombre-admin">
+            <a href="./menuAdmin.jsp">Administrador ~</a>
+            <p>Nombre DB</p>
+          </div>
+          <a href="" id="cerrarSesion">Cerrar Sesión</a>
+        </div>
+    </div>
+    <div id="div-nav">
+      <nav id="nav-header">
+        <a id="a-nav-header" href="abmlClientes.jsp">Clientes</a>
+        <a id="a-nav-header" href="abmlCuentas.jsp">Cuentas</a>
+        <a id="a-nav-header" href="autorizacionPrest.jsp">Préstamos</a>
+        <a id="a-nav-header" href="reporte.jsp">Reportes</a>
+      </nav>
+    </div>
+  </header>
+
