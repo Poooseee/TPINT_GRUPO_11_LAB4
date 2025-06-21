@@ -72,6 +72,7 @@
       #tabla table {
           border-collapse: collapse;
           text-align: center;
+          width:100%;
         }
 
     #tabla thead {

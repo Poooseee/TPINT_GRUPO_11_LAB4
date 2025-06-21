@@ -96,6 +96,7 @@
       #listado-cuenta table {
           border-collapse: collapse;
           text-align: center;
+          width: 100%;
         }
 
     #listado-cuenta thead {
