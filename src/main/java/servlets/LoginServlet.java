@@ -27,9 +27,9 @@ public class LoginServlet extends HttpServlet {
     		String rutaVistaDestino = "/menuLog.jsp";
     		
     		Usuario usuario = new Usuario(nick,pass);  
-    		System.out.println(usuario.toString());
+    		
     		if (login(usuario)) {
-    			// ahora usuario tiene todos los valores cargados 
+    		 
     			
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
@@ -39,8 +39,6 @@ public class LoginServlet extends HttpServlet {
     				
     				rutaVistaDestino = "/menu"+usuario.getTipoUsuario()+".jsp";    				    			
     			  }
-    			
-    			    request.setAttribute("nombreUsuarioIniciado", usuario.getNickUsuario());
     			}
     		  request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
     			
