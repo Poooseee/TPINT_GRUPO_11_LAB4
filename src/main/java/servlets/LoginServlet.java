@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
     		
     		if (login(usuario)) {
     		 
-    			mensajeError = "";
+    				mensajeError = "";
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
     			
@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				
     				rutaVistaDestino = "/menu"+usuario.getTipoUsuario()+".jsp";    				    			
-    			  }else {mensajeError = "";}
+    			  }
     			}
     		  request.setAttribute("errorLogin", mensajeError);
     		  request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
