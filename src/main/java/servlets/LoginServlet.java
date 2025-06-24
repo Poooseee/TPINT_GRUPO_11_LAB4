@@ -18,28 +18,48 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nick = request.getParameter("nick");
-        String pass = request.getParameter("password");
+       
+    	if(request.getParameter("btnIngresar") != null) {
+         
+    		String nick = request.getParameter("nick");
+    		String pass = request.getParameter("password");
+    		
+    		String rutaVistaDestino = "/menuLog.jsp";
+    		
+    		Usuario usuario = new Usuario(nick,pass);  
+    		System.out.println(usuario.toString());
+    		if (login(usuario)) {
+    			// ahora usuario tiene todos los valores cargados 
+    			
+    			HttpSession session = request.getSession();
+    			session.setAttribute("usuarioLogueado", usuario);
+    			
+    			String tipo = usuario.getTipoUsuario();
+    			if(tipo != null && !tipo.trim().isEmpty()) {
+    				
+    				rutaVistaDestino = "/menu"+usuario.getTipoUsuario()+".jsp";    				    			
+    			  }
+    			
+    			    request.setAttribute("nombreUsuarioIniciado", usuario.getNickUsuario());
+    			}
+    		  request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
+    			
+    	}
 
-        UsuarioNegocio usuarioNegocio = new UsuarioNegocioImpl();
-        Usuario usuario = usuarioNegocio.login(nick, pass);
-
-        if (usuario != null) {
-            HttpSession session = request.getSession();
-            session.setAttribute("usuarioLogueado", usuario);
-
-            if ("admin".equalsIgnoreCase(usuario.getTipoUsuario())) {
-                response.sendRedirect("MenuAdmin.jsp");
-            } else if ("cliente".equalsIgnoreCase(usuario.getTipoUsuario())) {
-                response.sendRedirect("MenuCliente.jsp");
-            } else {
-                // Por si hay un tipo desconocido
-                request.setAttribute("errorLogin", "Tipo de usuario no válido.");
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
-            }
-        } else {
-            request.setAttribute("errorLogin", "Usuario o contraseña incorrectos.");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-        }
+    }
+    // esta funcion verifica que el usuario este iniciado 
+    // y en ese caso le setea al objeto pasado por parametro
+    // los valores que le faltan (id y tipo )    
+    
+    private boolean login(Usuario usuario) {
+    	boolean iniciado = false;
+    	UsuarioNegocio usuarioNegocio = new UsuarioNegocioImpl();
+    Usuario user = usuarioNegocio.login(usuario.getNickUsuario(), usuario.getContraseñaUsuario());
+    	if(user != null) {
+    		usuario.setIdUsuario(user.getIdUsuario());
+    		usuario.setTipoUsuario(user.getTipoUsuario());
+    		iniciado = true;
+    	}
+    	return iniciado;
     }
 }

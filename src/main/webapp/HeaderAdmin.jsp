@@ -84,7 +84,12 @@
 }
   
 </style>
-
+<%
+String nombreUs =" Indefinido ";
+if(request.getAttribute("nombreUsuarioIniciado")!=null){
+	 nombreUs = (String)request.getAttribute("nombreUsuarioIniciado");
+}
+%>
     <header>
       <div id="informacion">
         <div id="logo">
@@ -93,7 +98,8 @@
         <div id="admin-interaccion">
           <div id="nombre-admin">
             <a href="./menuAdmin.jsp">Administrador ~</a>
-            <p>Nombre DB</p>
+        
+            <p><%=nombreUs %></p>
           </div>
           <a href="" id="cerrarSesion">Cerrar Sesión</a>
         </div>

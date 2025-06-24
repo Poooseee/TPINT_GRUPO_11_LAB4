@@ -7,6 +7,13 @@ public class Usuario {
 	private String contraseñaUsuario;
 	private String tipoUsuario;
 	
+	public Usuario(String nombre,String contraseña) {
+		super();
+		this.nickUsuario = nombre;
+		this.contraseñaUsuario = contraseña;
+	}
+	
+	
 	public int getIdUsuario() {
 		return idUsuario;
 	}

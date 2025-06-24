@@ -80,7 +80,7 @@
             <label>Contraseña</label>
             <input type="password" name="password" placeholder="Contraseña muy segura" required>
         </div>
-        <input id="submit-button" type="submit" value="Ingresar">
+        <input id="submit-button" type="submit" value="Ingresar" name="btnIngresar">
     </form>
 
     <% if (request.getAttribute("errorLogin") != null) { %>
