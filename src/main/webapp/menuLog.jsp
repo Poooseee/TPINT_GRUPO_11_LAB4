@@ -71,19 +71,24 @@
 <body>
 <main>
 	<h1>Login</h1>
-    <form id="form-login" action="">
+    <form id="form-login" action="LoginServlet" method="post">
         <div id="div-form">
             <label>Nombre de Usuario</label>
-            <input type="text" placeholder="Juan123">
+            <input type="text" name="nick" placeholder="Juan123" required>
         </div>
         <div id="div-form">
             <label>Contraseña</label>
-            <input type="password" placeholder="Contraseña muy segura">
+            <input type="password" name="password" placeholder="Contraseña muy segura" required>
         </div>
         <input id="submit-button" type="submit" value="Ingresar">
     </form>
+
+    <% if (request.getAttribute("errorLogin") != null) { %>
+        <div class="error-msg"><%= request.getAttribute("errorLogin") %></div>
+    <% } %>
+
     <br>
-    <a href="">¿No tiene una cuenta? Registrese aquí</a>
+    <a href="">¿No tiene una cuenta? Regístrese aquí</a>
 </main>
 </body>
 </html>
