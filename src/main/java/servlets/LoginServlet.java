@@ -25,12 +25,13 @@ public class LoginServlet extends HttpServlet {
     		String pass = request.getParameter("password");
     		
     		String rutaVistaDestino = "/menuLog.jsp";
+    		String mensajeError = "usuario Incorrecto";
     		
     		Usuario usuario = new Usuario(nick,pass);  
     		
     		if (login(usuario)) {
     		 
-    			
+    			mensajeError = "";
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
     			
@@ -38,10 +39,9 @@ public class LoginServlet extends HttpServlet {
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				
     				rutaVistaDestino = "/menu"+usuario.getTipoUsuario()+".jsp";    				    			
-    			  }
-    			}else {
-    				request.setAttribute("errorLogin", "usuario Incorrecto");
+    			  }else {mensajeError = "";}
     			}
+    		  request.setAttribute("errorLogin", mensajeError);
     		  request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
     			
     	}
