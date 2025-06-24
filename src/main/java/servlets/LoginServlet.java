@@ -39,6 +39,8 @@ public class LoginServlet extends HttpServlet {
     				
     				rutaVistaDestino = "/menu"+usuario.getTipoUsuario()+".jsp";    				    			
     			  }
+    			}else {
+    				request.setAttribute("errorLogin", "usuario Incorrecto");
     			}
     		  request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
     			
