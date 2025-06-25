@@ -273,7 +273,7 @@
       <div id="div-alta-cuenta">
         <h2>DAR DE ALTA</h2>
         <div id="div-form-alta">
-          <form id="form-alta">
+          <form id="form-alta" action="ServletCuentas" method="post">
             <div>
               <label>Numero de Cuenta</label>
               <input
@@ -306,7 +306,7 @@
               <label>Saldo Inicial</label>
               <input type="text" value="10.000" disabled />
             </div>
-            <input type="submit" value="Vincular Cuenta al Cliente" />
+            <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
         </div>
       </div>

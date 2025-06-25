@@ -26,7 +26,14 @@ public class ClienteNegocioImpl implements ClienteNegocio {
     }
 
     @Override
-    public boolean eliminar(int dni) {
+    public boolean eliminar(String dni) {
         return clienteDao.eliminar(dni);
     }
+
+	
+
+	@Override
+	public boolean existe(String dni) {
+		return clienteDao.existe(dni);
+	}
 }
