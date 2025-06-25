@@ -14,7 +14,9 @@ public class Cliente {
 	private Localidad localidad;
 	private Provincia provincia;
 	private String email;
+	private String telefono;
 	private Boolean baja;
+	
 	
 	//GETTERS & SETTERS
 	public String getDNI() {
@@ -83,6 +85,12 @@ public class Cliente {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getTelefono() {
+		return telefono;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 	public Boolean getBaja() {
 		return baja;
 	}
@@ -93,7 +101,7 @@ public class Cliente {
 	
 	//CONSTRUCTORES Y TO STRING
 	public Cliente(String dNI, String cUIL, String nombre, String apellido, Sexo sexo, Pais nacionalidad,
-			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email,
+			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email, String telefono,
 			Boolean baja) {
 		super();
 		DNI = dNI;
@@ -107,6 +115,7 @@ public class Cliente {
 		this.localidad = localidad;
 		this.provincia = provincia;
 		this.email = email;
+		this.telefono = telefono;
 		this.baja = baja;
 	}
 	
@@ -115,7 +124,7 @@ public class Cliente {
 	public String toString() {
 		return "Cliente [DNI=" + DNI + ", CUIL=" + CUIL + ", nombre=" + nombre + ", apellido=" + apellido + ", sexo="
 				+ sexo + ", nacionalidad=" + nacionalidad + ", fechaNacimiento=" + fechaNacimiento + ", domicilio="
-				+ domicilio + ", localidad=" + localidad + ", provincia=" + provincia + ", email=" + email + ", baja="
+				+ domicilio + ", localidad=" + localidad + ", provincia=" + provincia + ", email=" + email + ", telefono=" + telefono +", baja="
 				+ baja + "]";
 	};
 	
