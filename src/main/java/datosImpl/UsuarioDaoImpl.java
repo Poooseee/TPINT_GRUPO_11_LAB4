@@ -32,6 +32,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 				u.setIdUsuario(rs.getInt("id"));
 				u.setTipoUsuario(rs.getString("tipo"));
 				System.out.println("usuario en dao: "+u.getIdUsuario());
+				System.out.println("usuario en dao: "+u.getTipoUsuario());
 			}
 			
 			rs.close();

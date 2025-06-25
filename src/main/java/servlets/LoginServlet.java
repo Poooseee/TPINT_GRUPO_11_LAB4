@@ -31,14 +31,20 @@ public class LoginServlet extends HttpServlet {
     		
     		if (login(usuario)) {
     		 
-    				mensajeError = "";
+    			mensajeError = "";
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
-    			
+    			System.out.println("usuario: " + usuario.toString());
     			String tipo = usuario.getTipoUsuario();
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				
-    				rutaVistaDestino = "/menu"+usuario.getTipoUsuario()+".jsp";    				    			
+
+    				if(tipo.equals("ADMIN")) {
+    					rutaVistaDestino = "/menuAdministrador.jsp";
+    				}
+    				else if(tipo.equals("CLIENTE")){
+    					rutaVistaDestino = "/menuCliente.jsp";
+    				}				    			
     			  }
     			}
     		  request.setAttribute("errorLogin", mensajeError);
