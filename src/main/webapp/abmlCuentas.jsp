@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+   
 <!DOCTYPE html>
 <html>
 <head>
@@ -275,12 +276,18 @@
         <div id="div-form-alta">
           <form id="form-alta" action="ServletCuentas" method="post">
             <div>
+           <%
+           int numeroDeCuenta = 0;
+           if (request.getAttribute("numeroDeCuenta")!=null) {
+        	    numeroDeCuenta = (int) request.getAttribute("numeroDeCuenta");// valor por defecto o manejo alternativo
+           }
+           %>
               <label>Numero de Cuenta</label>
               <input
                 type="text"
                 name="NumeroCuenta"
                 disabled
-                value="Obtener proximo DB"
+                value="<%=numeroDeCuenta%>"
               />
             </div>
             <div>
@@ -304,10 +311,14 @@
             </div>
             <div>
               <label>Saldo Inicial</label>
-              <input type="text" value="10.000" disabled />
+              <input name="saldoInicial" type="text" value="10.000" disabled />
             </div>
             <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
+          <%
+         String mensaje =(String)request.getAttribute("mensajeAlta");
+          %>
+          <%=mensaje %>
         </div>
       </div>
 
