@@ -1,17 +1,145 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+   
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>ABML cuentas - Banco Honse</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(0deg,
+                    rgba(44, 144, 170, 1) 0%,
+                    rgba(113, 190, 196, 0.616) 70%);
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 98vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+                sans-serif;
+            text-align: center;
+        }
+
+        /*
+        header {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 1% auto;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        main {
+            width: 100%;
+            margin: 0 auto;
+            padding: 1em;
+        }
+
+        #content {
+            width: 80%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px #ccc;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="date"] {
+            padding: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 30px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 5px #bbb;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+*/
+        .reporte {
+            width: 80%;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        #reporte1-form {
+            background-color: white;
+            display: flex;
+            flex-direction: row;
+            gap: 2em;
+            padding: 1em;
+            justify-content: space-between;
+            box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+        }
+
+        #reporte1-form input {
+            min-width: 20em;
+            padding: 0.4em;
+            border-radius: 0.5em;
+            outline: none;
+            border: 1px solid darkgray;
+        }
+
+        #reporte2-table {
+            background-color: white;
+            width: 100%;
+            text-align: center;
+            box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+        }
+        #reporte3-table {
+            background-color: white;
+            width: 100%;
+            text-align: center;
+            box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+        }
+    </style>
 <style>
       body {
         margin: 0;
         background: linear-gradient(
           0deg,
           rgba(44, 144, 170, 1) 0%,
-          rgba(113, 190, 196, 0.616) 70%
+          #cfcdcd 70%
         );
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
@@ -20,6 +148,7 @@
         text-align: center;
       }
       main {
+        padding-top: 8em;
         margin-bottom: 5em;
       }
       
@@ -145,14 +274,20 @@
       <div id="div-alta-cuenta">
         <h2>DAR DE ALTA</h2>
         <div id="div-form-alta">
-          <form id="form-alta">
+          <form id="form-alta" action="ServletCuentas" method="post">
             <div>
+           <%
+           int numeroDeCuenta = 0;
+           if (request.getAttribute("numeroDeCuenta")!=null) {
+        	    numeroDeCuenta = (int) request.getAttribute("numeroDeCuenta");// valor por defecto o manejo alternativo
+           }
+           %>
               <label>Numero de Cuenta</label>
               <input
                 type="text"
                 name="NumeroCuenta"
                 disabled
-                value="Obtener proximo DB"
+                value="<%=numeroDeCuenta%>"
               />
             </div>
             <div>
@@ -176,10 +311,14 @@
             </div>
             <div>
               <label>Saldo Inicial</label>
-              <input type="text" value="10.000" disabled />
+              <input name="saldoInicial" type="text" value="10.000" disabled />
             </div>
-            <input type="submit" value="Vincular Cuenta al Cliente" />
+            <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
+          <%
+         String mensaje =(String)request.getAttribute("mensajeAlta");
+          %>
+          <%=mensaje %>
         </div>
       </div>
 
@@ -221,6 +360,7 @@
                     <input type="text" value="CBU" disabled />
                   </td>
 
+</body>
                   <td>
                     <select>
                       <option value="1">Caja de Ahorro</option>
