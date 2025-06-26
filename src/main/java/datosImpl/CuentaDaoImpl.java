@@ -41,7 +41,7 @@ public class CuentaDaoImpl implements CuentaDao {
 	        try {
 	            cn = new Conexion();
 	            cn.Open();
-	            String query = "SELECT MAX(umeroCuenta_Ctas) AS ultimoNum FROM CUENTAS";
+	            String query = "SELECT MAX(numeroCuenta_Ctas) AS ultimoNum FROM CUENTAS";
 	           
 	          ResultSet rs = cn.query(query);
 	          if(rs.next()) {

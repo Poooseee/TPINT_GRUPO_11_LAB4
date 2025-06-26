@@ -29,14 +29,16 @@ public class ServletCuentas extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("param")!= null) {
-			CuentaNegocio neg = new CuentaNegocioImpl();
-			int nuevoNumCuenta = neg.obtenerNuevoNumero();
+			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
 		}
 	}
-
+private int actualizarProximoNumeroDeCuenta() {
+	CuentaNegocio neg = new CuentaNegocioImpl();
+	return neg.obtenerNuevoNumero();
+}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("btnAgregar")!=null) {
@@ -46,6 +48,7 @@ public class ServletCuentas extends HttpServlet {
 				mensajeSalida="Cargado Correctamente";
 			}
 			request.setAttribute("mensajeAlta",mensajeSalida);
+			actualizarProximoNumeroDeCuenta();
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
 		}
