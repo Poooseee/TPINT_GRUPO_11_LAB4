@@ -7,13 +7,14 @@ public class Cliente {
 	private String CUIL;
 	private String nombre;
 	private String apellido;
-	private Sexo sexo;
+	private String sexo;
 	private Pais nacionalidad;
 	private Date fechaNacimiento;
 	private String domicilio;
 	private Localidad localidad;
 	private Provincia provincia;
 	private String email;
+	private String telefono;
 	private Boolean baja;
 	
 	//GETTERS & SETTERS
@@ -41,10 +42,10 @@ public class Cliente {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
-	public Sexo getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
-	public void setSexo(Sexo sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 	public Pais getNacionalidad() {
@@ -83,6 +84,12 @@ public class Cliente {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getTelefono() {
+		return telefono;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 	public Boolean getBaja() {
 		return baja;
 	}
@@ -92,7 +99,7 @@ public class Cliente {
 	
 	
 	//CONSTRUCTORES Y TO STRING
-	public Cliente(String dNI, String cUIL, String nombre, String apellido, Sexo sexo, Pais nacionalidad,
+	public Cliente(String dNI, String cUIL, String nombre, String apellido, String sexo, Pais nacionalidad,
 			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email,
 			Boolean baja) {
 		super();

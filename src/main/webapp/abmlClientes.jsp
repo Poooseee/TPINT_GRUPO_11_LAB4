@@ -128,7 +128,6 @@
           justify-content: center;
           
     }
-
     .form-submit button{
         padding: 1em;
         margin-top: 2em;
@@ -180,7 +179,7 @@
       <div id="div-crear-cliente">
         <h2>DAR DE ALTA</h2>
 
-        <form>
+        <form method="post" action="abmlClientesServlet" id="form-agregar-cliente">
           <div class="form-lado">
             <div>
               <label for="txtDni">DNI</label>
@@ -233,6 +232,11 @@
                 <option selected>Seleccione</option>
               </select>
             </div>
+            
+            <div>
+              <label for="txtDomicilio">Domicilio</label>
+              <input type="text" id="txtDomicilio" name="txtDomicilio" />
+            </div>
 
             <div>
               <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
@@ -274,9 +278,40 @@
           </div>
 
           <div class="form-submit">
-            <button type="submit">Crear</button>
+            <button type="submit" name="btnAgregarCliente">Crear</button>
           </div>
         </form>
+
+		<!-- CONDICIONAL MENSAJE DE ERROR -->
+		<% if (request.getAttribute("mensajeError") != null) { %>
+		    <div id="div-agregar-error">
+		        <%= request.getAttribute("mensajeError") %>
+		   </div>
+		<% } %>
+		<!-- CONDICIONAL INSERTAR EN LA DB -->
+		<%
+		int filas = 0; 
+		if (request.getAttribute("cantFilas") != null) {
+			filas = Integer.parseInt(request.getAttribute("cantFilas").toString()); 
+		
+		%>
+		
+		<%
+			if (filas == 1) {
+		%>
+		    <div style = "color:green;" id="div-agregado-exito">
+		         Cliente agregado con éxito.
+		    </div>
+		<%
+			} else {
+		%>
+		    <div style = "color:red;" id="div-error-agregado">
+		         Hubo un ERROR al agregar el cliente.
+		    </div>
+		<%
+			}
+		}
+		%>
       </div>
 
       <h2>FILTRAR CLIENTES</h2>
