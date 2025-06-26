@@ -1,6 +1,7 @@
 package datosImpl;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import datos.CuentaDao;
 import entidades.Cuenta;
@@ -10,7 +11,7 @@ public class CuentaDaoImpl implements CuentaDao {
 	@Override
 	public boolean insert(Cuenta cuenta) {
 	    boolean insert = false;
-	    String query="INSERT INTO CUENTAS(numeroCuenta_Ctas,DNI_Ctas,fechaCreacion_Ctas,tipoCta_Ctas,"
+ String query="INSERT INTO CUENTAS(numeroCuenta_Ctas,DNI_Ctas,fechaCreacion_Ctas,tipoCta_Ctas,"
 	    		+ "CBU_Ctas,saldo_Ctas) VALUES(?,?,?,?,?,?)";
 		cn = new Conexion();
 		cn.Open();
@@ -33,6 +34,26 @@ public class CuentaDaoImpl implements CuentaDao {
 			cn.close();
 		}
 		return insert;
+	}
+	@Override
+	public int obtenerUltimoNumCuenta() {
+		 int utlimoNum = 0;
+	        try {
+	            cn = new Conexion();
+	            cn.Open();
+	            String query = "SELECT MAX(umeroCuenta_Ctas) AS ultimoNum FROM CUENTAS";
+	           
+	          ResultSet rs = cn.query(query);
+	          if(rs.next()) {
+	        	  utlimoNum = rs.getInt(1);
+	          }
+	           
+	            cn.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return utlimoNum;
+		
 	}
 
 }

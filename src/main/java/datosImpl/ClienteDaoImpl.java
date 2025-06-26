@@ -130,7 +130,7 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "DELETE FROM CLIENTES WHERE dni = ?";
+            String query = "DELETE FROM CLIENTES WHERE DNI_Cl = ?";
             PreparedStatement ps = cn.prepare(query);
             ps.setString(1, dni);
             resultado = ps.executeUpdate() > 0;
@@ -149,7 +149,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	        try {
 	            cn = new Conexion();
 	            cn.Open();
-	            String query = "SELECT * FROM CLIENTES WHERE dni = ?";
+	            String query = "SELECT * FROM CLIENTES WHERE DNI_Cl = ?";
 	            PreparedStatement ps = cn.prepare(query);
 	            ps.setString(1, dni);
 	          ResultSet rs = ps.executeQuery();
