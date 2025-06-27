@@ -146,7 +146,9 @@
     background-color: #dc3545;
   }
 </style>
-	
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 <body>
     <%@ include file="./HeaderAdmin.jsp" %>
@@ -228,7 +230,7 @@
           </div>
           <form method="post" action="ServletCuentas">
           <div id="listado-cuenta">
-            <table>
+            <table id="tabla-cuentas">
               <thead>
                 <tr>
                   <th>Numero de Cuenta</th>
@@ -241,78 +243,64 @@
                   <th>Eliminar</th>
                 </tr>
               </thead>
-              <tbody>
-                <%
-                ArrayList<Cuenta> listaCuentasSv;
-                if(request.getAttribute("ListaCuentas")!=null){
-                listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("ListaCuentas");
-                for(Cuenta cuenta : listaCuentasSv){
-                %>
-                <tr>
-                  <td>
-                  <input type="hidden" value="
-                    <%=cuenta.getNumero() %>" name="txtTablaNumero">
-                    <%=cuenta.getNumero() %>
-                  </td>
+				<tbody>
+				<%
+				ArrayList<Cuenta> listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("ListaCuentas");
+				if (listaCuentasSv != null && !listaCuentasSv.isEmpty()) {
+				    for (Cuenta cuenta : listaCuentasSv) {
+				%>
+				<tr>
+				  <td>
+				    <input type="hidden" value="<%= cuenta.getNumero() %>" name="txtTablaNumero">
+				    <%= cuenta.getNumero() %>
+				  </td>
+				  <td>
+				    <input type="hidden" value="<%= cuenta.getDni() %>" name="txtTablaDni">
+				    <%= cuenta.getDni() %>
+				  </td>
+				  <td>
+				    <input type="text" value="<%= cuenta.getCbu() %>" name="txtTablaCbu">
+				  </td>
+				  <td>
+				    <select name="ddlTablaTipoCuenta">
+				      <%
+				      ArrayList<TipoCuenta> tiposCuentas2 = (ArrayList<TipoCuenta>) request.getAttribute("listaTiposCuentas");
+				      if (tiposCuentas2 != null) {
+				          for (TipoCuenta tipo : tiposCuentas2) {
+				              boolean seleccionado = cuenta.getTipo().getIdTipo() == tipo.getIdTipo();
+				      %>
+				        <option value="<%= tipo.getIdTipo() %>" <%= seleccionado ? "selected" : "" %>><%= tipo.getNombre() %></option>
+				      <%
+				          }
+				      }
+				      %>
+				    </select>
+				  </td>
+				  <td>
+				    <input type="text" value="<%= cuenta.getSaldo() %>" name="txtTablaSaldo">
+				  </td>
+				  <td>
+				    <input type="text" value="<%= cuenta.getFechaCreacion() %>" name="txtTablaFecha">
+				  </td>
+				  <td>
+				    <input type="submit" name="btnModificar" class="btn btn-warning" value="Modificar" />
+				  </td>
+				  <td>
+				    <input type="submit" name="btnEliminar" class="btn btn-danger" value="Eliminar" />
+				  </td>
+				</tr>
+				<%
+				    }
+				} else {
+				%>
+				<tr>
+				  <td colspan="8">No hay cuentas para mostrar.</td>
+				</tr>
+				<%
+				}
+				%>
+				</tbody>
 
-                  <td>
-                  <input type="Hidden" value="
-                    <%=cuenta.getDni() %>" name="txtTablaDni">
-                    <%=cuenta.getDni() %>
-                  </td>
-
-                  <td>
-                  <input type="text" value="
-                    <%=cuenta.getCbu() %>" name="txtTablaCbu">
-                  </td>
-                  <td>   
-                  <select name="ddlTablaTipoCuenta" id="">
-                       <%
-                		ArrayList<TipoCuenta> tiposCuentas2;
-                            if(request.getAttribute("listaTiposCuentas") != null) {
-                            	tiposCuentas2 = (ArrayList<TipoCuenta>) request.getAttribute("listaTiposCuentas");
-                                for(TipoCuenta tipo : tiposCuentas2) {
-                                	if(cuenta.getTipo().getIdTipo() == tipo.getIdTipo()){
-                        %>
-                        
-                            <option selected value="<%= tipo.getIdTipo() %>"><%= tipo.getNombre() %></option>
-                        <%
-                                	}else{// 2° if
-                        %>   
-                           <option value="<%= tipo.getIdTipo() %>"><%= tipo.getNombre() %></option>    
-                        <%        } // else
-                               } // for
-                            } // if
-                                %>
-                                </select>
-                                       </td>
-         		<td>
-         		<input type="Text" value="
-         		<%=cuenta.getSaldo() %>" name="txtTablaSaldo">
-                </td>
-                <td>
-                <input type="Text" value="
-                   <%=cuenta.getFechaCreacion() %>" name="txtTablaFecha">
-                </td>
-                  <td>
-                   <input
-                      type="submit"
-                      name="btnModificar"
-                      class="btn btn-warning"
-                      value="Modificar"
-                    />
-                    </td>
-                  <td>
-                    <input
-                      type="submit"
-                      name="btnEliminar"
-                      class="btn btn-danger"
-                      value="Eliminar"
-                    />
-                  </td>
-                </tr>
-                  <% }} %>
-              </tbody>
             </table>
             <%
             String resultModificacion = "";
@@ -326,5 +314,17 @@
         </div>
       </div>
     </main>
+    <script>
+  $(document).ready(function() {
+    $('#tabla-cuentas').DataTable({
+      "pageLength": 2,
+      "lengthChange": false,
+      "searching": false,
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
   </body>
 </html>

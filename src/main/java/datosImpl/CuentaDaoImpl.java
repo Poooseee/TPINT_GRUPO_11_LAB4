@@ -95,10 +95,11 @@ public class CuentaDaoImpl implements CuentaDao {
 			cn = new Conexion();
 			cn.Open();
 			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
-					+ "CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId"
-					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta";
+					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId"
+					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
+					+ " WHERE cuentas.baja_Ctas = 'FALSE' ";
 			if(dni!=null || !(dni.isBlank())) {
-				query+=" WHERE  DNI_Ctas LIKE '%"+dni+"%'";
+				query+=" AND DNI_Ctas LIKE '%"+dni+"%'";
 			}
 			ResultSet rs = cn.query(query);
 			while(rs.next()) {
@@ -121,5 +122,6 @@ public class CuentaDaoImpl implements CuentaDao {
 		}
 		return listaCuentas;
 	}
+
 
 }

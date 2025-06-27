@@ -444,6 +444,9 @@
           </div>
         </form>
       </div>
+      
+      <!-- LISTADO DE CLIENTES  -->
+      
        <h2>LISTADO, MODIFICACION Y ELIMINACIÓN</h2>
       <div class="contenedor-tabla">
         <table>
