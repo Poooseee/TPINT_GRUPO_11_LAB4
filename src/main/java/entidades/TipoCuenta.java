@@ -30,5 +30,11 @@ public void setNombre(String nombre) {
 }
 
 
+@Override
+public String toString() {
+	return "TipoCuenta [idTipo=" + idTipo + ", nombre=" + nombre + "]";
+}
+
+
 
 }

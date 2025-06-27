@@ -23,6 +23,7 @@ public class CuentaDaoImpl implements CuentaDao {
 			ps.setInt(1, cuenta.getNumero());
 			ps.setString(2, cuenta.getDni());
 			ps.setString(3, cuenta.getFechaCreacion());
+			System.out.println("idTipo en insert dao "+cuenta.getTipo().getIdTipo());
 			ps.setInt(4,cuenta.getTipo().getIdTipo());
 			ps.setString(5, cuenta.getCbu());
 			ps.setFloat(6, cuenta.getSaldo());
@@ -60,15 +61,13 @@ public class CuentaDaoImpl implements CuentaDao {
 	@Override
 	public boolean update(Cuenta cuenta) {
 		boolean update = false;
-		System.out.println(cuenta.getDni());
-		System.out.println(cuenta.getNumero());
-		System.out.println(cuenta.getFechaCreacion());
+		System.out.println("cuenta a modificar en cuenta dao: "+cuenta.toString());
 		String query = "UPDATE cuentas SET  "
-				+ " fechaCreacion_Ctas = '?', "
-				+ " tipoCta_Ctas = '?', "
-				+ " CBU_Ctas = '?', "
-				+ " saldo_Ctas = '?', "
-				+ "WHERE numeroCuenta_Ctas = '?' AND DNI_Ctas = '?'";
+				+ " fechaCreacion_Ctas = ?, "
+				+ " tipoCta_Ctas = ?, "
+				+ " CBU_Ctas = ?, "
+				+ " saldo_Ctas = ? "
+				+ "WHERE numeroCuenta_Ctas = ? AND DNI_Ctas = ?";
 		cn = new Conexion();
 		cn.Open();
 		try {
@@ -77,6 +76,8 @@ public class CuentaDaoImpl implements CuentaDao {
 			pst.setInt(2, cuenta.getTipo().getIdTipo());
 			pst.setString(3, cuenta.getCbu());
 			pst.setFloat(4, cuenta.getSaldo());
+			pst.setInt(5,cuenta.getNumero());
+			pst.setString(6, cuenta.getDni());
 			
 			if(pst.executeUpdate() == 1) {
 				update = true;

@@ -191,7 +191,7 @@
                             	tiposCuentas = (ArrayList<TipoCuenta>) request.getAttribute("listaTiposCuentas");
                                 for(TipoCuenta tipo : tiposCuentas) {
                         %>
-                            <option value="<%= tipo.getIdTipo() %>"><%= tipo.getNombre() %></option>
+                            <option value="<%= tipo.getIdTipo() %>"><%= tipo.getIdTipo() %></option>
                         <%
                                 } // for
                             } // if
@@ -266,8 +266,26 @@
                     <%=cuenta.getCbu() %>" name="txtTablaCbu">
                   </td>
                   <td>   
-                      <input type="Text" value="<%=cuenta.getTipo().getNombre() %> " name="txtTablaTipo"></input>
-                  </td>
+                  <select name="ddlTablaTipoCuenta" id="">
+                       <%
+                		ArrayList<TipoCuenta> tiposCuentas2;
+                            if(request.getAttribute("listaTiposCuentas") != null) {
+                            	tiposCuentas2 = (ArrayList<TipoCuenta>) request.getAttribute("listaTiposCuentas");
+                                for(TipoCuenta tipo : tiposCuentas2) {
+                                	if(cuenta.getTipo().getIdTipo() == tipo.getIdTipo()){
+                        %>
+                        
+                            <option selected value="<%= tipo.getIdTipo() %>"><%= tipo.getNombre() %></option>
+                        <%
+                                	}else{// 2° if
+                        %>   
+                           <option value="<%= tipo.getIdTipo() %>"><%= tipo.getNombre() %></option>    
+                        <%        } // else
+                               } // for
+                            } // if
+                                %>
+                                </select>
+                                       </td>
          		<td>
          		<input type="Text" value="
          		<%=cuenta.getSaldo() %>" name="txtTablaSaldo">

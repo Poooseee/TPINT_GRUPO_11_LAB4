@@ -98,6 +98,7 @@ public class ServletCuentas extends HttpServlet {
 	public boolean agregarCuenta(HttpServletRequest request) {
 		CuentaNegocio negCu = new CuentaNegocioImpl();
 		Cuenta cuenta = cargarCuentaConDatosIngresados(request);
+	
 		return negCu.insert(cuenta);
 	}
 private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
@@ -105,14 +106,19 @@ private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	CuentaNegocio neg = new CuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
 	TipoCuenta tipC = new TipoCuenta();
-	tipC.setIdTipo(negTip.obtenerId((request.getParameter("txtTipoCuenta")))); 
-	tipC.setNombre((request.getParameter("txtTipoCuenta")));
+	int idTipo = 0;
+	if(request.getParameter("ddlTipoCuenta")!=null) {
+		 idTipo = Integer.parseInt(request.getParameter("ddlTipoCuenta"));
+	}
+	tipC.setIdTipo(idTipo);
 	cuenta.setCbu(request.getParameter("CBU"));
 	cuenta.setDni(request.getParameter("DNI"));
 	cuenta.setFechaCreacion(request.getParameter("fechaCreacion"));
 	cuenta.setNumero(neg.obtenerNuevoNumero());
+	
 	cuenta.setTipo(tipC);
 	cuenta.setSaldo(10000);
+	
 	return cuenta;
 }
 
@@ -126,8 +132,8 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
 	TipoCuenta tipC = new TipoCuenta();
-	tipC.setIdTipo(negTip.obtenerId((request.getParameter("txtTipoCuenta")))); 
-	tipC.setNombre((request.getParameter("txtTipoCuenta")));
+	
+	tipC.setIdTipo(Integer.parseInt(request.getParameter("ddlTablaTipoCuenta")));
 	cuenta.setCbu(request.getParameter("txtTablaCbu").trim());
 	cuenta.setDni(request.getParameter("txtTablaDni").trim());
 	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha").trim());

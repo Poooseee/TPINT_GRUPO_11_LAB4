@@ -29,11 +29,9 @@ CuentaDao dao = new CuentaDaoImpl();
 	public boolean update(Cuenta cuenta) {
 		boolean update = false;
 		ClienteNegocio negCli = new ClienteNegocioImpl();
-		System.out.println(cuenta.getDni());
-		System.out.println(cuenta.getNumero());
-		if(negCli.existe(cuenta.getDni())) {
+		
 			update = dao.update(cuenta);
-		}
+		
 		return update;
 	}
 	

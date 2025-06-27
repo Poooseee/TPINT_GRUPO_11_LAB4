@@ -152,7 +152,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	        try {
 	            cn = new Conexion();
 	            cn.Open();
-	            String query = "SELECT * FROM CLIENTES WHERE dni = ?";
+	            String query = "SELECT * FROM CLIENTES WHERE DNI_CL = ?";
 	            PreparedStatement ps = cn.prepare(query);
 	            ps.setString(1, dni);
 	          ResultSet rs = ps.executeQuery();
