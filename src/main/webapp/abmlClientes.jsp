@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="entidades.Pais" %>
+<%@ page import="entidades.Provincia" %>
+<%@ page import="entidades.Localidad" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -212,15 +217,39 @@
 
             <div>
               <label for="ddlNacionalidad">Nacionalidad</label>
-              <select id="ddlNacionalidad" name="ddlNacionalidad">
+              <select id="ddlNacionalidad" name="ddlNacionalidad" onchange="document.getElementById('form-agregar-cliente').submit();">
                 <option selected>Seleccione</option>
+  				<%
+				    List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+            		String nacionalidadSeleccionada = request.getParameter("ddlNacionalidad");
+				    if (listaPaises != null) {
+				        for (Pais p : listaPaises) {
+				            String selected = "";
+				            if (nacionalidadSeleccionada != null && nacionalidadSeleccionada.equals(p.getNacionalidad())) {
+				                selected = "selected";
+				            }
+				  %>
+				      <option value="<%= p.getId() %>"><%= p.getNacionalidad() %></option>
+				  <%
+				        }
+				    }
+				  %>
               </select>
             </div>
-
             <div>
               <label for="ddlProvincia">Provincia</label>
-              <select id="ddlProvincia" name="ddlProvincia">
+              <select id="ddlProvincia" name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
                 <option selected>Seleccione</option>
+                  <%
+				    List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
+				    if (listaProvincias != null) {
+				        for (Provincia p : listaProvincias) {
+				  %>
+				      <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
               </select>
             </div>
           </div>
@@ -230,6 +259,16 @@
               <label for="ddlLocalidad">Localidad</label>
               <select id="ddlLocalidad" name="ddlLocalidad">
                 <option selected>Seleccione</option>
+                  <%
+				    List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+				    if (listaLocalidades != null) {
+				        for (Localidad l : listaLocalidades) {
+				  %>
+				      <option value="<%= l.getId() %>"><%= l.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
               </select>
             </div>
             
@@ -386,7 +425,7 @@
           </div>
         </form>
       </div>
-       <h2>LISTADO Y MODIFICACION</h2>
+       <h2>LISTADO, MODIFICACION Y ELIMINACIÓN</h2>
       <div class="contenedor-tabla">
         <table>
           <thead>

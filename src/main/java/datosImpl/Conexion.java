@@ -11,15 +11,14 @@ public class Conexion {
 
 	private String host = "jdbc:mysql://localhost:3306/";
 	private String user = "root";
-	//private String pass = "root";
-	private String pass = "13121401";
+	private String pass = "root";
+	//private String pass = "13121401";
 
 	private String dbName = "tp_integrador";
 
 	protected Connection connection;
 	
-	public Connection Open()
-	{
+	public Connection Open(){
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");

@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +17,9 @@ import entidades.Pais;
 import entidades.Provincia;
 import entidades.Usuario;
 import negocioImpl.ClienteNegocioImpl;
+import negocioImpl.LocalidadNegocioImpl;
+import negocioImpl.PaisNegocioImpl;
+import negocioImpl.ProvinciaNegocioImpl;
 
 @WebServlet("/abmlClientesServlet")
 public class abmlClientesServlet extends HttpServlet {
@@ -23,16 +28,57 @@ public class abmlClientesServlet extends HttpServlet {
 
     public abmlClientesServlet() {
         super();
-        
     }
-
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+	
+	    List<Pais> listaPaises = paisNeg.obtenerPaises(); 
+
+	    request.setAttribute("listaPaises", listaPaises);
+		String idPais = request.getParameter("ddlNacionalidad"); 
+		System.out.println(idPais);
+
+	    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
+	    rd.forward(request, response);
 	}
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int filas = 0;
 		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
+		String idPais = request.getParameter("ddlNacionalidad"); 
+		String idProv = request.getParameter("ddlProvincia");
+		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+		
+		if (idPais != null && !idPais.equals("") && request.getParameter("btnAgregarCliente") == null) {
+		    List<Pais> listaPaises = paisNeg.obtenerPaises();
+		    List<Provincia> listaProvincias = provNeg.obtenerProvinciasPorPais(Integer.parseInt(idPais));
+		    
+		    request.setAttribute("listaPaises", listaPaises);
+		    request.setAttribute("listaProvincias", listaProvincias);
+
+
+		    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
+		    rd.forward(request, response);
+		    return;
+		}
+		
+		if (idProv != null && !idProv.equals("") && request.getParameter("btnAgregarCliente") == null) {
+		    List<Pais> listaPaises = paisNeg.obtenerPaises();
+		    List<Provincia> listaProvincias = provNeg.obtenerProvinciasPorPais(Integer.parseInt(idPais));
+		    List<Localidad> listaLocalidades = locNeg.obtenerLocalidadesXProvXPais(Integer.parseInt(idPais), Integer.parseInt(idProv));
+		    
+		    request.setAttribute("listaPaises", listaPaises);
+		    request.setAttribute("listaProvincias", listaProvincias);
+		    request.setAttribute("listaLocalidades", listaLocalidades);
+
+		    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
+		    rd.forward(request, response);
+		    return;
+		}
 		
 		//Si se hizo click en agregar
 		if(request.getParameter("btnAgregarCliente") != null) {
