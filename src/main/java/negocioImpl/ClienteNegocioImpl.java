@@ -29,4 +29,10 @@ public class ClienteNegocioImpl implements ClienteNegocio {
     public int eliminar(String dni) {
         return clienteDao.eliminar(dni);
     }
+
+	@Override
+	public boolean existe(String dni) {
+		boolean existe = clienteDao.existe(dni);
+		return existe;
+	}
 }

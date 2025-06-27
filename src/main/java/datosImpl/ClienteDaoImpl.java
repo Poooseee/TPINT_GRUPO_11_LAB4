@@ -145,4 +145,25 @@ public class ClienteDaoImpl implements ClienteDao {
         }
         return filas;
     }
+    
+	@Override
+	public boolean existe(String dni) {
+		  boolean existe = false;
+	        try {
+	            cn = new Conexion();
+	            cn.Open();
+	            String query = "SELECT * FROM CLIENTES WHERE dni = ?";
+	            PreparedStatement ps = cn.prepare(query);
+	            ps.setString(1, dni);
+	          ResultSet rs = ps.executeQuery();
+	          if(rs.next()) {
+	        	  existe = true;
+	          }
+	            ps.close();
+	            cn.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return existe;
+	}
 }

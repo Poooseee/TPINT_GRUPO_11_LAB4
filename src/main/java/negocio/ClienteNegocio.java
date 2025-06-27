@@ -8,4 +8,5 @@ public interface ClienteNegocio {
     public int agregar(Cliente cliente);
     public boolean modificar(Cliente cliente);
     public int eliminar(String dni);
+    public boolean existe(String dni);
 }
