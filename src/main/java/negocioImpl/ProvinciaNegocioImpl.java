@@ -10,12 +10,18 @@ import negocio.ProvinciaNegocio;
 public class ProvinciaNegocioImpl implements ProvinciaNegocio{
 	ProvinciaDaoImpl provDao = new ProvinciaDaoImpl();
 	
-	public List<Provincia> obtenerProvinciasPorPais(int idPais){
+	public List<Provincia> obtenerProvinciasPorPais(String nombrePais){
 		List<Provincia> listaProvincias = new ArrayList<>();
-		listaProvincias = provDao.obtenerProvinciasPorPais(idPais);
+		listaProvincias = provDao.obtenerProvinciasPorPais(nombrePais);
 		for (Provincia p : listaProvincias) {
 			System.out.println(p.getNombre());
 		}
 		return listaProvincias;
+	}
+
+	@Override
+	public Provincia obtenerProvinciaPorNombre(String nombreProvincia) {
+		Provincia p = provDao.obtenerProvinciaPorNombre(nombreProvincia);
+		return p;
 	}
 }

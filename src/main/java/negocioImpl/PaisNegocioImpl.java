@@ -16,4 +16,10 @@ public class PaisNegocioImpl implements PaisNegocio{
 		return paisDao.obtenerPaises();
 	}
 
+	@Override
+	public Pais obtenerPaisxNombre(String nombrePais) {
+		Pais p = paisDao.obtenerPaisxNombre(nombrePais);
+		return p;
+	}
+
 }

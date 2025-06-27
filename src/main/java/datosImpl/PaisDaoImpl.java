@@ -40,4 +40,33 @@ public class PaisDaoImpl implements PaisDao{
         return lista;
 	}
 
+	@Override
+	public Pais obtenerPaisxNombre(String nombrePais) {
+		Pais p = null;
+		
+        try {
+            cn = new Conexion();
+            cn.Open();
+            String query = "SELECT * FROM PAISES WHERE nombre_Pa = '" + nombrePais + "'";
+            ResultSet rs = cn.query(query);
+            if (rs == null) {
+                System.out.println("ResultSet es null");
+            } else {
+                System.out.println("ResultSet obtenido");
+            }
+            while(rs.next()) {
+            	p = new Pais();
+                p.setId(rs.getInt("idPais_Pa"));
+                p.setNombre(rs.getString("nombre_Pa"));
+                p.setNacionalidad(rs.getString("nacionalidad_Pa"));
+            }
+            rs.close();
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		return p;
+	}
+
 }

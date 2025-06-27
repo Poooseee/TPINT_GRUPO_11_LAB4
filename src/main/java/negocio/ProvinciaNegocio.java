@@ -5,5 +5,6 @@ import java.util.List;
 import entidades.Provincia;
 
 public interface ProvinciaNegocio {
-	public List<Provincia> obtenerProvinciasPorPais(int idPais);
+	public List<Provincia> obtenerProvinciasPorPais(String nombrePais);
+	public Provincia obtenerProvinciaPorNombre (String nombreProvincia);
 }
