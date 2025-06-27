@@ -36,18 +36,18 @@ public class ServletCuentas extends HttpServlet {
 			
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
 			request.setAttribute("listaTiposCuentas", ListaTiposCuentas);
-			System.out.println("Tipos de cuenta obtenidos: " + ListaTiposCuentas.size());
+
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
 		
 	}
 	
 	private int actualizarProximoNumeroDeCuenta() {
-		CuentaNegocio neg = new CuentaNegocioImpl();
+		CuentaNegocioImpl neg = new CuentaNegocioImpl();
 		return neg.obtenerNuevoNumero();
 	}
 	private ArrayList<TipoCuenta> obtenerTiposCuentas(){
-		TipoCuentaNegocio neg = new TipoCuentaNegocioImpl();
+		TipoCuentaNegocioImpl neg = new TipoCuentaNegocioImpl();
 		return neg.obtenerTiposCuentas();
 	}
 	

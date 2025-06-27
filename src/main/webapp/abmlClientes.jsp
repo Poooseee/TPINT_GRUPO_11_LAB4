@@ -1,8 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+       <%@ page import="java.util.ArrayList" %>
+       <%@ page import="entidades.Pais" %>
+        <%@ page import="entidades.Provincia" %>
+         <%@ page import="entidades.Localidad" %>
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>ABML clientes - Banco Honse</title>
 
@@ -215,13 +220,60 @@
               <label for="ddlNacionalidad">Nacionalidad</label>
               <select id="ddlNacionalidad" name="ddlNacionalidad">
                 <option selected>Seleccione</option>
+               <%
+                		ArrayList<Pais> nacionalidades;
+                            if(request.getAttribute("nacionalidades") != null) {
+                            	nacionalidades = (ArrayList<Pais>) request.getAttribute("nacionalidades");
+                                for(Pais nacionalidad : nacionalidades) {
+                        %>
+                            <option value="<%= nacionalidad.getId() %>"><%= nacionalidad.getNacionalidad() %></option>
+                        <%
+                                } // for
+                            } // if
+                 %>
+                	
               </select>
             </div>
-
+			
+			<div>
+              <label for="ddlPaises">País</label>
+              <select id="ddlPaises" name="ddlPaises" onchange="this.form.submit()">
+                <option selected>Seleccione</option>
+                 <%
+                		ArrayList<Pais> paises;
+            		  Integer paisSeleccionado = (Integer) request.getAttribute("paisSeleccionado");
+                            if(request.getAttribute("paises") != null) {
+                            	paises = (ArrayList<Pais>) request.getAttribute("paises");
+                                for(Pais pais : paises) {
+                        %>
+                            <option value="<%= pais.getId() %>" <%= (paisSeleccionado != null && paisSeleccionado == pais.getId()) ? "selected" : "" %>>
+                            <%= pais.getNombre() %>
+                            </option>
+                        <%
+                                } // for
+                            } // if
+                 %>
+              </select>
+            </div>
+			
             <div>
               <label for="ddlProvincia">Provincia</label>
-              <select id="ddlProvincia" name="ddlProvincia">
+              <select id="ddlProvincia" name="ddlProvincia" onchange="this.form.submit()" >
                 <option selected>Seleccione</option>
+                <%
+                		ArrayList<Provincia> provincias;
+            		  Integer provinciaSeleccionada = (Integer) request.getAttribute("provinciaSeleccionada");
+                            if(request.getAttribute("provincias") != null) {
+                            	provincias = (ArrayList<Provincia>) request.getAttribute("provincias");
+                                for(Provincia provincia : provincias) {
+                        %>
+                            <option value="<%= provincia.getId() %>" <%= (provinciaSeleccionada != null && provinciaSeleccionada == provincia.getId()) ? "selected" : "" %>>
+                            <%= provincia.getNombre() %>
+                            </option>
+                        <%
+                                } // for
+                            } // if
+                 %>
               </select>
             </div>
           </div>
@@ -231,6 +283,20 @@
               <label for="ddlLocalidad">Localidad</label>
               <select id="ddlLocalidad" name="ddlLocalidad">
                 <option selected>Seleccione</option>
+                <%
+                		ArrayList<Localidad> localidades;
+            		  Integer localidadSeleccionada = (Integer) request.getAttribute("localidadSeleccionada");
+                            if(request.getAttribute("localidades") != null) {
+                            	localidades = (ArrayList<Localidad>) request.getAttribute("localidades");
+                                for(Localidad localidad : localidades) {
+                        %>
+                            <option value="<%= localidad.getId() %>" <%= (localidadSeleccionada != null && localidadSeleccionada == localidad.getId()) ? "selected" : "" %>>
+                            <%= localidad.getNombre() %>
+                            </option>
+                        <%
+                                } // for
+                            } // if
+                 %>
               </select>
             </div>
 
@@ -274,7 +340,7 @@
           </div>
 
           <div class="form-submit">
-            <button type="submit">Crear</button>
+            <button type="submit" name="btnCrear">Crear</button>
           </div>
         </form>
       </div>
