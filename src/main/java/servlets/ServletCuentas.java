@@ -65,7 +65,7 @@ public class ServletCuentas extends HttpServlet {
 		}
 		
 		if(request.getParameter("btnModificar")!=null) {
-			System.out.println("entre en servlet btnmodificar");
+		
 			String mensajeUpdate = "no se pudo modificar";
 			if(modificarCuenta(request)) {
 				 mensajeUpdate = "Modificado correctamente";
