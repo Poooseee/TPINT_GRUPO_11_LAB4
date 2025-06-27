@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				
 
-    				if(tipo.equals("ADMIN")) {
+    				if(tipo.equals("Administrador")) {
     					rutaVistaDestino = "/menuAdministrador.jsp";
     				}
     				else if(tipo.equals("CLIENTE")){
