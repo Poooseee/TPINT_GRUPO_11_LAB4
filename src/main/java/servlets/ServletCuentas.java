@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import entidades.Cuenta;
 import entidades.TipoCuenta;
 import negocio.CuentaNegocio;
@@ -33,13 +34,16 @@ public class ServletCuentas extends HttpServlet {
 		//obtener proximo numero de cuenta Y tipos de cuentas
 			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 			ArrayList <TipoCuenta> ListaTiposCuentas = obtenerTiposCuentas();
+			ArrayList<Cuenta> listaCuentas = obtenerCuentas();
 			
+			request.setAttribute("ListaCuentas", listaCuentas);
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
 			request.setAttribute("listaTiposCuentas", ListaTiposCuentas);
 			System.out.println("Tipos de cuenta obtenidos: " + ListaTiposCuentas.size());
+			System.out.println("Cuentas obtenidas: " + listaCuentas.size());
+			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
-		
 	}
 	
 	private int actualizarProximoNumeroDeCuenta() {
@@ -49,6 +53,11 @@ public class ServletCuentas extends HttpServlet {
 	private ArrayList<TipoCuenta> obtenerTiposCuentas(){
 		TipoCuentaNegocio neg = new TipoCuentaNegocioImpl();
 		return neg.obtenerTiposCuentas();
+	}
+	
+	private ArrayList<Cuenta> obtenerCuentas(){
+		CuentaNegocio neg = new CuentaNegocioImpl();
+		return neg.obtenerListaCuentas();
 	}
 	
 	
@@ -64,6 +73,7 @@ public class ServletCuentas extends HttpServlet {
 			request.setAttribute("mensajeAlta",mensajeSalida);
 		}
 		
+		
 		if(request.getParameter("btnModificar")!=null) {
 		
 			String mensajeUpdate = "no se pudo modificar";
@@ -74,6 +84,8 @@ public class ServletCuentas extends HttpServlet {
 			
 		}
 		
+		ArrayList<Cuenta> listaCuentas = obtenerCuentas();
+		request.setAttribute("ListaCuentas", listaCuentas);
 		actualizarProximoNumeroDeCuenta();
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 		dispatcher.forward(request, response);
@@ -88,14 +100,15 @@ private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
 	CuentaNegocio neg = new CuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
+	TipoCuenta tipC = new TipoCuenta();
+	tipC.setIdTipo(negTip.obtenerId((request.getParameter("txtTipoCuenta")))); 
+	tipC.setNombre((request.getParameter("txtTipoCuenta")));
 	cuenta.setCbu(request.getParameter("CBU"));
 	cuenta.setDni(request.getParameter("DNI"));
 	cuenta.setFechaCreacion(request.getParameter("fechaCreacion"));
 	cuenta.setNumero(neg.obtenerNuevoNumero());
-	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTipoCuenta")),
-			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTipoCuenta")))));
+	cuenta.setTipo(tipC);
 	cuenta.setSaldo(10000);
-    System.out.println(cuenta.toString());
 	return cuenta;
 }
 
@@ -108,6 +121,16 @@ private boolean modificarCuenta(HttpServletRequest request) {
 private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
+<<<<<<< HEAD
+	TipoCuenta tipC = new TipoCuenta();
+	tipC.setIdTipo(negTip.obtenerId((request.getParameter("txtTipoCuenta")))); 
+	tipC.setNombre((request.getParameter("txtTipoCuenta")));
+	cuenta.setCbu(request.getParameter("txtTablaCbu").trim());
+	cuenta.setDni(request.getParameter("txtTablaDni").trim());
+	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha").trim());
+	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero").trim()));
+	cuenta.setTipo(tipC);
+=======
 	cuenta.setCbu(request.getParameter("txtTablaCbu"));
 	cuenta.setDni(request.getParameter("txtTablaDni"));
 	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha"));
@@ -116,8 +139,8 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	}
 	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTablaTipo")),
 			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTablaTipo")))));
+>>>>>>> main
 	cuenta.setSaldo(10000);
-	
 	return cuenta;
 }
 

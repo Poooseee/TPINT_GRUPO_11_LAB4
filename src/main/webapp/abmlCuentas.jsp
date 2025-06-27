@@ -1,3 +1,5 @@
+<%@page import="java.io.PrintWriter"%>
+<%@page import="entidades.Cuenta"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
        <%@ page import="java.util.ArrayList" %>
@@ -203,12 +205,18 @@
             <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
           <%
+<<<<<<< HEAD
+         String mensaje =(String)request.getAttribute("mensajeAlta");
+         if(request.getAttribute("btnAgregar")!=null){
+=======
          String mensaje = "";
           if(request.getAttribute("mensajeAlta")!=null){
           mensaje =(String)request.getAttribute("mensajeAlta");        	  
           }
+>>>>>>> main
           %>
           <%=mensaje %>
+          <% } %>
         </div>
       </div>
 
@@ -219,9 +227,10 @@
             <form id="form-buscar">
               <label>Ingrese DNI del cliente</label>
               <input type="text" name="DNIClienteBuscar" />
-              <input type="submit" value="Buscar Cuentas" />
+              <input type="submit" value="Buscar Cuentas" name="btnBuscar" />
             </form>
           </div>
+          <form method="post" action="ServletCuentas">
           <div id="listado-cuenta">
             <table>
               <thead>
@@ -237,41 +246,49 @@
                 </tr>
               </thead>
               <tbody>
-              <form method="post" action="ServletCuentas">
+                <%
+                ArrayList<Cuenta> listaCuentasSv;
+                if(request.getAttribute("ListaCuentas")!=null){
+                listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("ListaCuentas");
+                for(Cuenta cuenta : listaCuentasSv){
+                %>
+                <form>
                 <tr>
                   <td>
-                    <input name="txtTablaNumero" type="text" value="Obtener Numero DB" disabled />
+                  <input type="hidden" value="
+                    <%=cuenta.getNumero() %>" name="txtTablaNumero">
+                    <%=cuenta.getNumero() %>
                   </td>
 
                   <td>
-                    <input name="txtTablaDni" type="text" value="DNI" disabled />
+                  <input type="Hidden" value="
+                    <%=cuenta.getDni() %>" name="txtTablaDni">
+                    <%=cuenta.getDni() %>
                   </td>
 
                   <td>
-                    <input name="txtTablaCbu" type="text" value="CBU" disabled />
+                  <input type="text" value="
+                    <%=cuenta.getCbu() %>" name="txtTablaCbu">
                   </td>
-
-</body>
-                  <td>
-                    <select name="ddlTablaTipo">
-                      <option value="1">Caja de Ahorro</option>
-                      <option value="1">Cuenta Corriente</option>
-                    </select>
+                  <td>   
+                      <input type="Text" value="<%= cuenta.getTipo().getNombre() %> " name="txtTablaTipo"></input>
                   </td>
+         		<td>
+         		<input type="Text" value="
+         		<%=cuenta.getSaldo() %>" name="txtTablaSaldo">
                 </td>
                 <td>
-                  <input name="txtTablaSaldo" type="text" value="10.000">
+                <input type="Text" value="
+                   <%=cuenta.getFechaCreacion() %>" name="txtTablaFecha">
                 </td>
                   <td>
-                    <input name="txtTablaFecha" type="date" />
-                  <td>
-                    <input
+                   <input
                       type="submit"
                       name="btnModificar"
                       class="btn btn-warning"
                       value="Modificar"
                     />
-                  </td>
+                    </td>
                   <td>
                     <input
                       type="submit"
@@ -281,7 +298,8 @@
                     />
                   </td>
                 </tr>
-              </form>
+                </form>
+                  <% }} %>
               </tbody>
             </table>
             <%
@@ -292,6 +310,7 @@
             %>
             <span><%= resultModificacion %></span>
           </div>
+         </form>
         </div>
       </div>
     </main>

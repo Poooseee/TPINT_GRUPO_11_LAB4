@@ -2,9 +2,11 @@ package datosImpl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import datos.CuentaDao;
 import entidades.Cuenta;
+import entidades.TipoCuenta;
 
 public class CuentaDaoImpl implements CuentaDao {
 	private Conexion cn;
@@ -58,23 +60,23 @@ public class CuentaDaoImpl implements CuentaDao {
 	@Override
 	public boolean update(Cuenta cuenta) {
 		boolean update = false;
+		System.out.println(cuenta.getDni());
+		System.out.println(cuenta.getNumero());
+		System.out.println(cuenta.getFechaCreacion());
 		String query = "UPDATE cuentas SET  "
-				+ " DNI_Ctas = '?', "
 				+ " fechaCreacion_Ctas = '?', "
-				+ " tipoCta_Ctas = ?, "
+				+ " tipoCta_Ctas = '?', "
 				+ " CBU_Ctas = '?', "
-				+ " saldo_Ctas = ?, "
-				+ "WHERE numeroCuenta_Ctas = ? ";
+				+ " saldo_Ctas = '?', "
+				+ "WHERE numeroCuenta_Ctas = '?' AND DNI_Ctas = '?'";
 		cn = new Conexion();
 		cn.Open();
 		try {
 			PreparedStatement pst = cn.prepare(query);
-			pst.setString(1, cuenta.getDni());
-			pst.setString(2, cuenta.getFechaCreacion());
-			pst.setInt(3, cuenta.getTipo().getIdTipo());
-			pst.setString(4, cuenta.getCbu());
-			pst.setFloat(5, cuenta.getSaldo());
-			pst.setInt(6, cuenta.getNumero());
+			pst.setString(1, cuenta.getFechaCreacion());
+			pst.setInt(2, cuenta.getTipo().getIdTipo());
+			pst.setString(3, cuenta.getCbu());
+			pst.setFloat(4, cuenta.getSaldo());
 			
 			if(pst.executeUpdate() == 1) {
 				update = true;
@@ -84,6 +86,37 @@ public class CuentaDaoImpl implements CuentaDao {
 			e.printStackTrace();
 		}
 		return update;
+	}
+	
+	public ArrayList<Cuenta> obtenerCuentas() {
+		ArrayList<Cuenta> listaCuentas = new ArrayList<Cuenta>();
+		try {
+			cn = new Conexion();
+			cn.Open();
+			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
+					+ "CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId"
+					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta";
+			
+			ResultSet rs = cn.query(query);
+			while(rs.next()) {
+				Cuenta cuenta = new Cuenta();
+				TipoCuenta tipoCuenta = new TipoCuenta();
+				cuenta.setCbu(rs.getString("cbu"));
+				cuenta.setDni(rs.getString("dni"));
+				cuenta.setFechaCreacion(rs.getString("fecha"));
+				cuenta.setNumero(rs.getInt("numero"));
+				cuenta.setSaldo(rs.getFloat("saldo"));
+				tipoCuenta.setIdTipo(rs.getInt("tipoId"));
+				tipoCuenta.setNombre(rs.getString("tipoNombre"));
+				cuenta.setTipo(tipoCuenta);
+				listaCuentas.add(cuenta);
+			}
+			rs.close();
+			cn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaCuentas;
 	}
 
 }
