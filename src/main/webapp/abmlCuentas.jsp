@@ -234,6 +234,7 @@
                 </tr>
               </thead>
               <tbody>
+              <form method="post" action="ServletCuentas">
                 <tr>
                   <td>
                     <input name="txtTablaNumero" type="text" value="Obtener Numero DB" disabled />
@@ -277,6 +278,7 @@
                     />
                   </td>
                 </tr>
+              </form>
               </tbody>
             </table>
           </div>
