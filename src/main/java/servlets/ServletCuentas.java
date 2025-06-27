@@ -61,7 +61,7 @@ public class ServletCuentas extends HttpServlet {
 	}
 	
 	
-	//AL APRETAR BOTON AGREGAR
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		if(request.getParameter("btnAgregar")!=null) {
@@ -75,11 +75,13 @@ public class ServletCuentas extends HttpServlet {
 		
 		
 		if(request.getParameter("btnModificar")!=null) {
+		
 			String mensajeUpdate = "no se pudo modificar";
 			if(modificarCuenta(request)) {
 				 mensajeUpdate = "Modificado correctamente";
-				 request.setAttribute("mensajeModificacion",mensajeUpdate);
 			}
+			request.setAttribute("mensajeModificacion",mensajeUpdate);
+			
 		}
 		
 		ArrayList<Cuenta> listaCuentas = obtenerCuentas();
@@ -119,6 +121,7 @@ private boolean modificarCuenta(HttpServletRequest request) {
 private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
+<<<<<<< HEAD
 	TipoCuenta tipC = new TipoCuenta();
 	tipC.setIdTipo(negTip.obtenerId((request.getParameter("txtTipoCuenta")))); 
 	tipC.setNombre((request.getParameter("txtTipoCuenta")));
@@ -127,6 +130,16 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha").trim());
 	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero").trim()));
 	cuenta.setTipo(tipC);
+=======
+	cuenta.setCbu(request.getParameter("txtTablaCbu"));
+	cuenta.setDni(request.getParameter("txtTablaDni"));
+	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha"));
+	if(request.getParameter("txtTablaNumero")!=null) {
+		cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero")));		
+	}
+	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTablaTipo")),
+			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTablaTipo")))));
+>>>>>>> main
 	cuenta.setSaldo(10000);
 	return cuenta;
 }

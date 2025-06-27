@@ -205,8 +205,15 @@
             <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
           <%
+<<<<<<< HEAD
          String mensaje =(String)request.getAttribute("mensajeAlta");
          if(request.getAttribute("btnAgregar")!=null){
+=======
+         String mensaje = "";
+          if(request.getAttribute("mensajeAlta")!=null){
+          mensaje =(String)request.getAttribute("mensajeAlta");        	  
+          }
+>>>>>>> main
           %>
           <%=mensaje %>
           <% } %>
@@ -295,6 +302,13 @@
                   <% }} %>
               </tbody>
             </table>
+            <%
+            String resultModificacion = "";
+            if(request.getAttribute("mensajeModificacion")!=null){
+            	 resultModificacion = (String)request.getAttribute("mensajeModificacion");
+            }
+            %>
+            <span><%= resultModificacion %></span>
           </div>
          </form>
         </div>
