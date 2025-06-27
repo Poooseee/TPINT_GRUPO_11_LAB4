@@ -220,7 +220,7 @@
         <h2>LISTADO Y MODIFICACION</h2>
         <div id="contenedor-listado-cuenta">
           <div id="buscar-cuenta">
-            <form id="form-buscar">
+            <form method="post" action="ServletCuentas" id="form-buscar">
               <label>Ingrese DNI del cliente</label>
               <input type="text" name="DNIClienteBuscar" />
               <input type="submit" value="Buscar Cuentas" name="btnBuscar" />

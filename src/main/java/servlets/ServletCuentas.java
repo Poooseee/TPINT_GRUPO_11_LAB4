@@ -34,7 +34,8 @@ public class ServletCuentas extends HttpServlet {
 		//obtener proximo numero de cuenta Y tipos de cuentas
 			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 			ArrayList <TipoCuenta> ListaTiposCuentas = obtenerTiposCuentas();
-			ArrayList<Cuenta> listaCuentas = obtenerCuentas();
+			String dni="";
+			ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni);
 			
 			request.setAttribute("ListaCuentas", listaCuentas);
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
@@ -55,9 +56,10 @@ public class ServletCuentas extends HttpServlet {
 		return neg.obtenerTiposCuentas();
 	}
 	
-	private ArrayList<Cuenta> obtenerCuentas(){
+	private ArrayList<Cuenta> obtenerCuentas(String dni){
 		CuentaNegocio neg = new CuentaNegocioImpl();
-		return neg.obtenerListaCuentas();
+		
+		return neg.obtenerListaCuentas(dni);
 	}
 	
 	
@@ -84,7 +86,11 @@ public class ServletCuentas extends HttpServlet {
 			
 		}
 		
-		ArrayList<Cuenta> listaCuentas = obtenerCuentas();
+		String dni="";
+		if(request.getParameter("btnBuscar")!=null) {
+           dni = request.getParameter("DNIClienteBuscar");			
+		}
+		ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni);
 		request.setAttribute("ListaCuentas", listaCuentas);
 		ArrayList<TipoCuenta> listaTipoCuentas = obtenerTiposCuentas();
 		request.setAttribute("listaTiposCuentas", listaTipoCuentas);

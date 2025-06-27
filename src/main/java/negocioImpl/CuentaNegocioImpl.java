@@ -35,8 +35,8 @@ CuentaDao dao = new CuentaDaoImpl();
 		return update;
 	}
 	
-	public ArrayList<Cuenta> obtenerListaCuentas() {
-		return dao.obtenerCuentas();
+	public ArrayList<Cuenta> obtenerListaCuentas(String dni) {
+		return dao.obtenerCuentas(dni);
 	}
 
 }
