@@ -1,9 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page import="java.util.ArrayList" %>
+    <%@ page import="entidades.Cliente" %>
+    <%@ page import= "java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script type="text/javascript" charset="utf8"
+  src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
 <title>ABML clientes - Banco Honse</title>
 
 <style>
@@ -345,99 +355,83 @@
           </div>
            
           
-
           <div class="form-submit">
             <button type="submit">Filtrar</button>
           </div>
         </form>
       </div>
+      
+      
        <h2>LISTADO Y MODIFICACION</h2>
-      <div class="contenedor-tabla">
-        <table>
-          <thead>
-            <tr>
-              <th>Dni</th>
-              <th>CUIL</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Sexo</th>
-              <th>Fecha de Nacimiento</th>
-              <th>Nacionalidad</th>
-              <th>Provincia</th>
-              <th>Localidad</th>
-              <th>Direccion</th>
-              <th>Correo</th>
-              <th>Telefonos</th>
-              <th>Usuario</th>
-              <th>Contraseña</th>
-              <th>Modificar</th>
-              <th>Eliminar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input type="text" name="dni" value="123456789" disabled/>
-              </td>
-              <td>
-                <input type="text" name="cuil" value="0123456789" disabled />
-              </td>
-              <td>
-                <input type="text" name="nombre" value="nombre" />
-              </td>
-              <td>
-                <input type="text" name="apellido" value="apellido" />
-              </td>
-              <td>
-                <input type="text" name="sexo" value="sexo" />
-              </td>
-              <td>
-                <input type="date" name="fechaNacimiento" value="2/10/2004" />
-              </td>
-              <td>
-                <select name="ddlPais"></select>
-              </td>
-              <td>
-                <select name="ddlProvincia"></select>
-              </td>
-              <td>
-                <select name="ddlLocalidad"></select>
-              </td>
-              <td>
-                <input type="text" name="direccion" value="echevrria 2343" />
-              </td>
-              <td>
-                <input type="text" name="correo" value="correo@gmail.com" />
-              </td>
-              <td>
-                <input type="text" name="telefono" value="telefono" />
-              </td>
-              <td>
-                <input type="text" name="usuario" value="nombreUsuario" disabled />
-              </td>
-              <td>
-                <input type="text" name="contraseña" value="contraseña" />
-              </td>
-              <td>
-                <input
-                  type="submit"
-                  name="btnModificar"
-                  class="btn btn-warning"
-                  value="Modificar"
-                />
-              </td>
-              <td>
-                <input
-                  type="submit"
-                  name="btnEliminar"
-                  class="btn btn-danger"
-                  value="Eliminar"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div class="contenedor-tabla">
+  <table id="tabla-clientes" border="1"> <!-- ID agregado acá -->
+    <thead>
+      <tr>
+        <th>Dni</th>
+        <th>CUIL</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Sexo</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Nacionalidad</th>
+        <th>Provincia</th>
+        <th>Localidad</th>
+        <th>Direccion</th>
+        <th>Correo</th>
+        <th>Telefonos</th>
+        <th>Modificar</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%
+        List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");
+        if (clientes != null && !clientes.isEmpty()) {
+          for (Cliente c : clientes) {
+      %>
+      <tr>
+        <td><input type="text" value="<%= c.getDNI() %>" readonly /></td>
+        <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
+        <td><input type="text" value="<%= c.getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getApellido() %>" /></td>
+        <td><input type="text" value="<%= c.getSexo().getSexo() %>" /></td>
+        <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
+        <td><input type="text" value="<%= c.getNacionalidad().getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
+        <td><input type="text" value="<%= c.getEmail() %>" /></td>
+        <td><input type="text" value="<%= c.getTelefono() %>" /></td>
+        <td><input type="submit" class="btn btn-warning" value="Modificar" disabled /></td>
+        <td><input type="submit" class="btn btn-danger" value="Eliminar" disabled /></td>
+      </tr>
+      <%
+          }
+        } else {
+      %>
+      <tr>
+        <td>No hay clientes para mostrar.</td>
+        <% for (int i = 1; i < 14; i++) { %>
+          <td></td>
+        <% } %>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#tabla-clientes').DataTable({
+      "pageLength": 8,
+      "lengthChange": false,
+      "searching": false, // Oculta el campo de búsqueda
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
 
     </main>
   </body>

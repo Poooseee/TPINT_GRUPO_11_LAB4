@@ -110,7 +110,7 @@ if (usuario != null) {
     </div>
     <div id="div-nav">
       <nav id="nav-header">
-        <a id="a-nav-header" href="abmlClientes.jsp">Clientes</a>
+        <a id="a-nav-header" href="ServletClientes">Clientes</a>
         <a id="a-nav-header" href="ServletCuentas?param=menu">Cuentas</a>
         <a id="a-nav-header" href="autorizacionPrest.jsp">Préstamos</a>
         <a id="a-nav-header" href="reporte.jsp">Reportes</a>
