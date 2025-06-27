@@ -5,5 +5,5 @@ import java.util.List;
 import entidades.Localidad;
 
 public interface LocalidadNegocio {
-	public List<Localidad> obtenerLocalidadesXProvXPais(int idPais, int idProvincia);
+	public List<Localidad> obtenerLocalidadesXProvXPais(String nombrePais, String nombreProv);
 }

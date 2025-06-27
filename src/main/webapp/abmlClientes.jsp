@@ -225,7 +225,7 @@
 
             <div>
               <label for="ddlNacionalidad">Nacionalidad</label>
-              <select id="ddlNacionalidad" name="ddlNacionalidad" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <select id="ddlNacionalidad" name="ddlNacionalidad">
                 <option selected>Seleccione</option>
   				<%
 				    List<Pais> listaNacionalidades = (List<Pais>) request.getAttribute("listaPaises");
@@ -242,13 +242,23 @@
             <div>
               <label for="ddlPais">País</label>
               <select id="ddlPais" name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
-              <option selected>Seleccione</option>
-                				<%
-				    List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+              <%
+              	List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+            	String paisSeleccionado = "";
+            	if (request.getAttribute("paisSeleccionado") != null) {
+            	    paisSeleccionado = request.getAttribute("paisSeleccionado").toString();
+            	}
+            	if(paisSeleccionado == null){
+              %>
+            	<option selected>Seleccione</option>
+            <% }else{%>
+            	<option selected><%= paisSeleccionado %></option>
+			<%} %>
+                <%   
 				    if (listaPaises != null) {
 				        for (Pais p : listaPaises) {
 				  %>
-				      <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
+				      <option value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
 				  <%
 				        }
 				    }
@@ -258,13 +268,23 @@
             <div>
               <label for="ddlProvincia">Provincia</label>
               <select id="ddlProvincia" name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
-                <option selected>Seleccione</option>
+              <%
+              	List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
+            	String provinciaSeleccionada = "";
+            	if (request.getAttribute("provinciaSeleccionada") != null) {
+            	    provinciaSeleccionada = request.getAttribute("provinciaSeleccionada").toString();
+            	}
+            	if(provinciaSeleccionada == null){
+                    %>
+                	<option selected>Seleccione</option>
+                <% }else{%>
+                	<option selected><%= provinciaSeleccionada %></option>
+    			<%} %>
                   <%
-				    List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
 				    if (listaProvincias != null) {
 				        for (Provincia p : listaProvincias) {
 				  %>
-				      <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
+				      <option value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
 				  <%
 				        }
 				    }
@@ -276,14 +296,25 @@
           <div class="form-lado">
             <div>
               <label for="ddlLocalidad">Localidad</label>
-              <select id="ddlLocalidad" name="ddlLocalidad">
-                <option selected>Seleccione</option>
+              <select id="ddlLocalidad" name="ddlLocalidad" onchange="this.form.submit()">
+              <%
+              	List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+            	String localidadSeleccionada = "";
+                if (request.getAttribute("localidadSeleccionada") != null) {
+               	    localidadSeleccionada = request.getAttribute("localidadSeleccionada").toString();
+               	}
+               	if(localidadSeleccionada == null){
+                       %>
+                   	<option selected>Seleccione</option>
+                   <% }else{%>
+                   	<option selected><%= localidadSeleccionada %></option>
+       			<%} %>
                   <%
-				    List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+				    
 				    if (listaLocalidades != null) {
 				        for (Localidad l : listaLocalidades) {
 				  %>
-				      <option value="<%= l.getId() %>"><%= l.getNombre() %></option>
+				      <option value="<%= l.getNombre() %>"><%= l.getNombre() %></option>
 				  <%
 				        }
 				    }

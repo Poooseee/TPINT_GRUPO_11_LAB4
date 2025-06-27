@@ -10,9 +10,9 @@ import negocio.LocalidadNegocio;
 public class LocalidadNegocioImpl implements LocalidadNegocio{
 	LocalidadDaoImpl locDao = new LocalidadDaoImpl();
 	
-	public List<Localidad> obtenerLocalidadesXProvXPais(int idPais, int idProvincia) {
+	public List<Localidad> obtenerLocalidadesXProvXPais(String nombrePais, String nombreProv) {
 		List<Localidad> listaLocalidades = new ArrayList<>();
-		listaLocalidades = locDao.obtenerLocalidadesXProvXPais(idPais, idProvincia);
+		listaLocalidades = locDao.obtenerLocalidadesXProvXPais(nombrePais, nombreProv);
 		for (Localidad l : listaLocalidades) {
 			System.out.println(l.getNombre());
 		}
