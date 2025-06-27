@@ -52,7 +52,7 @@ public class ServletCuentas extends HttpServlet {
 	}
 	
 	
-	//AL APRETAR BOTON AGREGAR
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		if(request.getParameter("btnAgregar")!=null) {
@@ -65,11 +65,13 @@ public class ServletCuentas extends HttpServlet {
 		}
 		
 		if(request.getParameter("btnModificar")!=null) {
+			System.out.println("entre en servlet btnmodificar");
 			String mensajeUpdate = "no se pudo modificar";
 			if(modificarCuenta(request)) {
 				 mensajeUpdate = "Modificado correctamente";
-				 request.setAttribute("mensajeModificacion",mensajeUpdate);
 			}
+			request.setAttribute("mensajeModificacion",mensajeUpdate);
+			
 		}
 		
 		actualizarProximoNumeroDeCuenta();
@@ -109,7 +111,9 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	cuenta.setCbu(request.getParameter("txtTablaCbu"));
 	cuenta.setDni(request.getParameter("txtTablaDni"));
 	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha"));
-	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero")));
+	if(request.getParameter("txtTablaNumero")!=null) {
+		cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero")));		
+	}
 	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTablaTipo")),
 			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTablaTipo")))));
 	cuenta.setSaldo(10000);
