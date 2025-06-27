@@ -49,6 +49,7 @@ public class ClienteDaoImpl implements ClienteDao {
                 c.setTelefono(rs.getString("telefono_TxC"));
                 c.setNick(rs.getString("nick_usr"));
                 c.setPassword(rs.getString("contraseña_usr"));
+                c.setBaja(rs.getInt("baja_Cl"));
 
                 lista.add(c);
             }
@@ -83,7 +84,7 @@ public class ClienteDaoImpl implements ClienteDao {
             ps.setString(13, cliente.getDomicilio());
             ps.setString(14, cliente.getEmail());
             ps.setString(15, cliente.getTelefono());
-            ps.setBoolean(16, cliente.getBaja() != null ? cliente.getBaja() : false);
+            ps.setInt(16, cliente.getBaja());
 
             filas = ps.executeUpdate();
             ps.close();
@@ -116,7 +117,7 @@ public class ClienteDaoImpl implements ClienteDao {
             ps.setString(12, cliente.getDomicilio());
             ps.setString(13, cliente.getEmail());
             ps.setString(14, cliente.getTelefono());
-            ps.setBoolean(15, cliente.getBaja() != null ? cliente.getBaja() : false);
+            ps.setInt(16, cliente.getBaja());
             ps.setString(16, cliente.getDNI());
             resultado = ps.executeUpdate() > 0;
             ps.close();
@@ -128,20 +129,20 @@ public class ClienteDaoImpl implements ClienteDao {
     }
 
     @Override
-    public boolean eliminar(int dni) {
-        boolean resultado = false;
+    public int eliminar(String dni) {
+        int filas = 0;
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "DELETE FROM CLIENTES WHERE dni = ?";
+            String query = "UPDATE CLIENTES SET baja_Cl = 1 WHERE DNI_Cl = ?";
             PreparedStatement ps = cn.prepare(query);
-            ps.setInt(1, dni);
-            resultado = ps.executeUpdate() > 0;
+            ps.setString(1, dni);
+            filas = ps.executeUpdate();
             ps.close();
             cn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return resultado;
+        return filas;
     }
 }

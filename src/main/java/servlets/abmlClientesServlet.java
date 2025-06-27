@@ -29,7 +29,7 @@ public class abmlClientesServlet extends HttpServlet {
     public abmlClientesServlet() {
         super();
     }
-    
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 		ClienteNegocioImpl cliNeg = new ClienteNegocioImpl();
@@ -246,6 +246,17 @@ public class abmlClientesServlet extends HttpServlet {
 		    }
 		    
 		}
+		
+		if(request.getParameter("btnEliminarCliente") != null) {
+		    String DNI = request.getParameter("listDNI");
+		    System.out.println("DNI recibido: " + DNI);
+
+		    int filasE = clienteNeg.eliminar(DNI);
+
+		    request.setAttribute("cantFilasE", filasE);
+		    request.setAttribute("listaClientes", clienteNeg.listar());
+		}
+		
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 		

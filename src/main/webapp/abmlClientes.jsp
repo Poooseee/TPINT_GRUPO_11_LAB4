@@ -5,7 +5,6 @@
 <%@ page import="entidades.Provincia" %>
 <%@ page import="entidades.Localidad" %>
 <%@ page import="entidades.Cliente" %>
-<%@ page import="entidades.datosUsrCliente" %>
 
 
 
@@ -468,43 +467,71 @@
               <th>Eliminar</th>
             </tr>
           </thead>
-          <tbody>
-            <%
-        List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
-        
-       if (listaClientes != null && !listaClientes.isEmpty()) {
-          for (Cliente c : listaClientes) {
-      %>
-      <tr>
-        <td><input type="text" value="<%= c.getDNI() %>" readonly /></td>
-        <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
-        <td><input type="text" value="<%= c.getNombre() %>" /></td>
-        <td><input type="text" value="<%= c.getApellido() %>" /></td>
-        <td><input type="text" value="<%= c.getSexo() %>" /></td>
-        <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
-        <td><input type="text" value="<%= c.getNacionalidad().getNombre() %>" /></td>
-        <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
-        <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
-        <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
-        <td><input type="text" value="<%= c.getEmail() %>" /></td>
-        <td><input type="text" value="<%= c.getTelefono() %>" /></td>
-        <td><input type="text" value="<%= c.getNick() %>" disabled/></td>
-        <td><input type="text" value="<%= c.getPassword() %>" /></td>
-        <td><input type="submit" class="btn btn-warning" value="Modificar" disabled /></td>
-        <td><input type="submit" class="btn btn-danger" value="Eliminar" disabled /></td>
-      </tr>
-      <%
-          }
-        } else {
-      %>
-      <tr>
-        <td>No hay clientes para mostrar.</td>
-        <% for (int i = 1; i < 14; i++) { %>
-          <td></td>
-        <% } %>
-      </tr>
-      <% } %>
-          </tbody>
+<tbody>
+<%
+    List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
+    if (listaClientes != null && !listaClientes.isEmpty()) {
+        for (Cliente c : listaClientes) {
+        	if(c.getBaja()!=1)
+        	{
+%>
+<form method="post" action="abmlClientesServlet">
+  <tr>
+    <td><input type="text" value="<%= c.getDNI() %>" name="listDNI" readonly /></td>
+    <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
+    <td><input type="text" value="<%= c.getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getApellido() %>" /></td>
+    <td><input type="text" value="<%= c.getSexo() %>" /></td>
+    <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
+    <td><input type="text" value="<%= c.getNacionalidad().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
+    <td><input type="text" value="<%= c.getEmail() %>" /></td>
+    <td><input type="text" value="<%= c.getTelefono() %>" /></td>
+    <td><input type="text" value="<%= c.getNick() %>" readonly /></td>
+    <td><input type="text" value="<%= c.getPassword() %>" /></td>
+    <td><input type="submit" class="btn btn-warning" value="Modificar" /></td>
+    <td><input type="submit" class="btn btn-danger" value="Eliminar" name="btnEliminarCliente" /></td>
+  </tr>
+</form>
+<%
+        	}
+        }
+    } else {
+%>
+<tr>
+  <td>No hay clientes para mostrar.</td>
+  <% for (int i = 1; i < 14; i++) { %>
+    <td></td>
+  <% } %>
+</tr>
+<% } %>
+<!-- CONDICIONAL ELIMINAR EN LA DB -->
+		<%
+		int filasE = 0; 
+		if (request.getAttribute("cantFilasE") != null) {
+			filasE = Integer.parseInt(request.getAttribute("cantFilasE").toString()); 
+		
+		%>
+		
+		<%
+			if (filasE == 1) {
+		%>
+		    <div style = "color:green;" id="div-agregado-exito">
+		         Cliente eliminado con éxito.
+		    </div>
+		<%
+			} else {
+		%>
+		    <div style = "color:red;" id="div-error-agregado">
+		         Hubo un ERROR al eliminar el cliente.
+		    </div>
+		<%
+			}
+		}
+		%>
+</tbody>
         </table>
       </div>
 	<script>

@@ -17,7 +17,7 @@ public class Cliente {
 	private String telefono;
 	private String nick;
 	private String password;
-	private Boolean baja;
+	private int baja;
 	
 	//GETTERS & SETTERS
 	public String getDNI() {
@@ -92,10 +92,10 @@ public class Cliente {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	public Boolean getBaja() {
+	public int getBaja() {
 		return baja;
 	}
-	public void setBaja(Boolean baja) {
+	public void setBaja(int baja) {
 		this.baja = baja;
 	}
 	
@@ -115,7 +115,7 @@ public class Cliente {
 	//CONSTRUCTORES Y TO STRING
 	public Cliente(String dNI, String cUIL, String nombre, String apellido, String sexo, Pais nacionalidad,
 			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email,
-			String nick, String password, Boolean baja) {
+			String nick, String password, int baja) {
 		super();
 		DNI = dNI;
 		CUIL = cUIL;
