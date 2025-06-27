@@ -4,6 +4,8 @@
 <%@ page import="entidades.Pais" %>
 <%@ page import="entidades.Provincia" %>
 <%@ page import="entidades.Localidad" %>
+<%@ page import="entidades.Cliente" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -220,16 +222,27 @@
               <select id="ddlNacionalidad" name="ddlNacionalidad" onchange="document.getElementById('form-agregar-cliente').submit();">
                 <option selected>Seleccione</option>
   				<%
-				    List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
-            		String nacionalidadSeleccionada = request.getParameter("ddlNacionalidad");
-				    if (listaPaises != null) {
-				        for (Pais p : listaPaises) {
-				            String selected = "";
-				            if (nacionalidadSeleccionada != null && nacionalidadSeleccionada.equals(p.getNacionalidad())) {
-				                selected = "selected";
-				            }
+				    List<Pais> listaNacionalidades = (List<Pais>) request.getAttribute("listaPaises");
+				    if (listaNacionalidades != null) {
+				        for (Pais p : listaNacionalidades) {
 				  %>
 				      <option value="<%= p.getId() %>"><%= p.getNacionalidad() %></option>
+				  <%
+				        }
+				    }
+				  %>
+              </select>
+            </div>
+            <div>
+              <label for="ddlPais">País</label>
+              <select id="ddlPais" name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <option selected>Seleccione</option>
+                				<%
+				    List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+				    if (listaPaises != null) {
+				        for (Pais p : listaPaises) {
+				  %>
+				      <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
 				  <%
 				        }
 				    }
@@ -450,44 +463,55 @@
           </thead>
           <tbody>
             <tr>
-              <td>
-                <input type="text" name="dni" value="123456789" disabled/>
+               <%
+			    List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
+			    if (listaClientes != null) {
+			        for (Cliente c : listaClientes) {
+			  %>
+			  <td>
+                <input type="text" name="dni" value="<%= c.getDNI() %>" disabled/>
               </td>
               <td>
-                <input type="text" name="cuil" value="0123456789" disabled />
+                <input type="text" name="cuil" value="<%= c.getCUIL() %>" disabled />
               </td>
               <td>
-                <input type="text" name="nombre" value="nombre" />
+                <input type="text" name="nombre" value="<%= c.getNombre() %>" />
               </td>
               <td>
-                <input type="text" name="apellido" value="apellido" />
+                <input type="text" name="apellido" value="<%= c.getApellido() %>" />
               </td>
               <td>
-                <input type="text" name="sexo" value="sexo" />
+                <input type="text" name="sexo" value="<%= c.getSexo() %>" />
               </td>
               <td>
-                <input type="date" name="fechaNacimiento" value="2/10/2004" />
+                <input type="date" name="fechaNacimiento" value="<%= c.getFechaNacimiento() %>" />
               </td>
               <td>
-                <select name="ddlPais"></select>
+                <select name="ddlPais">
+                <option selected><%= c.getNacionalidad() %></option>
+                </select>
               </td>
               <td>
-                <select name="ddlProvincia"></select>
+                <select name="ddlProvincia">
+                <option selected><%= c.getProvincia() %></option>
+                </select>
               </td>
               <td>
-                <select name="ddlLocalidad"></select>
+                <select name="ddlLocalidad">
+                <option selected><%= c.getLocalidad() %></option>
+                </select>
               </td>
               <td>
-                <input type="text" name="direccion" value="echevrria 2343" />
+                <input type="text" name="direccion" value="<%= c.getDomicilio() %>" />
               </td>
               <td>
-                <input type="text" name="correo" value="correo@gmail.com" />
+                <input type="text" name="correo" value="<%= c.getEmail() %>" />
               </td>
               <td>
-                <input type="text" name="telefono" value="telefono" />
+                <input type="text" name="telefono" value="<%= c.getTelefono() %>" />
               </td>
               <td>
-                <input type="text" name="usuario" value="nombreUsuario" disabled />
+                <input type="text" name="usuario" value="<%= c.getFechaNacimiento() %>" disabled />
               </td>
               <td>
                 <input type="text" name="contraseña" value="contraseña" />
@@ -507,6 +531,11 @@
                   class="btn btn-danger"
                   value="Eliminar"
                 />
+			  <%
+			        }
+			    }
+				%>
+
               </td>
             </tr>
           </tbody>

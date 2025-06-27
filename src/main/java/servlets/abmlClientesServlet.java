@@ -32,12 +32,15 @@ public class abmlClientesServlet extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+		ClienteNegocioImpl cliNeg = new ClienteNegocioImpl();
 	
 	    List<Pais> listaPaises = paisNeg.obtenerPaises(); 
+	    List <Cliente> listaClientes = cliNeg.listar();
 
+	    request.setAttribute("listaClientes", listaClientes);
 	    request.setAttribute("listaPaises", listaPaises);
-		String idPais = request.getParameter("ddlNacionalidad"); 
-		System.out.println(idPais);
+		//String idPais = request.getParameter("ddlNacionalidad"); 
+		//System.out.println(idPais);
 
 	    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 	    rd.forward(request, response);
