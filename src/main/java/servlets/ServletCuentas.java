@@ -54,6 +54,7 @@ public class ServletCuentas extends HttpServlet {
 	
 	//AL APRETAR BOTON AGREGAR
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		if(request.getParameter("btnAgregar")!=null) {
 			
 			String mensajeSalida = "no se pudo cargar";
@@ -61,10 +62,19 @@ public class ServletCuentas extends HttpServlet {
 				mensajeSalida="Cargado Correctamente";
 			}
 			request.setAttribute("mensajeAlta",mensajeSalida);
-			actualizarProximoNumeroDeCuenta();
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
-			dispatcher.forward(request, response);
 		}
+		
+		if(request.getParameter("btnModificar")!=null) {
+			String mensajeUpdate = "no se pudo modificar";
+			if(modificarCuenta(request)) {
+				 mensajeUpdate = "Modificado correctamente";
+				 request.setAttribute("mensajeModificacion",mensajeUpdate);
+			}
+		}
+		
+		actualizarProximoNumeroDeCuenta();
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
+		dispatcher.forward(request, response);
 	}
 	
 	public boolean agregarCuenta(HttpServletRequest request) {
@@ -83,7 +93,28 @@ private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTipoCuenta")),
 			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTipoCuenta")))));
 	cuenta.setSaldo(10000);
+    System.out.println(cuenta.toString());
+	return cuenta;
+}
+
+private boolean modificarCuenta(HttpServletRequest request) {
+	CuentaNegocio neg = new CuentaNegocioImpl();
+    Cuenta cuenta = cargarCuentaConDatosDeLaTabla(request);
+    return neg.update(cuenta);
+	
+}
+private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
+	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
+	Cuenta cuenta = new Cuenta();
+	cuenta.setCbu(request.getParameter("txtTablaCbu"));
+	cuenta.setDni(request.getParameter("txtTablaDni"));
+	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha"));
+	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero")));
+	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTablaTipo")),
+			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTablaTipo")))));
+	cuenta.setSaldo(10000);
 	
 	return cuenta;
 }
+
 }

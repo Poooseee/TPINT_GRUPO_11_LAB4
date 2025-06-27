@@ -21,5 +21,14 @@ CuentaDao dao = new CuentaDaoImpl();
 	public int obtenerNuevoNumero() {
 		return dao.obtenerUltimoNumCuenta()+1;
 	}
+	@Override
+	public boolean update(Cuenta cuenta) {
+		boolean update = false;
+		ClienteNegocio negCli = new ClienteNegocioImpl();
+		if(negCli.existe(cuenta.getDni())) {
+			update = dao.update(cuenta);
+		}
+		return update;
+	}
 
 }

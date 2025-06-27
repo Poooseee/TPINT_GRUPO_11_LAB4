@@ -234,32 +234,33 @@
                 </tr>
               </thead>
               <tbody>
+              <form method="post" action="ServletCuentas">
                 <tr>
                   <td>
-                    <input type="text" value="Obtener Numero DB" disabled />
+                    <input name="txtTablaNumero" type="text" value="Obtener Numero DB" disabled />
                   </td>
 
                   <td>
-                    <input type="text" value="DNI" disabled />
+                    <input name="txtTablaDni" type="text" value="DNI" disabled />
                   </td>
 
                   <td>
-                    <input type="text" value="CBU" disabled />
+                    <input name="txtTablaCbu" type="text" value="CBU" disabled />
                   </td>
 
 </body>
                   <td>
-                    <select>
+                    <select name="ddlTablaTipo">
                       <option value="1">Caja de Ahorro</option>
                       <option value="1">Cuenta Corriente</option>
                     </select>
                   </td>
                 </td>
                 <td>
-                  <input type="text" value="10.000">
+                  <input name="txtTablaSaldo" type="text" value="10.000">
                 </td>
                   <td>
-                    <input type="date" disabled />
+                    <input name="txtTablaFecha" type="date" />
                   <td>
                     <input
                       type="submit"
@@ -277,6 +278,7 @@
                     />
                   </td>
                 </tr>
+              </form>
               </tbody>
             </table>
           </div>

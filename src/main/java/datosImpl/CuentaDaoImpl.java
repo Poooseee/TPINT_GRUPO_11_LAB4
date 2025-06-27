@@ -55,5 +55,35 @@ public class CuentaDaoImpl implements CuentaDao {
 	        return utlimoNum;
 		
 	}
+	@Override
+	public boolean update(Cuenta cuenta) {
+		boolean update = false;
+		String query = "UPDATE cuentas SET  "
+				+ " DNI_Ctas = '?', "
+				+ " fechaCreacion_Ctas = '?', "
+				+ " tipoCta_Ctas = ?, "
+				+ " CBU_Ctas = '?', "
+				+ " saldo_Ctas = ?, "
+				+ "WHERE numeroCuenta_Ctas = ? ";
+		cn = new Conexion();
+		cn.Open();
+		try {
+			PreparedStatement pst = cn.prepare(query);
+			pst.setString(1, cuenta.getDni());
+			pst.setString(2, cuenta.getFechaCreacion());
+			pst.setInt(3, cuenta.getTipo().getIdTipo());
+			pst.setString(4, cuenta.getCbu());
+			pst.setFloat(5, cuenta.getSaldo());
+			pst.setInt(6, cuenta.getNumero());
+			
+			if(pst.executeUpdate() == 1) {
+				update = true;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return update;
+	}
 
 }
