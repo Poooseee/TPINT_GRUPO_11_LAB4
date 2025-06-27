@@ -249,7 +249,6 @@ public class abmlClientesServlet extends HttpServlet {
 		
 		if(request.getParameter("btnEliminarCliente") != null) {
 		    String DNI = request.getParameter("listDNI");
-		    System.out.println("DNI recibido: " + DNI);
 
 		    int filasE = clienteNeg.eliminar(DNI);
 
