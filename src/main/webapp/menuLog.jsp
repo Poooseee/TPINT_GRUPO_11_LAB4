@@ -67,6 +67,9 @@
     #submit-button:hover{
         background-color: rgba(38, 117, 122, 0.637);
     }
+    .error-msg{
+    color:red;
+    }
 </style>
 <body>
 <main>

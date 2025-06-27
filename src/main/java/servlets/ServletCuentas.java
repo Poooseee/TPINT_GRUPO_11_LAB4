@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,20 +27,36 @@ public class ServletCuentas extends HttpServlet {
        
     }
 
-	
+	//AL CARGAR LA PAGINA
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getParameter("param")!= null) {
+		  System.out.println("✔ Entró al doGet de ServletCuentas");
+		  System.out.println("✔ Entró al doGet de ServletCuentas");
+		  System.out.println("✔ Entró al doGet de ServletCuentas");
+		  System.out.println("✔ Entró al doGet de ServletCuentas");
+		  
+		//obtener proximo numero de cuenta Y tipos de cuentas
 			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
+			ArrayList <TipoCuenta> ListaTiposCuentas = obtenerTiposCuentas();
+			
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
+			request.setAttribute("listaTiposCuentas", ListaTiposCuentas);
+			System.out.println("Tipos de cuenta obtenidos: " + ListaTiposCuentas.size());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
-		}
+		
 	}
-private int actualizarProximoNumeroDeCuenta() {
-	CuentaNegocio neg = new CuentaNegocioImpl();
-	return neg.obtenerNuevoNumero();
-}
 	
+	private int actualizarProximoNumeroDeCuenta() {
+		CuentaNegocio neg = new CuentaNegocioImpl();
+		return neg.obtenerNuevoNumero();
+	}
+	private ArrayList<TipoCuenta> obtenerTiposCuentas(){
+		TipoCuentaNegocio neg = new TipoCuentaNegocioImpl();
+		return neg.obtenerTiposCuentas();
+	}
+	
+	
+	//AL APRETAR BOTON AGREGAR
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("btnAgregar")!=null) {
 			
