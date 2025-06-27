@@ -364,7 +364,7 @@
       
        <h2>LISTADO Y MODIFICACION</h2>
 <div class="contenedor-tabla">
-  <table id="tabla-clientes" border="1"> <!-- ID agregado acá -->
+  <table id="tabla-clientes" border="1">
     <thead>
       <tr>
         <th>Dni</th>
