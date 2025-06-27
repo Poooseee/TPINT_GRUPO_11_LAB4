@@ -5,12 +5,19 @@
 <%@ page import="entidades.Provincia" %>
 <%@ page import="entidades.Localidad" %>
 <%@ page import="entidades.Cliente" %>
+<%@ page import="entidades.datosUsrCliente" %>
+
 
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script type="text/javascript" charset="utf8"
+  src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <title>ABML clientes - Banco Honse</title>
 
 <style>
@@ -462,86 +469,56 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-               <%
-			    List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
-			    if (listaClientes != null) {
-			        for (Cliente c : listaClientes) {
-			  %>
-			  <td>
-                <input type="text" name="dni" value="<%= c.getDNI() %>" disabled/>
-              </td>
-              <td>
-                <input type="text" name="cuil" value="<%= c.getCUIL() %>" disabled />
-              </td>
-              <td>
-                <input type="text" name="nombre" value="<%= c.getNombre() %>" />
-              </td>
-              <td>
-                <input type="text" name="apellido" value="<%= c.getApellido() %>" />
-              </td>
-              <td>
-                <input type="text" name="sexo" value="<%= c.getSexo() %>" />
-              </td>
-              <td>
-                <input type="date" name="fechaNacimiento" value="<%= c.getFechaNacimiento() %>" />
-              </td>
-              <td>
-                <select name="ddlPais">
-                <option selected><%= c.getNacionalidad() %></option>
-                </select>
-              </td>
-              <td>
-                <select name="ddlProvincia">
-                <option selected><%= c.getProvincia() %></option>
-                </select>
-              </td>
-              <td>
-                <select name="ddlLocalidad">
-                <option selected><%= c.getLocalidad() %></option>
-                </select>
-              </td>
-              <td>
-                <input type="text" name="direccion" value="<%= c.getDomicilio() %>" />
-              </td>
-              <td>
-                <input type="text" name="correo" value="<%= c.getEmail() %>" />
-              </td>
-              <td>
-                <input type="text" name="telefono" value="<%= c.getTelefono() %>" />
-              </td>
-              <td>
-                <input type="text" name="usuario" value="<%= c.getFechaNacimiento() %>" disabled />
-              </td>
-              <td>
-                <input type="text" name="contraseña" value="contraseña" />
-              </td>
-              <td>
-                <input
-                  type="submit"
-                  name="btnModificar"
-                  class="btn btn-warning"
-                  value="Modificar"
-                />
-              </td>
-              <td>
-                <input
-                  type="submit"
-                  name="btnEliminar"
-                  class="btn btn-danger"
-                  value="Eliminar"
-                />
-			  <%
-			        }
-			    }
-				%>
-
-              </td>
-            </tr>
+            <%
+        List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
+        
+       if (listaClientes != null && !listaClientes.isEmpty()) {
+          for (Cliente c : listaClientes) {
+      %>
+      <tr>
+        <td><input type="text" value="<%= c.getDNI() %>" readonly /></td>
+        <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
+        <td><input type="text" value="<%= c.getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getApellido() %>" /></td>
+        <td><input type="text" value="<%= c.getSexo() %>" /></td>
+        <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
+        <td><input type="text" value="<%= c.getNacionalidad().getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
+        <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
+        <td><input type="text" value="<%= c.getEmail() %>" /></td>
+        <td><input type="text" value="<%= c.getTelefono() %>" /></td>
+        <td><input type="text" value="<%= c.getNick() %>" disabled/></td>
+        <td><input type="text" value="<%= c.getPassword() %>" /></td>
+        <td><input type="submit" class="btn btn-warning" value="Modificar" disabled /></td>
+        <td><input type="submit" class="btn btn-danger" value="Eliminar" disabled /></td>
+      </tr>
+      <%
+          }
+        } else {
+      %>
+      <tr>
+        <td>No hay clientes para mostrar.</td>
+        <% for (int i = 1; i < 14; i++) { %>
+          <td></td>
+        <% } %>
+      </tr>
+      <% } %>
           </tbody>
         </table>
       </div>
-
+	<script>
+  $(document).ready(function() {
+    $('#tabla-clientes').DataTable({
+      "pageLength": 8,
+      "lengthChange": false,
+      "searching": false, // Oculta el campo de búsqueda
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
     </main>
   </body>
 </html>

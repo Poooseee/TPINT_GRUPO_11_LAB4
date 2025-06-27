@@ -15,6 +15,8 @@ public class Cliente {
 	private Provincia provincia;
 	private String email;
 	private String telefono;
+	private String nick;
+	private String password;
 	private Boolean baja;
 	
 	//GETTERS & SETTERS
@@ -97,11 +99,23 @@ public class Cliente {
 		this.baja = baja;
 	}
 	
+	public String getNick() {
+		return nick;
+	}
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 	//CONSTRUCTORES Y TO STRING
 	public Cliente(String dNI, String cUIL, String nombre, String apellido, String sexo, Pais nacionalidad,
 			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email,
-			Boolean baja) {
+			String nick, String password, Boolean baja) {
 		super();
 		DNI = dNI;
 		CUIL = cUIL;
@@ -114,6 +128,8 @@ public class Cliente {
 		this.localidad = localidad;
 		this.provincia = provincia;
 		this.email = email;
+		this.nick = nick;
+		this.password = password;
 		this.baja = baja;
 	}
 	

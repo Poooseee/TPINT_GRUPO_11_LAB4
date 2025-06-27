@@ -15,38 +15,40 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "SELECT * FROM CLIENTES";
+            String query = "SELECT C.*, TxC.telefono_TxC, U.nick_usr, U.contraseña_usr FROM CLIENTES C "
+            		+ "LEFT JOIN TELEFONOSXCLIENTES TxC ON C.DNI_Cl = TxC.DNI_TxC "
+            		+ "LEFT JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
+            		+ "RIGHT JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr;";
             ResultSet rs = cn.query(query);
             while (rs.next()) {
                 Cliente c = new Cliente();
-                c.setDNI(rs.getString("dni"));
-                c.setCUIL(rs.getString("cuil"));
-                c.setNombre(rs.getString("nombre"));
-                c.setApellido(rs.getString("apellido"));
+                c.setDNI(rs.getString("DNI_Cl"));
+                c.setCUIL(rs.getString("CUIL_Cl"));
+                c.setNombre(rs.getString("nombre_Cl"));
+                c.setApellido(rs.getString("apellido_Cl"));
                 
-                Sexo sexo = new Sexo(rs.getString("sexo"));
+                Sexo sexo = new Sexo();
+                sexo.setSexo(rs.getString("sexo_Cl"));
                 c.setSexo(sexo.getSexo());
 
-                Pais pais = new Pais();
-                pais.setId(rs.getInt("idPais"));
-                pais.setNombre(rs.getString("nacionalidad"));
-                c.setNacionalidad(pais);
+                Pais nacionalidad = new Pais();
+                nacionalidad.setNombre(rs.getString("nacionalidad_Cl"));
+                c.setNacionalidad(nacionalidad);
 
                 Provincia provincia = new Provincia();
-                provincia.setId(rs.getInt("idProvincia"));
-                provincia.setNombre(rs.getString("provincia"));
+                provincia.setNombre(rs.getString("provincia_Cl"));
                 c.setProvincia(provincia);
 
                 Localidad localidad = new Localidad();
-                localidad.setId(rs.getInt("idLocalidad"));
-                localidad.setNombre(rs.getString("localidad"));
+                localidad.setNombre(rs.getString("localidad_Cl"));
                 c.setLocalidad(localidad);
 
-                c.setFechaNacimiento(rs.getDate("fechaNacimiento"));
-                c.setDomicilio(rs.getString("domicilio"));
-                c.setEmail(rs.getString("email"));
-                c.setTelefono(rs.getString("telefono"));
-                c.setBaja(rs.getBoolean("baja"));
+                c.setDomicilio(rs.getString("domicilio_Cl"));
+                c.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
+                c.setEmail(rs.getString("mail_Cl"));
+                c.setTelefono(rs.getString("telefono_TxC"));
+                c.setNick(rs.getString("nick_usr"));
+                c.setPassword(rs.getString("contraseña_usr"));
 
                 lista.add(c);
             }

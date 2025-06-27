@@ -35,7 +35,7 @@ public class abmlClientesServlet extends HttpServlet {
 		ClienteNegocioImpl cliNeg = new ClienteNegocioImpl();
 	
 	    List<Pais> listaPaises = paisNeg.obtenerPaises(); 
-	    List <Cliente> listaClientes = cliNeg.listar();
+	    List<Cliente> listaClientes = cliNeg.listar();
 
 	    request.setAttribute("listaClientes", listaClientes);
 	    request.setAttribute("listaPaises", listaPaises);
