@@ -1,9 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="entidades.Pais" %>
+<%@ page import="entidades.Provincia" %>
+<%@ page import="entidades.Localidad" %>
+<%@ page import="entidades.Cliente" %>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script type="text/javascript" charset="utf8"
+  src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <title>ABML clientes - Banco Honse</title>
 
 <style>
@@ -128,7 +141,6 @@
           justify-content: center;
           
     }
-
     .form-submit button{
         padding: 1em;
         margin-top: 2em;
@@ -180,7 +192,7 @@
       <div id="div-crear-cliente">
         <h2>DAR DE ALTA</h2>
 
-        <form>
+        <form method="post" action="abmlClientesServlet" id="form-agregar-cliente">
           <div class="form-lado">
             <div>
               <label for="txtDni">DNI</label>
@@ -213,15 +225,50 @@
 
             <div>
               <label for="ddlNacionalidad">Nacionalidad</label>
-              <select id="ddlNacionalidad" name="ddlNacionalidad">
+              <select id="ddlNacionalidad" name="ddlNacionalidad" onchange="document.getElementById('form-agregar-cliente').submit();">
                 <option selected>Seleccione</option>
+  				<%
+				    List<Pais> listaNacionalidades = (List<Pais>) request.getAttribute("listaPaises");
+				    if (listaNacionalidades != null) {
+				        for (Pais p : listaNacionalidades) {
+				  %>
+				      <option value="<%= p.getId() %>"><%= p.getNacionalidad() %></option>
+				  <%
+				        }
+				    }
+				  %>
               </select>
             </div>
-
+            <div>
+              <label for="ddlPais">País</label>
+              <select id="ddlPais" name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <option selected>Seleccione</option>
+                				<%
+				    List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+				    if (listaPaises != null) {
+				        for (Pais p : listaPaises) {
+				  %>
+				      <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
+              </select>
+            </div>
             <div>
               <label for="ddlProvincia">Provincia</label>
-              <select id="ddlProvincia" name="ddlProvincia">
+              <select id="ddlProvincia" name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
                 <option selected>Seleccione</option>
+                  <%
+				    List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
+				    if (listaProvincias != null) {
+				        for (Provincia p : listaProvincias) {
+				  %>
+				      <option value="<%= p.getId() %>"><%= p.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
               </select>
             </div>
           </div>
@@ -231,7 +278,22 @@
               <label for="ddlLocalidad">Localidad</label>
               <select id="ddlLocalidad" name="ddlLocalidad">
                 <option selected>Seleccione</option>
+                  <%
+				    List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+				    if (listaLocalidades != null) {
+				        for (Localidad l : listaLocalidades) {
+				  %>
+				      <option value="<%= l.getId() %>"><%= l.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
               </select>
+            </div>
+            
+            <div>
+              <label for="txtDomicilio">Domicilio</label>
+              <input type="text" id="txtDomicilio" name="txtDomicilio" />
             </div>
 
             <div>
@@ -274,9 +336,40 @@
           </div>
 
           <div class="form-submit">
-            <button type="submit">Crear</button>
+            <button type="submit" name="btnAgregarCliente">Crear</button>
           </div>
         </form>
+
+		<!-- CONDICIONAL MENSAJE DE ERROR -->
+		<% if (request.getAttribute("mensajeError") != null) { %>
+		    <div id="div-agregar-error">
+		        <%= request.getAttribute("mensajeError") %>
+		   </div>
+		<% } %>
+		<!-- CONDICIONAL INSERTAR EN LA DB -->
+		<%
+		int filas = 0; 
+		if (request.getAttribute("cantFilas") != null) {
+			filas = Integer.parseInt(request.getAttribute("cantFilas").toString()); 
+		
+		%>
+		
+		<%
+			if (filas == 1) {
+		%>
+		    <div style = "color:green;" id="div-agregado-exito">
+		         Cliente agregado con éxito.
+		    </div>
+		<%
+			} else {
+		%>
+		    <div style = "color:red;" id="div-error-agregado">
+		         Hubo un ERROR al agregar el cliente.
+		    </div>
+		<%
+			}
+		}
+		%>
       </div>
 
       <h2>FILTRAR CLIENTES</h2>
@@ -351,7 +444,7 @@
           </div>
         </form>
       </div>
-       <h2>LISTADO Y MODIFICACION</h2>
+       <h2>LISTADO, MODIFICACION Y ELIMINACIÓN</h2>
       <div class="contenedor-tabla">
         <table>
           <thead>
@@ -374,71 +467,85 @@
               <th>Eliminar</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input type="text" name="dni" value="123456789" disabled/>
-              </td>
-              <td>
-                <input type="text" name="cuil" value="0123456789" disabled />
-              </td>
-              <td>
-                <input type="text" name="nombre" value="nombre" />
-              </td>
-              <td>
-                <input type="text" name="apellido" value="apellido" />
-              </td>
-              <td>
-                <input type="text" name="sexo" value="sexo" />
-              </td>
-              <td>
-                <input type="date" name="fechaNacimiento" value="2/10/2004" />
-              </td>
-              <td>
-                <select name="ddlPais"></select>
-              </td>
-              <td>
-                <select name="ddlProvincia"></select>
-              </td>
-              <td>
-                <select name="ddlLocalidad"></select>
-              </td>
-              <td>
-                <input type="text" name="direccion" value="echevrria 2343" />
-              </td>
-              <td>
-                <input type="text" name="correo" value="correo@gmail.com" />
-              </td>
-              <td>
-                <input type="text" name="telefono" value="telefono" />
-              </td>
-              <td>
-                <input type="text" name="usuario" value="nombreUsuario" disabled />
-              </td>
-              <td>
-                <input type="text" name="contraseña" value="contraseña" />
-              </td>
-              <td>
-                <input
-                  type="submit"
-                  name="btnModificar"
-                  class="btn btn-warning"
-                  value="Modificar"
-                />
-              </td>
-              <td>
-                <input
-                  type="submit"
-                  name="btnEliminar"
-                  class="btn btn-danger"
-                  value="Eliminar"
-                />
-              </td>
-            </tr>
-          </tbody>
+<tbody>
+<%
+    List<Cliente> listaClientes = (List<Cliente>) request.getAttribute("listaClientes");
+    if (listaClientes != null && !listaClientes.isEmpty()) {
+        for (Cliente c : listaClientes) {
+        	if(c.getBaja()!=1)
+        	{
+%>
+<form method="post" action="abmlClientesServlet">
+  <tr>
+    <td><input type="text" value="<%= c.getDNI() %>" name="listDNI" readonly /></td>
+    <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
+    <td><input type="text" value="<%= c.getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getApellido() %>" /></td>
+    <td><input type="text" value="<%= c.getSexo() %>" /></td>
+    <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
+    <td><input type="text" value="<%= c.getNacionalidad().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
+    <td><input type="text" value="<%= c.getEmail() %>" /></td>
+    <td><input type="text" value="<%= c.getTelefono() %>" /></td>
+    <td><input type="text" value="<%= c.getNick() %>" readonly /></td>
+    <td><input type="text" value="<%= c.getPassword() %>" /></td>
+    <td><input type="submit" class="btn btn-warning" value="Modificar" /></td>
+    <td><input type="submit" class="btn btn-danger" value="Eliminar" name="btnEliminarCliente" /></td>
+  </tr>
+</form>
+<%
+        	}
+        }
+    } else {
+%>
+<tr>
+  <td>No hay clientes para mostrar.</td>
+  <% for (int i = 1; i < 14; i++) { %>
+    <td></td>
+  <% } %>
+</tr>
+<% } %>
+<!-- CONDICIONAL ELIMINAR EN LA DB -->
+		<%
+		int filasE = 0; 
+		if (request.getAttribute("cantFilasE") != null) {
+			filasE = Integer.parseInt(request.getAttribute("cantFilasE").toString()); 
+		
+		%>
+		
+		<%
+			if (filasE == 1) {
+		%>
+		    <div style = "color:green;" id="div-agregado-exito">
+		         Cliente eliminado con éxito.
+		    </div>
+		<%
+			} else {
+		%>
+		    <div style = "color:red;" id="div-error-agregado">
+		         Hubo un ERROR al eliminar el cliente.
+		    </div>
+		<%
+			}
+		}
+		%>
+</tbody>
         </table>
       </div>
-
+	<script>
+  $(document).ready(function() {
+    $('#tabla-clientes').DataTable({
+      "pageLength": 8,
+      "lengthChange": false,
+      "searching": false, // Oculta el campo de búsqueda
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
     </main>
   </body>
 </html>

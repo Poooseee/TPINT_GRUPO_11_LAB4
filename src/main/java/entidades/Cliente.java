@@ -7,7 +7,7 @@ public class Cliente {
 	private String CUIL;
 	private String nombre;
 	private String apellido;
-	private Sexo sexo;
+	private String sexo;
 	private Pais nacionalidad;
 	private Date fechaNacimiento;
 	private String domicilio;
@@ -15,8 +15,9 @@ public class Cliente {
 	private Provincia provincia;
 	private String email;
 	private String telefono;
-	private Boolean baja;
-	
+	private String nick;
+	private String password;
+	private int baja;
 	
 	//GETTERS & SETTERS
 	public String getDNI() {
@@ -43,10 +44,10 @@ public class Cliente {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
-	public Sexo getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
-	public void setSexo(Sexo sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 	public Pais getNacionalidad() {
@@ -91,18 +92,30 @@ public class Cliente {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	public Boolean getBaja() {
+	public int getBaja() {
 		return baja;
 	}
-	public void setBaja(Boolean baja) {
+	public void setBaja(int baja) {
 		this.baja = baja;
 	}
 	
+	public String getNick() {
+		return nick;
+	}
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 	//CONSTRUCTORES Y TO STRING
-	public Cliente(String dNI, String cUIL, String nombre, String apellido, Sexo sexo, Pais nacionalidad,
-			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email, String telefono,
-			Boolean baja) {
+	public Cliente(String dNI, String cUIL, String nombre, String apellido, String sexo, Pais nacionalidad,
+			Date fechaNacimiento, String domicilio, Localidad localidad, Provincia provincia, String email,
+			String nick, String password, int baja) {
 		super();
 		DNI = dNI;
 		CUIL = cUIL;
@@ -115,7 +128,8 @@ public class Cliente {
 		this.localidad = localidad;
 		this.provincia = provincia;
 		this.email = email;
-		this.telefono = telefono;
+		this.nick = nick;
+		this.password = password;
 		this.baja = baja;
 	}
 	
@@ -124,7 +138,7 @@ public class Cliente {
 	public String toString() {
 		return "Cliente [DNI=" + DNI + ", CUIL=" + CUIL + ", nombre=" + nombre + ", apellido=" + apellido + ", sexo="
 				+ sexo + ", nacionalidad=" + nacionalidad + ", fechaNacimiento=" + fechaNacimiento + ", domicilio="
-				+ domicilio + ", localidad=" + localidad + ", provincia=" + provincia + ", email=" + email + ", telefono=" + telefono +", baja="
+				+ domicilio + ", localidad=" + localidad + ", provincia=" + provincia + ", email=" + email + ", baja="
 				+ baja + "]";
 	};
 	

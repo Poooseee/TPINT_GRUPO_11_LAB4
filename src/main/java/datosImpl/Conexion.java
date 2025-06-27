@@ -18,8 +18,7 @@ public class Conexion {
 
 	protected Connection connection;
 	
-	public Connection Open()
-	{
+	public Connection Open(){
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
