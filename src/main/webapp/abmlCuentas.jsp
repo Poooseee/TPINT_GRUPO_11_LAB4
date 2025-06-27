@@ -205,15 +205,11 @@
             <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
           <%
-<<<<<<< HEAD
          String mensaje =(String)request.getAttribute("mensajeAlta");
          if(request.getAttribute("btnAgregar")!=null){
-=======
-         String mensaje = "";
           if(request.getAttribute("mensajeAlta")!=null){
           mensaje =(String)request.getAttribute("mensajeAlta");        	  
           }
->>>>>>> main
           %>
           <%=mensaje %>
           <% } %>
@@ -252,7 +248,6 @@
                 listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("ListaCuentas");
                 for(Cuenta cuenta : listaCuentasSv){
                 %>
-                <form>
                 <tr>
                   <td>
                   <input type="hidden" value="
@@ -271,7 +266,7 @@
                     <%=cuenta.getCbu() %>" name="txtTablaCbu">
                   </td>
                   <td>   
-                      <input type="Text" value="<%= cuenta.getTipo().getNombre() %> " name="txtTablaTipo"></input>
+                      <input type="Text" value="<%=cuenta.getTipo().getNombre() %> " name="txtTablaTipo"></input>
                   </td>
          		<td>
          		<input type="Text" value="
@@ -298,7 +293,6 @@
                     />
                   </td>
                 </tr>
-                </form>
                   <% }} %>
               </tbody>
             </table>

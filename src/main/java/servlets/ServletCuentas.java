@@ -86,7 +86,11 @@ public class ServletCuentas extends HttpServlet {
 		
 		ArrayList<Cuenta> listaCuentas = obtenerCuentas();
 		request.setAttribute("ListaCuentas", listaCuentas);
+		ArrayList<TipoCuenta> listaTipoCuentas = obtenerTiposCuentas();
+		request.setAttribute("listaTiposCuentas", listaTipoCuentas);
+		int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 		actualizarProximoNumeroDeCuenta();
+		request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -121,7 +125,6 @@ private boolean modificarCuenta(HttpServletRequest request) {
 private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
-<<<<<<< HEAD
 	TipoCuenta tipC = new TipoCuenta();
 	tipC.setIdTipo(negTip.obtenerId((request.getParameter("txtTipoCuenta")))); 
 	tipC.setNombre((request.getParameter("txtTipoCuenta")));
@@ -130,16 +133,6 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha").trim());
 	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero").trim()));
 	cuenta.setTipo(tipC);
-=======
-	cuenta.setCbu(request.getParameter("txtTablaCbu"));
-	cuenta.setDni(request.getParameter("txtTablaDni"));
-	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha"));
-	if(request.getParameter("txtTablaNumero")!=null) {
-		cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero")));		
-	}
-	cuenta.setTipo(new TipoCuenta(Integer.parseInt(request.getParameter("ddlTablaTipo")),
-			negTip.obtenerNombre(Integer.parseInt(request.getParameter("ddlTablaTipo")))));
->>>>>>> main
 	cuenta.setSaldo(10000);
 	return cuenta;
 }
