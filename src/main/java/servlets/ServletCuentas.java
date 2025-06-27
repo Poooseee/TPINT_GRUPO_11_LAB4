@@ -29,11 +29,7 @@ public class ServletCuentas extends HttpServlet {
 
 	//AL CARGAR LA PAGINA
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		  System.out.println("✔ Entró al doGet de ServletCuentas");
-		  System.out.println("✔ Entró al doGet de ServletCuentas");
-		  System.out.println("✔ Entró al doGet de ServletCuentas");
-		  System.out.println("✔ Entró al doGet de ServletCuentas");
-		  
+
 		//obtener proximo numero de cuenta Y tipos de cuentas
 			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 			ArrayList <TipoCuenta> ListaTiposCuentas = obtenerTiposCuentas();
