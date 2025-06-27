@@ -2,6 +2,9 @@ package negocioImpl;
 
 import entidades.Cuenta;
 import negocio.CuentaNegocio;
+
+import java.util.ArrayList;
+
 import datos.CuentaDao;
 import datosImpl.CuentaDaoImpl;
 import negocio.ClienteNegocio;
@@ -22,6 +25,7 @@ CuentaDao dao = new CuentaDaoImpl();
 		return dao.obtenerUltimoNumCuenta()+1;
 	}
 	@Override
+<<<<<<< Updated upstream
 	public boolean update(Cuenta cuenta) {
 		boolean update = false;
 		ClienteNegocio negCli = new ClienteNegocioImpl();
@@ -29,6 +33,10 @@ CuentaDao dao = new CuentaDaoImpl();
 			update = dao.update(cuenta);
 		}
 		return update;
+=======
+	public ArrayList<Cuenta> obtenerListaCuentas() {
+		return dao.obtenerCuentas();
+>>>>>>> Stashed changes
 	}
 
 }

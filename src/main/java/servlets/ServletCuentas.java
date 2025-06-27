@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import entidades.Cuenta;
 import entidades.TipoCuenta;
 import negocio.CuentaNegocio;
@@ -33,13 +34,16 @@ public class ServletCuentas extends HttpServlet {
 		//obtener proximo numero de cuenta Y tipos de cuentas
 			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 			ArrayList <TipoCuenta> ListaTiposCuentas = obtenerTiposCuentas();
+			ArrayList<Cuenta> listaCuentas = obtenerCuentas();
 			
+			request.setAttribute("ListaCuentas", listaCuentas);
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
 			request.setAttribute("listaTiposCuentas", ListaTiposCuentas);
 			System.out.println("Tipos de cuenta obtenidos: " + ListaTiposCuentas.size());
+			
+			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
-		
 	}
 	
 	private int actualizarProximoNumeroDeCuenta() {
@@ -49,6 +53,11 @@ public class ServletCuentas extends HttpServlet {
 	private ArrayList<TipoCuenta> obtenerTiposCuentas(){
 		TipoCuentaNegocio neg = new TipoCuentaNegocioImpl();
 		return neg.obtenerTiposCuentas();
+	}
+	
+	private ArrayList<Cuenta> obtenerCuentas(){
+		CuentaNegocio neg = new CuentaNegocioImpl();
+		return neg.obtenerListaCuentas();
 	}
 	
 	
@@ -64,6 +73,7 @@ public class ServletCuentas extends HttpServlet {
 			request.setAttribute("mensajeAlta",mensajeSalida);
 		}
 		
+<<<<<<< Updated upstream
 		if(request.getParameter("btnModificar")!=null) {
 			String mensajeUpdate = "no se pudo modificar";
 			if(modificarCuenta(request)) {
@@ -75,6 +85,8 @@ public class ServletCuentas extends HttpServlet {
 		actualizarProximoNumeroDeCuenta();
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 		dispatcher.forward(request, response);
+=======
+>>>>>>> Stashed changes
 	}
 	
 	public boolean agregarCuenta(HttpServletRequest request) {

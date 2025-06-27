@@ -2,9 +2,11 @@ package datosImpl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import datos.CuentaDao;
 import entidades.Cuenta;
+import entidades.TipoCuenta;
 
 public class CuentaDaoImpl implements CuentaDao {
 	private Conexion cn;
@@ -56,6 +58,7 @@ public class CuentaDaoImpl implements CuentaDao {
 		
 	}
 	@Override
+<<<<<<< Updated upstream
 	public boolean update(Cuenta cuenta) {
 		boolean update = false;
 		String query = "UPDATE cuentas SET  "
@@ -84,6 +87,33 @@ public class CuentaDaoImpl implements CuentaDao {
 			e.printStackTrace();
 		}
 		return update;
+=======
+	public ArrayList<Cuenta> obtenerCuentas() {
+		ArrayList<Cuenta> listaCuentas = new ArrayList<Cuenta>();
+		TipoCuenta tipoCuenta = new TipoCuenta();
+		try {
+			cn = new Conexion();
+			cn.Open();
+			String query = "SELECT * FROM CUENTAS";
+			
+			ResultSet rs = cn.query(query);
+			if(rs.next()) {
+				Cuenta cuenta = new Cuenta();
+				cuenta.setCbu(rs.getString("Cbu_Ctas"));
+				cuenta.setDni(rs.getString("DNI_Ctas"));
+				cuenta.setFechaCreacion(rs.getString("fechaCreacion_Ctas"));
+				cuenta.setNumero(rs.getInt("numeroCuenta_Ctas"));
+				cuenta.setSaldo(rs.getFloat("saldo_Ctas"));
+				tipoCuenta.setIdTipo(rs.getInt("tipoCta_Ctas"));
+				cuenta.setTipo(tipoCuenta);
+				listaCuentas.add(cuenta);
+			}
+			cn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaCuentas;
+>>>>>>> Stashed changes
 	}
 
 }

@@ -1,3 +1,4 @@
+<%@page import="entidades.Cuenta"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
        <%@ page import="java.util.ArrayList" %>
@@ -216,7 +217,7 @@
             <form id="form-buscar">
               <label>Ingrese DNI del cliente</label>
               <input type="text" name="DNIClienteBuscar" />
-              <input type="submit" value="Buscar Cuentas" />
+              <input type="submit" value="Buscar Cuentas" name="btnBuscar" />
             </form>
           </div>
           <div id="listado-cuenta">
@@ -236,7 +237,15 @@
               <tbody>
               <form method="post" action="ServletCuentas">
                 <tr>
+                <%
+                ArrayList<Cuenta> listaCuentasSv;
+                if(request.getAttribute("listaCuentas")!=null){
+                listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("listaCuentas");
+                	
+                for(Cuenta cuenta : listaCuentasSv){
+                %>
                   <td>
+<<<<<<< Updated upstream
                     <input name="txtTablaNumero" type="text" value="Obtener Numero DB" disabled />
                   </td>
 
@@ -246,29 +255,58 @@
 
                   <td>
                     <input name="txtTablaCbu" type="text" value="CBU" disabled />
+=======
+                  <input type="Text" name="
+                    <%= cuenta.getNumero() %>">
                   </td>
 
-</body>
                   <td>
+                  <input type="Text" name="
+                    <%= cuenta.getDni() %>">
+                  </td>
+
+                  <td>
+                  <input type="text" name="
+                    <%= cuenta.getCbu() %>">
+>>>>>>> Stashed changes
+                  </td>
+                  <td>
+<<<<<<< Updated upstream
                     <select name="ddlTablaTipo">
                       <option value="1">Caja de Ahorro</option>
                       <option value="1">Cuenta Corriente</option>
+=======
+                    <select>
+                      <option value="<%= cuenta.getTipo().getIdTipo() %>"><%= cuenta.getTipo().getNombre() %></option>
+>>>>>>> Stashed changes
                     </select>
                   </td>
+         		<td>
+         		<input type="text" name="
+         		<%= cuenta.getSaldo() %>">
                 </td>
                 <td>
+<<<<<<< Updated upstream
                   <input name="txtTablaSaldo" type="text" value="10.000">
+=======
+                <input type="text" name="
+                   <%= cuenta.getFechaCreacion() %>">
+>>>>>>> Stashed changes
                 </td>
+                  <% }} %>
                   <td>
+<<<<<<< Updated upstream
                     <input name="txtTablaFecha" type="date" />
                   <td>
                     <input
+=======
+                   <input
+>>>>>>> Stashed changes
                       type="submit"
                       name="btnModificar"
                       class="btn btn-warning"
                       value="Modificar"
                     />
-                  </td>
                   <td>
                     <input
                       type="submit"
