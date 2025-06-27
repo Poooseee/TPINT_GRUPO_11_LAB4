@@ -25,18 +25,20 @@ CuentaDao dao = new CuentaDaoImpl();
 		return dao.obtenerUltimoNumCuenta()+1;
 	}
 	@Override
-<<<<<<< Updated upstream
+
 	public boolean update(Cuenta cuenta) {
 		boolean update = false;
 		ClienteNegocio negCli = new ClienteNegocioImpl();
+		System.out.println(cuenta.getDni());
+		System.out.println(cuenta.getNumero());
 		if(negCli.existe(cuenta.getDni())) {
 			update = dao.update(cuenta);
 		}
 		return update;
-=======
+	}
+	
 	public ArrayList<Cuenta> obtenerListaCuentas() {
 		return dao.obtenerCuentas();
->>>>>>> Stashed changes
 	}
 
 }

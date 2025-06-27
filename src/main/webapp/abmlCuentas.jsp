@@ -1,3 +1,4 @@
+<%@page import="java.io.PrintWriter"%>
 <%@page import="entidades.Cuenta"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -205,8 +206,10 @@
           </form>
           <%
          String mensaje =(String)request.getAttribute("mensajeAlta");
+         if(request.getAttribute("btnAgregar")!=null){
           %>
           <%=mensaje %>
+          <% } %>
         </div>
       </div>
 
@@ -220,6 +223,7 @@
               <input type="submit" value="Buscar Cuentas" name="btnBuscar" />
             </form>
           </div>
+          <form method="post" action="ServletCuentas">
           <div id="listado-cuenta">
             <table>
               <thead>
@@ -235,78 +239,49 @@
                 </tr>
               </thead>
               <tbody>
-              <form method="post" action="ServletCuentas">
-                <tr>
                 <%
                 ArrayList<Cuenta> listaCuentasSv;
-                if(request.getAttribute("listaCuentas")!=null){
-                listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("listaCuentas");
-                	
+                if(request.getAttribute("ListaCuentas")!=null){
+                listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("ListaCuentas");
                 for(Cuenta cuenta : listaCuentasSv){
                 %>
+                <form>
+                <tr>
                   <td>
-<<<<<<< Updated upstream
-                    <input name="txtTablaNumero" type="text" value="Obtener Numero DB" disabled />
+                  <input type="hidden" value="
+                    <%=cuenta.getNumero() %>" name="txtTablaNumero">
+                    <%=cuenta.getNumero() %>
                   </td>
 
                   <td>
-                    <input name="txtTablaDni" type="text" value="DNI" disabled />
+                  <input type="Hidden" value="
+                    <%=cuenta.getDni() %>" name="txtTablaDni">
+                    <%=cuenta.getDni() %>
                   </td>
 
                   <td>
-                    <input name="txtTablaCbu" type="text" value="CBU" disabled />
-=======
-                  <input type="Text" name="
-                    <%= cuenta.getNumero() %>">
+                  <input type="text" value="
+                    <%=cuenta.getCbu() %>" name="txtTablaCbu">
                   </td>
-
-                  <td>
-                  <input type="Text" name="
-                    <%= cuenta.getDni() %>">
-                  </td>
-
-                  <td>
-                  <input type="text" name="
-                    <%= cuenta.getCbu() %>">
->>>>>>> Stashed changes
-                  </td>
-                  <td>
-<<<<<<< Updated upstream
-                    <select name="ddlTablaTipo">
-                      <option value="1">Caja de Ahorro</option>
-                      <option value="1">Cuenta Corriente</option>
-=======
-                    <select>
-                      <option value="<%= cuenta.getTipo().getIdTipo() %>"><%= cuenta.getTipo().getNombre() %></option>
->>>>>>> Stashed changes
-                    </select>
+                  <td>   
+                      <input type="Text" value="<%= cuenta.getTipo().getNombre() %> " name="txtTablaTipo"></input>
                   </td>
          		<td>
-         		<input type="text" name="
-         		<%= cuenta.getSaldo() %>">
+         		<input type="Text" value="
+         		<%=cuenta.getSaldo() %>" name="txtTablaSaldo">
                 </td>
                 <td>
-<<<<<<< Updated upstream
-                  <input name="txtTablaSaldo" type="text" value="10.000">
-=======
-                <input type="text" name="
-                   <%= cuenta.getFechaCreacion() %>">
->>>>>>> Stashed changes
+                <input type="Text" value="
+                   <%=cuenta.getFechaCreacion() %>" name="txtTablaFecha">
                 </td>
-                  <% }} %>
                   <td>
-<<<<<<< Updated upstream
-                    <input name="txtTablaFecha" type="date" />
-                  <td>
-                    <input
-=======
                    <input
->>>>>>> Stashed changes
                       type="submit"
                       name="btnModificar"
                       class="btn btn-warning"
                       value="Modificar"
                     />
+                    </td>
                   <td>
                     <input
                       type="submit"
@@ -316,10 +291,12 @@
                     />
                   </td>
                 </tr>
-              </form>
+                </form>
+                  <% }} %>
               </tbody>
             </table>
           </div>
+         </form>
         </div>
       </div>
     </main>

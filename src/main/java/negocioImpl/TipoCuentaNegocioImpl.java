@@ -11,14 +11,13 @@ import entidades.TipoCuenta;
 public class TipoCuentaNegocioImpl implements TipoCuentaNegocio {
 TiposCuentaDao dao = new TipoCuentaDaoImpl();
 	@Override
-	public String obtenerNombre(int idTipo) {
-		
-	return dao.ObtenerNombreDelTipo(idTipo);
-	}
-	
-	@Override
 	public ArrayList<TipoCuenta> obtenerTiposCuentas() {
 		return dao.obtenerTiposCuentas();
+	}
+
+	@Override
+	public int obtenerId(String NombreTipo) {
+	return	dao.ObtenerIdDelTipo(NombreTipo);
 	}
 
 }
