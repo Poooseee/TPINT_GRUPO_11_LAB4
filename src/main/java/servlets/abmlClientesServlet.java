@@ -29,15 +29,6 @@ public class abmlClientesServlet extends HttpServlet {
     public abmlClientesServlet() {
         super();
     }
-
-    public void prueba() {
-    	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
-    	List<Localidad> listaLocalidades = locNeg.obtenerLocalidadesXProvXPais("Argentina", "Buenos Aires");
-    	for(Localidad l : listaLocalidades) {
-    		System.out.println(l.getNombre());
-    	}
-    }
-    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 		ClienteNegocioImpl cliNeg = new ClienteNegocioImpl();
