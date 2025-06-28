@@ -97,7 +97,7 @@ public class CuentaDaoImpl implements CuentaDao {
 			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
 					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId"
 					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
-					+ " WHERE cuentas.baja_Ctas = 'FALSE' ";
+					+ " WHERE cuentas.baja_Ctas = '0' ";
 			if(dni!=null || !(dni.isBlank())) {
 				query+=" AND DNI_Ctas LIKE '%"+dni+"%'";
 			}
@@ -121,6 +121,26 @@ public class CuentaDaoImpl implements CuentaDao {
 			e.printStackTrace();
 		}
 		return listaCuentas;
+	}
+	@Override
+	public boolean eliminar(int NumeroCuenta) {
+		Conexion cn = new Conexion();
+		boolean eliminado = false;
+		System.out.println("Cuenta a eliminar dao: " + NumeroCuenta);
+		try {
+			cn.Open();
+			String query = "UPDATE cuentas SET baja_Ctas = '1' WHERE NumeroCuenta_Ctas = ?";
+			PreparedStatement ps = cn.prepare(query);
+			ps.setInt(1, NumeroCuenta);
+			
+			eliminado = ps.executeUpdate() > 0;
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {			
+			cn.close();
+		}
+		return eliminado;
 	}
 
 

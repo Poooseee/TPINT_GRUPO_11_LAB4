@@ -38,5 +38,9 @@ CuentaDao dao = new CuentaDaoImpl();
 	public ArrayList<Cuenta> obtenerListaCuentas(String dni) {
 		return dao.obtenerCuentas(dni);
 	}
+	@Override
+	public boolean eliminarCuenta(int numeroCuenta) {
+		return dao.eliminar(numeroCuenta);
+	}
 
 }
