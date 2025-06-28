@@ -86,6 +86,14 @@ public class ServletCuentas extends HttpServlet {
 			
 		}
 		
+		if(request.getParameter("btnEliminar")!=null) {
+			String mensajeEliminado = "No se pudo eliminar";
+			if(eliminarCuenta(request)) {
+				mensajeEliminado = "Eliminado correctamente";
+			}
+			request.setAttribute("mensajeEliminado", mensajeEliminado);
+		}
+		
 		String dni="";
 		if(request.getParameter("btnBuscar")!=null) {
            dni = request.getParameter("DNIClienteBuscar");			
@@ -121,7 +129,6 @@ private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	cuenta.setDni(request.getParameter("DNI"));
 	cuenta.setFechaCreacion(request.getParameter("fechaCreacion"));
 	cuenta.setNumero(neg.obtenerNuevoNumero());
-	
 	cuenta.setTipo(tipC);
 	cuenta.setSaldo(10000);
 	
@@ -145,8 +152,14 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	cuenta.setFechaCreacion(request.getParameter("txtTablaFecha").trim());
 	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero").trim()));
 	cuenta.setTipo(tipC);
-	cuenta.setSaldo(10000);
+	cuenta.setSaldo(Float.parseFloat(request.getParameter("txtTablaSaldo").trim()));
 	return cuenta;
+}
+
+private boolean eliminarCuenta(HttpServletRequest request) {
+	CuentaNegocio neg = new CuentaNegocioImpl();
+	int numeroCuenta = Integer.parseInt(request.getParameter("txtTablaNumero").trim());
+	return neg.eliminarCuenta(numeroCuenta);
 }
 
 }

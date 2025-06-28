@@ -250,6 +250,7 @@
 				    for (Cuenta cuenta : listaCuentasSv) {
 				%>
 				<tr>
+				<form method="post" action="ServletCuentas">
 				  <td>
 				    <input type="hidden" value="<%= cuenta.getNumero() %>" name="txtTablaNumero">
 				    <%= cuenta.getNumero() %>
@@ -288,6 +289,7 @@
 				  <td>
 				    <input type="submit" name="btnEliminar" class="btn btn-danger" value="Eliminar" />
 				  </td>
+				</form>
 				</tr>
 				<%
 				    }
@@ -309,6 +311,13 @@
             }
             %>
             <span><%= resultModificacion %></span>
+            <%
+            String resultEliminacion = "";
+            if(request.getAttribute("mensajeEliminado")!=null){
+            	resultEliminacion = (String)request.getAttribute("mensajeEliminado");
+            }
+             %>
+             <span><%= resultEliminacion %></span>
           </div>
          </form>
         </div>
@@ -317,7 +326,7 @@
     <script>
   $(document).ready(function() {
     $('#tabla-cuentas').DataTable({
-      "pageLength": 2,
+      "pageLength": 8,
       "lengthChange": false,
       "searching": false,
       "language": {
