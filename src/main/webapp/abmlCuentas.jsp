@@ -206,16 +206,17 @@
             </div>
             <input type="submit" value="Vincular Cuenta al Cliente" name="btnAgregar"/>
           </form>
-          <%
-         String mensaje =(String)request.getAttribute("mensajeAlta");
-         if(request.getAttribute("btnAgregar")!=null){
-          if(request.getAttribute("mensajeAlta")!=null){
-          mensaje =(String)request.getAttribute("mensajeAlta");        	  
-          }
-          %>
-          <%=mensaje %>
-          <% } %>
         </div>
+			<%
+			    String mensaje = (String) request.getAttribute("mensajeAlta");
+			    if (mensaje != null) {
+			%>
+			    <p style="color:<%= mensaje.trim().equals("La cuenta fue agregada correctamente") ? "green" : "red" %>;">
+			        <%= mensaje %>
+			    </p>
+			<%
+			    }
+			%>
       </div>
 
       <div id="div-listado-cuenta">

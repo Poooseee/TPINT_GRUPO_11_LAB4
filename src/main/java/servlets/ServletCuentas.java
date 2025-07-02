@@ -68,11 +68,35 @@ public class ServletCuentas extends HttpServlet {
 		
 		if(request.getParameter("btnAgregar")!=null) {
 			
-			String mensajeSalida = "no se pudo cargar";
-			if(agregarCuenta(request)) {
-				mensajeSalida="Cargado Correctamente";
+			int codigoInsercion = agregarCuenta(request);
+			String mensajeSalida = "";
+			
+			switch(codigoInsercion) {
+			case -1:{
+				 mensajeSalida = "El cliente NO existe";
 			}
+			break;
+			case -2:{
+				 mensajeSalida = "El cliente YA TIENE 3 cuentas ACTIVAS";
+			}
+			break;
+			case -3:{
+				 mensajeSalida = "Hubo un error inesperado al insertar la cuenta";
+			}
+			break;
+			case 1:{
+				 mensajeSalida = "La cuenta fue agregada correctamente";
+			}
+			break;
+			default:{
+				 mensajeSalida = "Hubo un error";
+			}
+			}
+			
+			
+			System.out.println(mensajeSalida);
 			request.setAttribute("mensajeAlta",mensajeSalida);
+
 		}
 		
 		
@@ -110,12 +134,13 @@ public class ServletCuentas extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 	
-	public boolean agregarCuenta(HttpServletRequest request) {
-		CuentaNegocio negCu = new CuentaNegocioImpl();
+	public int agregarCuenta(HttpServletRequest request) {
+		CuentaNegocioImpl negCu = new CuentaNegocioImpl();
 		Cuenta cuenta = cargarCuentaConDatosIngresados(request);
 	
 		return negCu.insert(cuenta);
 	}
+	
 private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	
 	CuentaNegocio neg = new CuentaNegocioImpl();

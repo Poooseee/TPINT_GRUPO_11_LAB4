@@ -13,7 +13,8 @@ public class CuentaDaoImpl implements CuentaDao {
 	@Override
 	public boolean insert(Cuenta cuenta) {
 	    boolean insert = false;
- String query="INSERT INTO CUENTAS(numeroCuenta_Ctas,DNI_Ctas,fechaCreacion_Ctas,tipoCta_Ctas,"
+
+	    String query="INSERT INTO CUENTAS(numeroCuenta_Ctas,DNI_Ctas,fechaCreacion_Ctas,tipoCta_Ctas,"
 	    		+ "CBU_Ctas,saldo_Ctas) VALUES(?,?,?,?,?,?)";
 		cn = new Conexion();
 		cn.Open();
@@ -141,6 +142,36 @@ public class CuentaDaoImpl implements CuentaDao {
 			cn.close();
 		}
 		return eliminado;
+	}
+	@Override
+	public boolean tieneMenosDe3Cuentas(String dni) {
+		boolean valido = false;
+		int cantidad = 0;
+		
+		try {
+			cn = new Conexion();
+			cn.Open();
+			
+			String query = "SELECT COUNT(*) AS cantidad FROM CUENTAS C WHERE C.DNI_Ctas = ? AND C.baja_Ctas = FALSE";
+			PreparedStatement ps = cn.prepare(query);
+			ps.setString(1, dni);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				cantidad = rs.getInt("cantidad");
+			}
+			
+			rs.close();
+			ps.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return cantidad < 3;
+
 	}
 
 

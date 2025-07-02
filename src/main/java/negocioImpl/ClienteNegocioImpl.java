@@ -8,7 +8,7 @@ import negocio.ClienteNegocio;
 
 public class ClienteNegocioImpl implements ClienteNegocio {
 
-    private ClienteDao clienteDao = new ClienteDaoImpl();
+    private ClienteDaoImpl clienteDao = new ClienteDaoImpl();
 
     @Override
     public List<Cliente> listar() {
@@ -35,4 +35,7 @@ public class ClienteNegocioImpl implements ClienteNegocio {
 		boolean existe = clienteDao.existe(dni);
 		return existe;
 	}
+
+	
+	
 }
