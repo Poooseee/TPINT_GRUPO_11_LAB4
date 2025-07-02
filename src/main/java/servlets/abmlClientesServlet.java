@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -39,9 +41,6 @@ public class abmlClientesServlet extends HttpServlet {
 	    request.setAttribute("listaClientes", listaClientes);
 	    request.setAttribute("listaPaises", listaPaises);
 	    
-	    System.out.println("AAAAA"+ listaPaises);
-		//String idPais = request.getParameter("ddlNacionalidad"); 
-		//System.out.println(idPais);
 
 	    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 	    rd.forward(request, response);
@@ -51,9 +50,38 @@ public class abmlClientesServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int filas = 0;
 		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
+		Cliente c = new Cliente();
+		Pais p = new Pais();
+		PaisNegocioImpl pNeg = new PaisNegocioImpl();
+		
+		//RECUPERAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
+		c.setDNI(request.getParameter("txtDni"));
+		c.setCUIL(request.getParameter("txtCuil"));
+		c.setNombre(request.getParameter("txtNombre"));
+		c.setApellido(request.getParameter("txtApellido"));
+		c.setSexo(request.getParameter("ddlSexo"));
+		p = pNeg.obtenerPaisxNacionalidad(request.getParameter("ddlNacionalidad"));
+		c.setNacionalidad(p);
+		c.setDomicilio(request.getParameter("txtDomicilio"));
+		String fechaStr = request.getParameter("txtFechaDeNacimiento");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+		    java.util.Date utilDate = sdf.parse(fechaStr);
+		    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		    c.setFechaNacimiento(sqlDate); // si espera java.sql.Date
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}
+		c.setEmail(request.getParameter("txtCorreo"));
+		c.setTelefono(request.getParameter("txtTelefono"));
+		c.setNick(request.getParameter("txtUsuario"));
+		c.setPassword(request.getParameter("txtContraseña"));
+		String contrasenia2 = request.getParameter("txtContraseña2");
 		String nombrePais = request.getParameter("ddlPais"); 
 		String nombreProv = request.getParameter("ddlProvincia");
 		String nombreLocalidad = request.getParameter("ddlLocalidad");
+		
+		
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
 		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
@@ -64,6 +92,21 @@ public class abmlClientesServlet extends HttpServlet {
 
 		    request.setAttribute("listaPaises", listaPaises);
 		    request.setAttribute("listaProvincias", listaProvincias);
+		    
+		    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
+		    request.setAttribute("dniIngresado", c.getDNI());
+		    request.setAttribute("cuilIngresado", c.getCUIL());
+		    request.setAttribute("nombreIngresado", c.getNombre());
+		    request.setAttribute("apellidoIngresado", c.getApellido());
+		    request.setAttribute("sexoSeleccionado", c.getSexo());
+		    request.setAttribute("nacionalidadSeleccionada", c.getNacionalidad());
+		    request.setAttribute("domicilioIngresado", c.getDomicilio());
+		    request.setAttribute("fechaIngresada", c.getFechaNacimiento());
+		    request.setAttribute("correoIngresado", c.getEmail());
+		    request.setAttribute("telefonoIngresado", c.getTelefono());
+		    request.setAttribute("usuarioIngresado", c.getNick());
+		    request.setAttribute("contraseniaIngresada", c.getPassword());
+		    request.setAttribute("contrasenia2Ingresada", contrasenia2);
 		    request.setAttribute("paisSeleccionado", nombrePais);
 
 		    if (nombreProv != null && !nombreProv.equals("")) {

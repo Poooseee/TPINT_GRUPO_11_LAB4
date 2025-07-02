@@ -5,7 +5,7 @@
 <%@ page import="entidades.Provincia" %>
 <%@ page import="entidades.Localidad" %>
 <%@ page import="entidades.Cliente" %>
-
+<%@ page import= "java.sql.Date"%>
 
 
 <!DOCTYPE html>
@@ -197,43 +197,111 @@
           <div class="form-lado">
             <div>
               <label for="txtDni">DNI</label>
-              <input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" required />
+              <%
+          	  String dniIngresado = "";
+              if (request.getAttribute("dniIngresado") != null) {
+            	  dniIngresado = request.getAttribute("dniIngresado").toString();
+				}
+             if(dniIngresado == null || dniIngresado == ""){
+                    %>
+			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" placeholder="Ingresar DNI" required /><% }else{%>
+			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" value="<%=dniIngresado %>" required /><%} %>
             </div>
-
             <div>
               <label for="txtCuil">CUIL</label>
-              <input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" required />
+             <%
+          	  String cuilIngresado = "";
+              if (request.getAttribute("cuilIngresado") != null) {
+            	  cuilIngresado = request.getAttribute("cuilIngresado").toString();
+				}
+             if(cuilIngresado == null || cuilIngresado == ""){
+                    %>
+			<input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" placeholder="Ingresar CUIL" required /><% }else{%>
+			<input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" value="<%= cuilIngresado %>" required /><%} %>   
             </div>
 
             <div>
               <label for="txtNombre">Nombre</label>
-              <input type="text" id="txtNombre" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtNombre" required />
+             <%
+          	  String nombreIngresado = "";
+              if (request.getAttribute("nombreIngresado") != null) {
+            	  nombreIngresado = request.getAttribute("nombreIngresado").toString();
+				}
+             if(nombreIngresado == null || nombreIngresado == ""){
+                    %>
+			<input type="text" id="txtNombre" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtNombre" placeholder="Ingresar nombre" required /><% }else{%>
+			<input type="text" id="txtNombre" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtNombre" value="<%= nombreIngresado%>" required /><%} %>
             </div>
 
             <div>
               <label for="txtApellido">Apellido</label>
-              <input type="text" id="txtApellido" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtApellido" required/>
+              <%
+          	  String apellidoIngresado = "";
+              if (request.getAttribute("apellidoIngresado") != null) {
+            	  apellidoIngresado = request.getAttribute("apellidoIngresado").toString();
+				}
+             if(apellidoIngresado == null || apellidoIngresado == ""){
+                    %>
+			<input type="text" id="txtApellido" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtApellido" placeholder="Ingresar apellido" required/><% }else{%>
+			<input type="text" id="txtApellido" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtApellido" value="<%= apellidoIngresado %>" required/><%} %>
             </div>
 
             <div>
-              <label for="ddlSexo">Sexo</label>
-              <select id="ddlSexo" name="ddlSexo" required>
-                <option value="">Seleccione</option>
-                <option>Masculino</option>
-                <option>Femenino</option>
-              </select>
+				<label for="ddlSexo">Sexo</label>
+				<select id="ddlSexo" name="ddlSexo" required>
+				<%
+				    String sexoSeleccionado = "";
+				    if (request.getAttribute("sexoSeleccionado") != null) {
+				        sexoSeleccionado = request.getAttribute("sexoSeleccionado").toString();
+				    }
+				
+				    if (sexoSeleccionado == null || sexoSeleccionado.equals("")) {
+				%>
+				    <option value="" selected>Seleccione</option>
+				    <option value="Masculino">Masculino</option>
+				    <option value="Femenino">Femenino</option>
+				<%
+				    } else {
+				%>
+				    <option value="<%= sexoSeleccionado %>" selected><%= sexoSeleccionado %></option>
+				    <option value="">Seleccione</option>
+				<%
+				        if (sexoSeleccionado.equals("Masculino")) {
+				%>
+				    <option value="Femenino">Femenino</option>
+				<%
+				        } else if (sexoSeleccionado.equals("Femenino")) {
+				%>
+				    <option value="Masculino">Masculino</option>
+				<%
+				        }
+				    }
+				%>
+				</select>
             </div>
 
             <div>
               <label for="ddlNacionalidad">Nacionalidad</label>
               <select id="ddlNacionalidad" required name="ddlNacionalidad" >
-                <option value="">Seleccione</option>
   				<%
 				    List<Pais> listaNacionalidades = (List<Pais>) request.getAttribute("listaPaises");
+            		Pais nacionalidadSeleccionada = new Pais();
+            		  
+                  	if (request.getAttribute("nacionalidadSeleccionada") != null) {
+                  		nacionalidadSeleccionada = (Pais) request.getAttribute("nacionalidadSeleccionada");
+                  	}
+                  	if(nacionalidadSeleccionada == null || nacionalidadSeleccionada.getNacionalidad() == ""){
+                    %>
+                  	<option value="" selected>Seleccione</option>
+                  <% }else{%>
+                  	<option selected><%= nacionalidadSeleccionada.getNacionalidad() %></option>
+                  	<option value="">Seleccione</option>
+      			<%} %>
+                      <%   
 				    if (listaNacionalidades != null) {
 				        for (Pais p : listaNacionalidades) {
 				  %>
-				      <option value="<%= p.getId() %>"><%= p.getNacionalidad() %></option>
+				      <option value="<%= p.getNacionalidad() %>"><%= p.getNacionalidad() %></option>
 				  <%
 				        }
 				    }
@@ -249,11 +317,12 @@
             	if (request.getAttribute("paisSeleccionado") != null) {
             	    paisSeleccionado = request.getAttribute("paisSeleccionado").toString();
             	}
-            	if(paisSeleccionado == null){
+            	if(paisSeleccionado == null || paisSeleccionado == ""){
               %>
-            	<option value="">Seleccione</option>
+            	<option value="" selected>Seleccione</option>
             <% }else{%>
             	<option selected><%= paisSeleccionado %></option>
+            	<option value="">Seleccione</option>
 			<%} %>
                 <%   
 				    if (listaPaises != null) {
@@ -275,11 +344,12 @@
             	if (request.getAttribute("provinciaSeleccionada") != null) {
             	    provinciaSeleccionada = request.getAttribute("provinciaSeleccionada").toString();
             	}
-            	if(provinciaSeleccionada == null){
+            	if(provinciaSeleccionada == null || provinciaSeleccionada == ""){
                     %>
-                	<option value="">Seleccione</option>
+                	<option value="" selected>Seleccione</option>
                 <% }else{%>
                 	<option selected><%= provinciaSeleccionada %></option>
+                	<option value="">Seleccione</option>
     			<%} %>
                   <%
 				    if (listaProvincias != null) {
@@ -304,11 +374,12 @@
                 if (request.getAttribute("localidadSeleccionada") != null) {
                	    localidadSeleccionada = request.getAttribute("localidadSeleccionada").toString();
                	}
-               	if(localidadSeleccionada == null){
+               	if(localidadSeleccionada == null || localidadSeleccionada == ""){
                        %>
-                   	<option value="">Seleccione</option>
+                   	<option value="" selected>Seleccione</option>
                    <% }else{%>
                    	<option selected><%= localidadSeleccionada %></option>
+                   	<option value="">Seleccione</option>
        			<%} %>
                   <%
 				    
@@ -325,48 +396,76 @@
             
             <div>
               <label for="txtDomicilio">Domicilio</label>
-              <input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" required />
+              <%
+          	  String domicilioIngresado = "";
+              if (request.getAttribute("domicilioIngresado") != null) {
+            	  domicilioIngresado = request.getAttribute("domicilioIngresado").toString();
+				}
+             if(domicilioIngresado == null || domicilioIngresado == ""){
+                    %>
+			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" placeholder="Ingresar domicilio" required /><% }else{%>
+			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" value="<%= domicilioIngresado %> " required /><%} %>
             </div>
-
             <div>
               <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
-              <input
-                type="date"
-                id="txtFechaDeNacimiento"
-                name="txtFechaDeNacimiento"
-                required
-              />
+              <%
+              Date fechaIngresada = null;
+              if (request.getAttribute("fechaIngresada") != null) {
+            	    fechaIngresada = (Date) request.getAttribute("fechaIngresada");
+				}
+             if(fechaIngresada == null){
+                    %>
+				<input type="date" id="txtFechaDeNacimiento" name="txtFechaDeNacimiento" required/><% }else{%>
+				<input type="date" id="txtFechaDeNacimiento" name="txtFechaDeNacimiento" value="<%= fechaIngresada %>" required/><%} %>
             </div>
 
             <div>
               <label for="txtCorreo">Correo</label>
-              <input type="email" title ="Máximo 30 caractéres" type="email" id="txtCorreo" name="txtCorreo" required />
+              <%
+          	  String correoIngresado = "";
+              if (request.getAttribute("correoIngresado") != null) {
+            	  correoIngresado = request.getAttribute("correoIngresado").toString();
+				}
+             if(correoIngresado == null || correoIngresado == ""){
+                    %>
+			<input type="email" title ="Máximo 30 caractéres" type="email" id="txtCorreo" name="txtCorreo" placeholder="Ingresar correo" required /><% }else{%>
+			<input type="email" title ="Máximo 30 caractéres" type="email" id="txtCorreo" name="txtCorreo" value="<%= correoIngresado%>" required /><%} %>
             </div>
 
             <div>
               <label for="txtTelefono">Teléfonos</label>
-              <input type="text" title="Solo números. Máximo 15 caractéres" id="txtTelefono" pattern="^\d{1,15}$" title="Solo números. Máximo 15 caractéres" name="txtTelefono" required/>
+              <%
+          	  String telefonoIngresado = "";
+              if (request.getAttribute("telefonoIngresado") != null) {
+            	  telefonoIngresado = request.getAttribute("telefonoIngresado").toString();
+				}
+             if(telefonoIngresado == null || telefonoIngresado == ""){
+                    %>
+			<input type="text" title="Solo números. Máximo 15 caractéres" id="txtTelefono" pattern="^\d{1,15}$" title="Solo números. Máximo 15 caractéres" name="txtTelefono" placeholder="Ingresar teléfono" required/><% }else{%>
+			<input type="text" title="Solo números. Máximo 15 caractéres" id="txtTelefono" pattern="^\d{1,15}$" title="Solo números. Máximo 15 caractéres" name="txtTelefono" value="<%= telefonoIngresado%>" required/><%} %>
             </div>
 
             <div>
               <label for="txtUsuario">Usuario</label>
-              <input type="text" id="txtUsuario" pattern="^[^\s]{1,20}$" title="Máximo 20 caractéres. Sin espacios en blanco" name="txtUsuario" required/>
+              <%
+          	  String usuarioIngresado = "";
+              if (request.getAttribute("usuarioIngresado") != null) {
+            	  usuarioIngresado = request.getAttribute("usuarioIngresado").toString();
+				}
+             if(usuarioIngresado == null || usuarioIngresado == ""){
+                    %>
+			<input type="text" id="txtUsuario" pattern="^[^\s]{1,20}$" title="Máximo 20 caractéres. Sin espacios en blanco" name="txtUsuario" placeholder="Ingresar usuario" required/><% }else{%>
+			<input type="text" id="txtUsuario" pattern="^[^\s]{1,20}$" title="Máximo 20 caractéres. Sin espacios en blanco" name="txtUsuario" value="<%= usuarioIngresado%>" required/><%} %>  
             </div>
 
             <div>
               <label for="txtContraseña">Contraseña</label>
-              <input type="password" id="txtContraseña" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContraseña" required/>
+			  <input type="password" id="txtContraseña" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContraseña" placeholder="Ingresar contraseña" required/>  
             </div>
 
             <div>
               <label for="txtContraseña2">Confirmar Contraseña</label>
-              <input
-                type="password"
-                id="txtContraseña2"
-                name="txtContraseña2"
-				required
-				pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco"
-              />
+			  <input type="password" id="txtContraseña2" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContraseña2" placeholder="Repetir contraseña" required/>
             </div>
           </div>
 
