@@ -156,7 +156,7 @@
       <div id="div-alta-cuenta">
         <h2>DAR DE ALTA</h2>
         <div id="div-form-alta">
-          <form id="form-alta" action="ServletCuentas" method="post">
+          <form id="form-alta" class="form-confirm" action="ServletCuentas" method="post">
             <div>
            <%
            int numeroDeCuenta = 0;
@@ -174,26 +174,26 @@
             </div>
             <div>
               <label>DNI del Titular</label>
-              <input type="text" name="DNI" id="" />
+              <input type="text" name="DNI" id="" required pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" />
             </div>
             <div>
               <label>CBU</label>
-              <input type="text" name="CBU" />
+              <input type="text" name="CBU" required pattern="^\d{1,20}$" title="Solo números. Máximo 20 caractéres" />
             </div>
             <div>
               <label>Fecha de Creación</label>
-              <input type="date" name="fechaCreacion" />
+              <input type="date" name="fechaCreacion" required />
             </div>
             <div>
               <label>Tipo de Cuenta</label>
-              <select name="ddlTipoCuenta" id="">
+              <select name="ddlTipoCuenta" id="" required>
                 <%
                 		ArrayList<TipoCuenta> tiposCuentas;
                             if(request.getAttribute("listaTiposCuentas") != null) {
                             	tiposCuentas = (ArrayList<TipoCuenta>) request.getAttribute("listaTiposCuentas");
                                 for(TipoCuenta tipo : tiposCuentas) {
                         %>
-                            <option value="<%= tipo.getIdTipo() %>"><%= tipo.getIdTipo() %></option>
+                            <option value="<%= tipo.getIdTipo() %>"><%= tipo.getNombre() %></option>
                         <%
                                 } // for
                             } // if
@@ -222,13 +222,13 @@
         <h2>LISTADO Y MODIFICACION</h2>
         <div id="contenedor-listado-cuenta">
           <div id="buscar-cuenta">
-            <form method="post" action="ServletCuentas" id="form-buscar">
+            <form method="post"  action="ServletCuentas" id="form-buscar">
               <label>Ingrese DNI del cliente</label>
               <input type="text" name="DNIClienteBuscar" />
               <input type="submit" value="Buscar Cuentas" name="btnBuscar" />
             </form>
           </div>
-          <form method="post" action="ServletCuentas">
+          <form method="post" class="form-confirm" action="ServletCuentas">
           <div id="listado-cuenta">
             <table id="tabla-cuentas">
               <thead>
@@ -250,7 +250,7 @@
 				    for (Cuenta cuenta : listaCuentasSv) {
 				%>
 				<tr>
-				<form method="post" action="ServletCuentas">
+				<form method="post" action="ServletCuentas" class="form-confirm">
 				  <td>
 				    <input type="hidden" value="<%= cuenta.getNumero() %>" name="txtTablaNumero">
 				    <%= cuenta.getNumero() %>
@@ -323,6 +323,7 @@
         </div>
       </div>
     </main>
+    <script src="./ConfirmacionForm.js"></script>
     <script>
   $(document).ready(function() {
     $('#tabla-cuentas').DataTable({

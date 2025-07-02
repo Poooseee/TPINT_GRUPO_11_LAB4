@@ -38,6 +38,8 @@ public class abmlClientesServlet extends HttpServlet {
 
 	    request.setAttribute("listaClientes", listaClientes);
 	    request.setAttribute("listaPaises", listaPaises);
+	    
+	    System.out.println("AAAAA"+ listaPaises);
 		//String idPais = request.getParameter("ddlNacionalidad"); 
 		//System.out.println(idPais);
 

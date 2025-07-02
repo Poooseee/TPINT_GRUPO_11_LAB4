@@ -15,10 +15,11 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "SELECT C.*, TxC.telefono_TxC, U.nick_usr, U.contraseña_usr FROM CLIENTES C "
+            String query = "SELECT C.*, TxC.telefono_TxC, U.nick_usr, U.tipo_Usr, U.contraseña_Usr FROM CLIENTES C "
             		+ "LEFT JOIN TELEFONOSXCLIENTES TxC ON C.DNI_Cl = TxC.DNI_TxC "
             		+ "LEFT JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
-            		+ "RIGHT JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr;";
+            		+ "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
+            		+ "WHERE U.tipo_Usr = 'CLIENTE';";
             ResultSet rs = cn.query(query);
             while (rs.next()) {
                 Cliente c = new Cliente();

@@ -65,7 +65,8 @@
     th,
     td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 1em;
+      margin:0 auto;
       min-width: 120px;
     }
 
@@ -192,32 +193,32 @@
       <div id="div-crear-cliente">
         <h2>DAR DE ALTA</h2>
 
-        <form method="post" action="abmlClientesServlet" id="form-agregar-cliente">
+        <form method="post" action="abmlClientesServlet" class="form-confirm" id="form-agregar-cliente">
           <div class="form-lado">
             <div>
               <label for="txtDni">DNI</label>
-              <input type="text" id="txtDni" name="txtDni" />
+              <input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" required />
             </div>
 
             <div>
               <label for="txtCuil">CUIL</label>
-              <input type="text" id="txtCuil" name="txtCuil" />
+              <input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" required />
             </div>
 
             <div>
               <label for="txtNombre">Nombre</label>
-              <input type="text" id="txtNombre" name="txtNombre" />
+              <input type="text" id="txtNombre" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtNombre" required />
             </div>
 
             <div>
               <label for="txtApellido">Apellido</label>
-              <input type="text" id="txtApellido" name="txtApellido" />
+              <input type="text" id="txtApellido" title ="Solo Letras. Máximo 30 caractéres" pattern="^[A-Za-z\s]{1,30}$" name="txtApellido" required/>
             </div>
 
             <div>
               <label for="ddlSexo">Sexo</label>
-              <select id="ddlSexo" name="ddlSexo">
-                <option selected>Seleccione</option>
+              <select id="ddlSexo" name="ddlSexo" required>
+                <option value="">Seleccione</option>
                 <option>Masculino</option>
                 <option>Femenino</option>
               </select>
@@ -225,8 +226,8 @@
 
             <div>
               <label for="ddlNacionalidad">Nacionalidad</label>
-              <select id="ddlNacionalidad" name="ddlNacionalidad">
-                <option selected>Seleccione</option>
+              <select id="ddlNacionalidad" required name="ddlNacionalidad" >
+                <option value="">Seleccione</option>
   				<%
 				    List<Pais> listaNacionalidades = (List<Pais>) request.getAttribute("listaPaises");
 				    if (listaNacionalidades != null) {
@@ -241,7 +242,7 @@
             </div>
             <div>
               <label for="ddlPais">País</label>
-              <select id="ddlPais" name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <select id="ddlPais" required  name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
               <%
               	List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
             	String paisSeleccionado = "";
@@ -250,7 +251,7 @@
             	}
             	if(paisSeleccionado == null){
               %>
-            	<option selected>Seleccione</option>
+            	<option value="">Seleccione</option>
             <% }else{%>
             	<option selected><%= paisSeleccionado %></option>
 			<%} %>
@@ -267,7 +268,7 @@
             </div>
             <div>
               <label for="ddlProvincia">Provincia</label>
-              <select id="ddlProvincia" name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <select id="ddlProvincia" required name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
               <%
               	List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
             	String provinciaSeleccionada = "";
@@ -276,7 +277,7 @@
             	}
             	if(provinciaSeleccionada == null){
                     %>
-                	<option selected>Seleccione</option>
+                	<option value="">Seleccione</option>
                 <% }else{%>
                 	<option selected><%= provinciaSeleccionada %></option>
     			<%} %>
@@ -296,7 +297,7 @@
           <div class="form-lado">
             <div>
               <label for="ddlLocalidad">Localidad</label>
-              <select id="ddlLocalidad" name="ddlLocalidad" onchange="this.form.submit()">
+              <select id="ddlLocalidad" required  name="ddlLocalidad" onchange="this.form.submit()">
               <%
               	List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
             	String localidadSeleccionada = "";
@@ -305,7 +306,7 @@
                	}
                	if(localidadSeleccionada == null){
                        %>
-                   	<option selected>Seleccione</option>
+                   	<option value="">Seleccione</option>
                    <% }else{%>
                    	<option selected><%= localidadSeleccionada %></option>
        			<%} %>
@@ -324,7 +325,7 @@
             
             <div>
               <label for="txtDomicilio">Domicilio</label>
-              <input type="text" id="txtDomicilio" name="txtDomicilio" />
+              <input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" required />
             </div>
 
             <div>
@@ -333,27 +334,28 @@
                 type="date"
                 id="txtFechaDeNacimiento"
                 name="txtFechaDeNacimiento"
+                required
               />
             </div>
 
             <div>
               <label for="txtCorreo">Correo</label>
-              <input type="email" id="txtCorreo" name="txtCorreo" />
+              <input type="email" title ="Máximo 30 caractéres" type="email" id="txtCorreo" name="txtCorreo" required />
             </div>
 
             <div>
               <label for="txtTelefono">Teléfonos</label>
-              <input type="text" id="txtTelefono" name="txtTelefono" />
+              <input type="text" title="Solo números. Máximo 15 caractéres" id="txtTelefono" pattern="^\d{1,15}$" title="Solo números. Máximo 15 caractéres" name="txtTelefono" required/>
             </div>
 
             <div>
               <label for="txtUsuario">Usuario</label>
-              <input type="text" id="txtUsuario" name="txtUsuario" />
+              <input type="text" id="txtUsuario" pattern="^[^\s]{1,20}$" title="Máximo 20 caractéres. Sin espacios en blanco" name="txtUsuario" required/>
             </div>
 
             <div>
               <label for="txtContraseña">Contraseña</label>
-              <input type="password" id="txtContraseña" name="txtContraseña" />
+              <input type="password" id="txtContraseña" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContraseña" required/>
             </div>
 
             <div>
@@ -362,6 +364,8 @@
                 type="password"
                 id="txtContraseña2"
                 name="txtContraseña2"
+				required
+				pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco"
               />
             </div>
           </div>
@@ -480,7 +484,7 @@
       
        <h2>LISTADO, MODIFICACION Y ELIMINACIÓN</h2>
       <div class="contenedor-tabla">
-        <table>
+        <table class="tabla-clientes">
           <thead>
             <tr>
               <th>Dni</th>
@@ -509,7 +513,7 @@
         	if(c.getBaja()!=1)
         	{
 %>
-<form method="post" action="abmlClientesServlet">
+<form method="post" class="form-confirm" action="abmlClientesServlet">
   <tr>
     <td><input type="text" value="<%= c.getDNI() %>" name="listDNI" readonly /></td>
     <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
@@ -536,7 +540,7 @@
 %>
 <tr>
   <td>No hay clientes para mostrar.</td>
-  <% for (int i = 1; i < 14; i++) { %>
+  <% for (int i = 1; i < 16; i++) { %>
     <td></td>
   <% } %>
 </tr>
@@ -568,9 +572,10 @@
 </tbody>
         </table>
       </div>
+    <script src="./ConfirmacionForm.js"></script>
 	<script>
   $(document).ready(function() {
-    $('#tabla-clientes').DataTable({
+    $('.tabla-clientes').DataTable({
       "pageLength": 8,
       "lengthChange": false,
       "searching": false, // Oculta el campo de búsqueda
