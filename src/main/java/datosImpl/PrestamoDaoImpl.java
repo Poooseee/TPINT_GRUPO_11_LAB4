@@ -62,6 +62,7 @@ public class PrestamoDaoImpl implements PrestamoDao {
 	public boolean cambiarEstado(String estado,int id) {
 		int filas =0;
 		boolean cambiar = false;
+		System.out.println("estado "+estado);
         String query = "UPDATE prestamos SET estado_Prest = ? WHERE idPrestamo_Prest = ?";
         cn = new Conexion();
         cn.Open();

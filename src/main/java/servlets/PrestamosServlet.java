@@ -63,7 +63,7 @@ private List<Prestamo> obtenerListaPrestamos(String estado , String dni){
 			
 			NuevoEstado = "Rechazado";
 		}
-		cambiarEstado(estado,id);
+		cambiarEstado(NuevoEstado,id);
 		}
 		
 		request.setAttribute("listaPrestamos", obtenerListaPrestamos(estado,dni));

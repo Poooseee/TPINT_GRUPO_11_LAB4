@@ -202,11 +202,19 @@
                             <td id="estado-td">
                             <input type="text" value="<%= prestamo.getEstado() %>" disabled>
                             </td>
+                            
 							<td>
-                               <input name="btnAutorizar" type="submit" value="Autorizar" class="btn">				
+							<%
+							boolean pendiente = false;
+							if("Pendiente".equals(prestamo.getEstado() )){
+								pendiente = true;
+							}
+							%>
+                               <input name="btnAutorizar" type="submit" value="Autorizar" class="btn" <%= pendiente? "" : "disabled" %>>				
 							</td>  
 							<td>
-							<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="background-color:red">
+							<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="background-color:red" <%= pendiente? "" : "disabled" %>>
+							
 							</td>                          
                         </tr>
                     </form>
