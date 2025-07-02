@@ -1,3 +1,5 @@
+<%@page import="java.io.PrintWriter"%>
+<%@page import="entidades.Cuenta"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
        <%@ page import="java.util.ArrayList" %>
@@ -144,7 +146,9 @@
     background-color: #dc3545;
   }
 </style>
-	
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 <body>
     <%@ include file="./HeaderAdmin.jsp" %>
@@ -152,7 +156,7 @@
       <div id="div-alta-cuenta">
         <h2>DAR DE ALTA</h2>
         <div id="div-form-alta">
-          <form id="form-alta" action="ServletCuentas" method="post">
+          <form id="form-alta" class="form-confirm" action="ServletCuentas" method="post">
             <div>
            <%
            int numeroDeCuenta = 0;
@@ -170,19 +174,19 @@
             </div>
             <div>
               <label>DNI del Titular</label>
-              <input type="text" name="DNI" id="" />
+              <input type="text" name="DNI" id="" required pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" />
             </div>
             <div>
               <label>CBU</label>
-              <input type="text" name="CBU" />
+              <input type="text" name="CBU" required pattern="^\d{1,20}$" title="Solo números. Máximo 20 caractéres" />
             </div>
             <div>
               <label>Fecha de Creación</label>
-              <input type="date" name="fechaCreacion" />
+              <input type="date" name="fechaCreacion" required />
             </div>
             <div>
               <label>Tipo de Cuenta</label>
-              <select name="ddlTipoCuenta" id="">
+              <select name="ddlTipoCuenta" id="" required>
                 <%
                 		ArrayList<TipoCuenta> tiposCuentas;
                             if(request.getAttribute("listaTiposCuentas") != null) {
@@ -204,8 +208,13 @@
           </form>
           <%
          String mensaje =(String)request.getAttribute("mensajeAlta");
+         if(request.getAttribute("btnAgregar")!=null){
+          if(request.getAttribute("mensajeAlta")!=null){
+          mensaje =(String)request.getAttribute("mensajeAlta");        	  
+          }
           %>
           <%=mensaje %>
+          <% } %>
         </div>
       </div>
 
@@ -213,14 +222,15 @@
         <h2>LISTADO Y MODIFICACION</h2>
         <div id="contenedor-listado-cuenta">
           <div id="buscar-cuenta">
-            <form id="form-buscar">
+            <form method="post"  action="ServletCuentas" id="form-buscar">
               <label>Ingrese DNI del cliente</label>
               <input type="text" name="DNIClienteBuscar" />
-              <input type="submit" value="Buscar Cuentas" />
+              <input type="submit" value="Buscar Cuentas" name="btnBuscar" />
             </form>
           </div>
+          <form method="post" class="form-confirm" action="ServletCuentas">
           <div id="listado-cuenta">
-            <table>
+            <table id="tabla-cuentas">
               <thead>
                 <tr>
                   <th>Numero de Cuenta</th>
@@ -233,55 +243,98 @@
                   <th>Eliminar</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input type="text" value="Obtener Numero DB" disabled />
-                  </td>
+				<tbody>
+				<%
+				ArrayList<Cuenta> listaCuentasSv = (ArrayList<Cuenta>) request.getAttribute("ListaCuentas");
+				if (listaCuentasSv != null && !listaCuentasSv.isEmpty()) {
+				    for (Cuenta cuenta : listaCuentasSv) {
+				%>
+				<tr>
+				<form method="post" action="ServletCuentas" class="form-confirm">
+				  <td>
+				    <input type="hidden" value="<%= cuenta.getNumero() %>" name="txtTablaNumero">
+				    <%= cuenta.getNumero() %>
+				  </td>
+				  <td>
+				    <input type="hidden" value="<%= cuenta.getDni() %>" name="txtTablaDni">
+				    <%= cuenta.getDni() %>
+				  </td>
+				  <td>
+				    <input type="text" value="<%= cuenta.getCbu() %>" name="txtTablaCbu">
+				  </td>
+				  <td>
+				    <select name="ddlTablaTipoCuenta">
+				      <%
+				      ArrayList<TipoCuenta> tiposCuentas2 = (ArrayList<TipoCuenta>) request.getAttribute("listaTiposCuentas");
+				      if (tiposCuentas2 != null) {
+				          for (TipoCuenta tipo : tiposCuentas2) {
+				              boolean seleccionado = cuenta.getTipo().getIdTipo() == tipo.getIdTipo();
+				      %>
+				        <option value="<%= tipo.getIdTipo() %>" <%= seleccionado ? "selected" : "" %>><%= tipo.getNombre() %></option>
+				      <%
+				          }
+				      }
+				      %>
+				    </select>
+				  </td>
+				  <td>
+				    <input type="text" value="<%= cuenta.getSaldo() %>" name="txtTablaSaldo">
+				  </td>
+				  <td>
+				    <input type="text" value="<%= cuenta.getFechaCreacion() %>" name="txtTablaFecha">
+				  </td>
+				  <td>
+				    <input type="submit" name="btnModificar" class="btn btn-warning" value="Modificar" />
+				  </td>
+				  <td>
+				    <input type="submit" name="btnEliminar" class="btn btn-danger" value="Eliminar" />
+				  </td>
+				</form>
+				</tr>
+				<%
+				    }
+				} else {
+				%>
+				<tr>
+				  <td colspan="8">No hay cuentas para mostrar.</td>
+				</tr>
+				<%
+				}
+				%>
+				</tbody>
 
-                  <td>
-                    <input type="text" value="DNI" disabled />
-                  </td>
-
-                  <td>
-                    <input type="text" value="CBU" disabled />
-                  </td>
-
-</body>
-                  <td>
-                    <select>
-                      <option value="1">Caja de Ahorro</option>
-                      <option value="1">Cuenta Corriente</option>
-                    </select>
-                  </td>
-                </td>
-                <td>
-                  <input type="text" value="10.000">
-                </td>
-                  <td>
-                    <input type="date" disabled />
-                  <td>
-                    <input
-                      type="submit"
-                      name="btnModificar"
-                      class="btn btn-warning"
-                      value="Modificar"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="submit"
-                      name="btnEliminar"
-                      class="btn btn-danger"
-                      value="Eliminar"
-                    />
-                  </td>
-                </tr>
-              </tbody>
             </table>
+            <%
+            String resultModificacion = "";
+            if(request.getAttribute("mensajeModificacion")!=null){
+            	 resultModificacion = (String)request.getAttribute("mensajeModificacion");
+            }
+            %>
+            <span><%= resultModificacion %></span>
+            <%
+            String resultEliminacion = "";
+            if(request.getAttribute("mensajeEliminado")!=null){
+            	resultEliminacion = (String)request.getAttribute("mensajeEliminado");
+            }
+             %>
+             <span><%= resultEliminacion %></span>
           </div>
+         </form>
         </div>
       </div>
     </main>
+    <script src="./ConfirmacionForm.js"></script>
+    <script>
+  $(document).ready(function() {
+    $('#tabla-cuentas').DataTable({
+      "pageLength": 8,
+      "lengthChange": false,
+      "searching": false,
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
   </body>
 </html>

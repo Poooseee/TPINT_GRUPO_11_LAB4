@@ -7,6 +7,7 @@ private String fechaCreacion;
 private TipoCuenta tipo;
 private String cbu;
 private float saldo;
+private Boolean baja;
 
 public Cuenta() {
 	
@@ -47,6 +48,20 @@ public float getSaldo() {
 }
 public void setSaldo(float saldo) {
 	this.saldo = saldo;
+}
+
+@Override
+public String toString() {
+	return "Cuenta [numero=" + numero + ", dni=" + dni + ", fechaCreacion=" + fechaCreacion + ", tipo=" + tipo
+			+ ", cbu=" + cbu + ", saldo=" + saldo + "]";
+}
+
+public Boolean getBaja() {
+	return baja;
+}
+
+public void setBaja(Boolean baja) {
+	this.baja = baja;
 }
 
 

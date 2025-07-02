@@ -2,9 +2,11 @@ package datosImpl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import datos.CuentaDao;
 import entidades.Cuenta;
+import entidades.TipoCuenta;
 
 public class CuentaDaoImpl implements CuentaDao {
 	private Conexion cn;
@@ -21,6 +23,7 @@ public class CuentaDaoImpl implements CuentaDao {
 			ps.setInt(1, cuenta.getNumero());
 			ps.setString(2, cuenta.getDni());
 			ps.setString(3, cuenta.getFechaCreacion());
+			System.out.println("idTipo en insert dao "+cuenta.getTipo().getIdTipo());
 			ps.setInt(4,cuenta.getTipo().getIdTipo());
 			ps.setString(5, cuenta.getCbu());
 			ps.setFloat(6, cuenta.getSaldo());
@@ -55,5 +58,90 @@ public class CuentaDaoImpl implements CuentaDao {
 	        return utlimoNum;
 		
 	}
+	@Override
+	public boolean update(Cuenta cuenta) {
+		boolean update = false;
+		System.out.println("cuenta a modificar en cuenta dao: "+cuenta.toString());
+		String query = "UPDATE cuentas SET  "
+				+ " fechaCreacion_Ctas = ?, "
+				+ " tipoCta_Ctas = ?, "
+				+ " CBU_Ctas = ?, "
+				+ " saldo_Ctas = ? "
+				+ "WHERE numeroCuenta_Ctas = ? AND DNI_Ctas = ?";
+		cn = new Conexion();
+		cn.Open();
+		try {
+			PreparedStatement pst = cn.prepare(query);
+			pst.setString(1, cuenta.getFechaCreacion());
+			pst.setInt(2, cuenta.getTipo().getIdTipo());
+			pst.setString(3, cuenta.getCbu());
+			pst.setFloat(4, cuenta.getSaldo());
+			pst.setInt(5,cuenta.getNumero());
+			pst.setString(6, cuenta.getDni());
+			
+			if(pst.executeUpdate() == 1) {
+				update = true;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return update;
+	}
+	
+	public ArrayList<Cuenta> obtenerCuentas(String dni) {
+		ArrayList<Cuenta> listaCuentas = new ArrayList<Cuenta>();
+		try {
+			cn = new Conexion();
+			cn.Open();
+			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
+					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId"
+					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
+					+ " WHERE cuentas.baja_Ctas = '0' ";
+			if(dni!=null || !(dni.isBlank())) {
+				query+=" AND DNI_Ctas LIKE '%"+dni+"%'";
+			}
+			ResultSet rs = cn.query(query);
+			while(rs.next()) {
+				Cuenta cuenta = new Cuenta();
+				TipoCuenta tipoCuenta = new TipoCuenta();
+				cuenta.setCbu(rs.getString("cbu"));
+				cuenta.setDni(rs.getString("dni"));
+				cuenta.setFechaCreacion(rs.getString("fecha"));
+				cuenta.setNumero(rs.getInt("numero"));
+				cuenta.setSaldo(rs.getFloat("saldo"));
+				tipoCuenta.setIdTipo(rs.getInt("tipoId"));
+				tipoCuenta.setNombre(rs.getString("tipoNombre"));
+				cuenta.setTipo(tipoCuenta);
+				listaCuentas.add(cuenta);
+			}
+			rs.close();
+			cn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listaCuentas;
+	}
+	@Override
+	public boolean eliminar(int NumeroCuenta) {
+		Conexion cn = new Conexion();
+		boolean eliminado = false;
+		System.out.println("Cuenta a eliminar dao: " + NumeroCuenta);
+		try {
+			cn.Open();
+			String query = "UPDATE cuentas SET baja_Ctas = '1' WHERE NumeroCuenta_Ctas = ?";
+			PreparedStatement ps = cn.prepare(query);
+			ps.setInt(1, NumeroCuenta);
+			
+			eliminado = ps.executeUpdate() > 0;
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {			
+			cn.close();
+		}
+		return eliminado;
+	}
+
 
 }

@@ -6,6 +6,6 @@ import java.util.ArrayList;
 import entidades.TipoCuenta;
 
 public interface TiposCuentaDao {
-public String ObtenerNombreDelTipo(int idTipo);
+public int ObtenerIdDelTipo(String idTipo);
 public ArrayList<TipoCuenta> obtenerTiposCuentas();
 }
