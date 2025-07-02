@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page import="java.util.List" %>
+    <%@ page import="entidades.Prestamo" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -120,21 +122,31 @@
         <h2>GESTION DE PRÉSTAMOS</h2>
         <div id="contenedor">
             <div id="filtrado">
-                <form>
+            <%
+            String estado="";
+            String dni="";
+            if(request.getAttribute("filtroEstado")!=null){
+            	estado = (String)request.getAttribute("filtroEstado");
+            }
+            if(request.getAttribute("filtroDni")!=null){
+            	dni = (String)request.getAttribute("filtroDni");
+            }
+            %>
+                <form method="post" action="PrestamosServlet">
                     <div class="div-filtrado">
                         <label>Estado de Préstamo</label>
                         <select name="ddlEstado" id="">
-                            <option value="Todos">Todos</option>
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Aprobado">Aprobado</option>
-                            <option value="Rechazado">Rechazado</option>
+                            <option value="" <%= ("".equals(estado)) ? "selected" : "" %>>Todos</option>
+                            <option value="Pendiente" <%= ("Pendiente".equals(estado)) ? "selected" : "" %>>Pendiente</option>
+                            <option value="Aprobado" <%= ("Aprobado".equals(estado)) ? "selected" : "" %> >Aprobado</option>
+                            <option value="Rechazado" <%= ("Rechazado".equals(estado)) ? "selected" : "" %>>Rechazado</option>
                         </select>
                     </div>
                     <div class="div-filtrado">
                         <label>DNI Cliente</label>
-                        <input type="text" name="DNI" value="45813799">
+                        <input type="text" name="txtDni" value="<%=dni%>">
                     </div>
-                    <input id="submit" type="submit" value="Filtrar Préstamos">
+                    <input id="submit" type="submit" name="btnFiltrar" value="Filtrar Préstamos">
                 </form>
 
             </div>
@@ -149,41 +161,64 @@
                             <th>Monto mensual</th>
                             <th>Plazo en cuotas</th>
                             <th>Fecha</th>
+                            <th>Cuenta</th>
                             <th>Estado</th>
+                            <th>Aceptar</th>
+                            <th>Rechazar</th>
                         </tr>
                     </thead>
                     <tbody>
+                    <%
+                    List<Prestamo> listaPrestamos = (List<Prestamo>) request.getAttribute("listaPrestamos");
+                    if(listaPrestamos != null){
+                    	for(Prestamo prestamo : listaPrestamos){
+                    %>
+                    <form method="post" action="PrestamosServlet">
                         <tr>
                             <td>
-                                <input type="text" value="Obtener DB" disabled>
+                                <input name="txtIdPrestamo" type="text" value="<%= prestamo.getIdPrestamo() %>" readonly>
                             </td>
                             <td>
-                                <input type="text" value="45813799" disabled>
+                                <input type="text" value="<%= prestamo.getDni()%>" disabled>
                             </td>
                              <td>
-                                <input type="text" value="200.000" disabled>
+                                <input type="text" value="<%= prestamo.getImportePagar() %>" disabled>
                             </td>
                              <td>
-                                <input type="text" value="150.000" disabled>
+                                <input type="text" value="<%= prestamo.getImportePedido() %>" disabled>
                             </td>
                              <td>
-                                <input type="text" value="2.000" disabled>
+                                <input type="text" value="<%= prestamo.getMontoPorMes()%>" disabled>
                             </td>
                              <td>
-                                <input type="text" value="10" disabled>
+                                <input type="text" value="<%= prestamo.getPlazoPagos() %>" disabled>
                             </td>
                              <td>
-                                <input type="date" disabled>
+                                <input type="date" value="<%= prestamo.getFecha() %>" disabled>
+                            </td>
+                            <td>
+                             <input type="text" value="<%= prestamo.getCuenta() %>" disabled>
                             </td>
                             <td id="estado-td">
-                                <select name="ddlEstadoTabla" id="">
-                                    <option value="Pendiente">Pendiente</option>
-                                    <option value="Aprobado">Aprobado</option>
-                                    <option value="Rechazado">Rechazado</option>
-                                </select>
-                                <input type="submit" value="Guardar" class="btn">
+                            <input type="text" value="<%= prestamo.getEstado() %>" disabled>
                             </td>
+							<td>
+                               <input name="btnAutorizar" type="submit" value="Autorizar" class="btn">				
+							</td>  
+							<td>
+							<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="background-color:red">
+							</td>                          
                         </tr>
+                    </form>
+                       <% } %>
+                    <% }else{ %>
+                          <tr>
+  							<td>No hay prestamos para mostrar.</td>
+  								<% for (int i = 1; i < 10; i++) { %>
+   										 <td></td>
+ 								 <% } %>
+						 </tr>
+                    <% } %>
                     </tbody>
                 </table>
             </div>

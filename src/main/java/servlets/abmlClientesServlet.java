@@ -31,6 +31,8 @@ public class abmlClientesServlet extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
 		ClienteNegocioImpl cliNeg = new ClienteNegocioImpl();
 	
 	    List<Pais> listaPaises = paisNeg.obtenerPaises(); 
@@ -105,6 +107,7 @@ public class abmlClientesServlet extends HttpServlet {
 			String domicilio = request.getParameter("txtDomicilio");
 			String fechaNac = request.getParameter("txtFechaDeNacimiento");
 	    	Date fechaDeNac = null;
+	    	
 	    	if (fechaNac != null && !fechaNac.trim().isEmpty()) {
 	    	    try {
 	    	        fechaDeNac = Date.valueOf(fechaNac);

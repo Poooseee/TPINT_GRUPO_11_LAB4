@@ -34,7 +34,6 @@ public class LoginServlet extends HttpServlet {
     			mensajeError = "";
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
-    			System.out.println("usuario: " + usuario.toString());
     			String tipo = usuario.getTipoUsuario();
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				

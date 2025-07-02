@@ -99,12 +99,13 @@ public class ServletCuentas extends HttpServlet {
            dni = request.getParameter("DNIClienteBuscar");			
 		}
 		ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni);
-		request.setAttribute("ListaCuentas", listaCuentas);
 		ArrayList<TipoCuenta> listaTipoCuentas = obtenerTiposCuentas();
-		request.setAttribute("listaTiposCuentas", listaTipoCuentas);
 		int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
-		actualizarProximoNumeroDeCuenta();
+
+		request.setAttribute("ListaCuentas", listaCuentas);
+		request.setAttribute("listaTiposCuentas", listaTipoCuentas);
 		request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -116,7 +117,7 @@ public class ServletCuentas extends HttpServlet {
 		return negCu.insert(cuenta);
 	}
 private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
-	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
+	
 	CuentaNegocio neg = new CuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
 	TipoCuenta tipC = new TipoCuenta();
