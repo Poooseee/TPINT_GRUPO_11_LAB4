@@ -9,6 +9,7 @@ public class Cliente {
 	private String apellido;
 	private String sexo;
 	private Pais nacionalidad;
+	private Pais pais;
 	private Date fechaNacimiento;
 	private String domicilio;
 	private Localidad localidad;
@@ -110,6 +111,12 @@ public class Cliente {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public Pais getPais() {
+		return pais;
+	}
+	public void setPais(Pais pais) {
+		this.pais = pais;
 	}
 	
 	//CONSTRUCTORES Y TO STRING

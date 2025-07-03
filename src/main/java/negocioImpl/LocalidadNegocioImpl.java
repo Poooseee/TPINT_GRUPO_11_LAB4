@@ -18,4 +18,16 @@ public class LocalidadNegocioImpl implements LocalidadNegocio{
 		}
 		return listaLocalidades;
 	}
+
+	@Override
+	public Localidad obtenerLocalidadPorId(int idLocalidad, int idProvincia, int idPais) {
+		Localidad l = locDao.obtenerLocalidadPorId(idLocalidad, idProvincia, idPais);
+		return l;
+	}
+
+	@Override
+	public Localidad obtenerLocalidadPorNombre(String nombreLoc) {
+		Localidad l = locDao.obtenerLocalidadPorNombre(nombreLoc);
+		return l;
+	}
 }

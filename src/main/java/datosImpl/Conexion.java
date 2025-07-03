@@ -80,5 +80,9 @@ public class Conexion {
 		}
 		return ok;
 	}
+
+	public PreparedStatement prepare(String queryUser, int returnGeneratedKeys) throws SQLException {
+		return connection.prepareStatement(queryUser, returnGeneratedKeys);
+	}
 	
 }

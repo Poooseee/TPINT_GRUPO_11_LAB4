@@ -28,4 +28,10 @@ public class PaisNegocioImpl implements PaisNegocio{
 		return p;
 	}
 
+	@Override
+	public Pais obtenerPaisxId(int id) {
+		Pais p = paisDao.obtenerPaisxId(id);
+		return p;
+	}
+
 }

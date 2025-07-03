@@ -58,4 +58,64 @@ public class LocalidadDaoImpl implements LocalidadDao{
         }
         return lista;
 	}
+
+	@Override
+	public Localidad obtenerLocalidadPorId(int idLoc, int idProv, int idPais) {
+		Localidad l = null;
+		
+        try {
+            cn = new Conexion();
+            cn.Open();
+            String query = "SELECT * FROM LOCALIDADES WHERE idLocalidad_Loc = " + idLoc + " AND idProvincia_Loc = " + idProv + " AND idPais_Loc = " + idPais;
+            ResultSet rs = cn.query(query);
+            if (rs == null) {
+                System.out.println("ResultSet es null");
+            } else {
+                System.out.println("ResultSet obtenido");
+            }
+            while(rs.next()) {
+            	l = new Localidad();
+            	l.setId(rs.getInt("idLocalidad_Loc"));
+                l.setIdProvincia(rs.getInt("idProvincia_Loc"));
+                l.setIdPais(rs.getInt("idPais_Loc"));
+                l.setNombre(rs.getString("nombre_Loc"));
+            }
+            rs.close();
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		return l;
+	}
+
+	@Override
+	public Localidad obtenerLocalidadPorNombre(String nombreLoc) {
+		Localidad l = null;
+		
+        try {
+            cn = new Conexion();
+            cn.Open();
+            String query = "SELECT * FROM LOCALIDADES WHERE nombre_Loc = '" + nombreLoc + "'";
+            ResultSet rs = cn.query(query);
+            if (rs == null) {
+                System.out.println("ResultSet es null");
+            } else {
+                System.out.println("ResultSet obtenido");
+            }
+            while(rs.next()) {
+            	l = new Localidad();
+                l.setId(rs.getInt("idLocalidad_Loc"));
+                l.setIdProvincia(rs.getInt("idProvincia_Loc"));
+                l.setIdPais(rs.getInt("idPais_Loc"));
+                l.setNombre(rs.getString("nombre_Loc"));
+            }
+            rs.close();
+            cn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		return l;
+	}
 }

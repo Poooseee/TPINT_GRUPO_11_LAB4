@@ -1,9 +1,9 @@
 package negocioImpl;
 
 import java.util.List;
-import datos.ClienteDao;
 import datosImpl.ClienteDaoImpl;
 import entidades.Cliente;
+import entidades.Usuario;
 import negocio.ClienteNegocio;
 
 public class ClienteNegocioImpl implements ClienteNegocio {
@@ -16,8 +16,8 @@ public class ClienteNegocioImpl implements ClienteNegocio {
     }
 
     @Override
-    public int agregar(Cliente cliente) {
-        return clienteDao.agregar(cliente);
+    public int agregar(Cliente cliente, Usuario user) {
+        return clienteDao.agregar(cliente, user);
     }
 
     @Override

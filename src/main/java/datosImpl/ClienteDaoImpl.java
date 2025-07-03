@@ -4,6 +4,9 @@ import java.sql.*;
 import java.util.*;
 import datos.ClienteDao;
 import entidades.*;
+import negocioImpl.LocalidadNegocioImpl;
+import negocioImpl.PaisNegocioImpl;
+import negocioImpl.ProvinciaNegocioImpl;
 
 public class ClienteDaoImpl implements ClienteDao {
 
@@ -12,6 +15,10 @@ public class ClienteDaoImpl implements ClienteDao {
     @Override
     public List<Cliente> listar() {
         List<Cliente> lista = new ArrayList<>();
+        PaisNegocioImpl paNeg = new PaisNegocioImpl();
+        ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+        LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+        
         try {
             cn = new Conexion();
             cn.Open();
@@ -32,16 +39,24 @@ public class ClienteDaoImpl implements ClienteDao {
                 sexo.setSexo(rs.getString("sexo_Cl"));
                 c.setSexo(sexo.getSexo());
 
+                int idNac = (rs.getInt("nacionalidad_Cl"));
                 Pais nacionalidad = new Pais();
-                nacionalidad.setNombre(rs.getString("nacionalidad_Cl"));
+                nacionalidad = paNeg.obtenerPaisxId(idNac);
                 c.setNacionalidad(nacionalidad);
+                
+                int idPa = (rs.getInt("pais_Cl"));
+                Pais pais = new Pais();
+                pais = paNeg.obtenerPaisxId(idPa);
+                c.setPais(pais);
 
+                int idProv = (rs.getInt("provincia_Cl"));
                 Provincia provincia = new Provincia();
-                provincia.setNombre(rs.getString("provincia_Cl"));
+                provincia = provNeg.obtenerProvinciaPorId(idProv, idPa);
                 c.setProvincia(provincia);
 
+                int idLoc = (rs.getInt("localidad_Cl"));
                 Localidad localidad = new Localidad();
-                localidad.setNombre(rs.getString("localidad_Cl"));
+                localidad = locNeg.obtenerLocalidadPorId(idLoc, idProv, idPa);
                 c.setLocalidad(localidad);
 
                 c.setDomicilio(rs.getString("domicilio_Cl"));
@@ -63,32 +78,65 @@ public class ClienteDaoImpl implements ClienteDao {
     }
 
     @Override
-    public int agregar(Cliente cliente) {
+    public int agregar(Cliente cliente, Usuario user) {
         int filas = 0;
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "INSERT INTO CLIENTES (dni, cuil, nombre, apellido, sexo, idPais, nacionalidad, idProvincia, provincia, idLocalidad, localidad, fechaNacimiento, domicilio, email, telefono, baja) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = cn.prepare(query);
+            String queryCliente = "INSERT INTO CLIENTES (dni_Cl, cuil_Cl, nombre_Cl, apellido_Cl, sexo_Cl, pais_Cl, nacionalidad_Cl, provincia_Cl, localidad_Cl, nacimiento_Cl, domicilio_Cl, mail_Cl, baja_Cl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = cn.prepare(queryCliente);
             ps.setString(1, cliente.getDNI());
             ps.setString(2, cliente.getCUIL());
             ps.setString(3, cliente.getNombre());
             ps.setString(4, cliente.getApellido());
             ps.setString(5, cliente.getSexo());
-            ps.setInt(6, cliente.getNacionalidad().getId());
-            ps.setString(7, cliente.getNacionalidad().getNombre());
+            ps.setInt(6, cliente.getPais().getId());
+            ps.setInt(7, cliente.getNacionalidad().getId());
             ps.setInt(8, cliente.getProvincia().getId());
-            ps.setString(9, cliente.getProvincia().getNombre());
-            ps.setInt(10, cliente.getLocalidad().getId());
-            ps.setString(11, cliente.getLocalidad().getNombre());
-            ps.setDate(12, cliente.getFechaNacimiento());
-            ps.setString(13, cliente.getDomicilio());
-            ps.setString(14, cliente.getEmail());
-            ps.setString(15, cliente.getTelefono());
-            ps.setInt(16, cliente.getBaja());
-
+            ps.setInt(9, cliente.getLocalidad().getId());
+            ps.setDate(10, cliente.getFechaNacimiento());
+            ps.setString(11, cliente.getDomicilio());
+            ps.setString(12, cliente.getEmail());
+            ps.setInt(13, cliente.getBaja());
             filas = ps.executeUpdate();
+            
+            String queryTelefono = "INSERT INTO TELEFONOS (telefono_Tel) VALUES (?)";
+            PreparedStatement psTel = cn.prepare(queryTelefono);
+            psTel.setString(1, cliente.getTelefono());
+            psTel.executeUpdate();
+            
+            String queryTxC = "INSERT INTO TELEFONOSxCLIENTES (dni_TxC, telefono_TxC) VALUES (?, ?)";
+            PreparedStatement psTxC = cn.prepare(queryTxC);
+            psTxC.setString(1, cliente.getDNI());
+            psTxC.setString(2, cliente.getTelefono());
+            psTxC.executeUpdate();
+            
+            String queryUser = "INSERT INTO USUARIOS (nick_Usr, contraseña_Usr, tipo_Usr) VALUES (?, ?, ?)";
+            PreparedStatement psUser = cn.prepare(queryUser, Statement.RETURN_GENERATED_KEYS);
+            psUser.setString(1, user.getNickUsuario());
+            psUser.setString(2, user.getContraseñaUsuario());
+            psUser.setString(3, user.getTipoUsuario());
+            psUser.executeUpdate();
+            
+            int idUsuario = -1;
+            ResultSet rsUsr = psUser.getGeneratedKeys();
+            if (rsUsr.next()) {
+            	idUsuario = rsUsr.getInt(1);
+            } else {
+                throw new SQLException("No se generó ID de usuario.");
+            }
+            
+            String queryUxC = "INSERT INTO USUARIOSXCLIENTES (idUsuario_UxC, dni_UxC) VALUES (?, ?)";
+            PreparedStatement psUxC = cn.prepare(queryUxC);
+            psUxC.setInt(1, idUsuario);
+            psUxC.setString(2, cliente.getDNI());
+            psUxC.executeUpdate();
+            
             ps.close();
+            psTel.close();
+            psTxC.close();
+            psUser.close();
+            psUxC.close();
             cn.close();
         } catch (Exception e) {
             e.printStackTrace();

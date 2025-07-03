@@ -33,12 +33,10 @@ public class abmlClientesServlet extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
-		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
-		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
-		ClienteNegocioImpl cliNeg = new ClienteNegocioImpl();
+		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 	
 	    List<Pais> listaPaises = paisNeg.obtenerPaises(); 
-	    List<Cliente> listaClientes = cliNeg.listar();
+	    List<Cliente> listaClientes = clienteNeg.listar();
 
 	    request.setAttribute("listaClientes", listaClientes);
 	    request.setAttribute("listaPaises", listaPaises);
@@ -77,12 +75,10 @@ public class abmlClientesServlet extends HttpServlet {
 		c.setEmail(request.getParameter("txtCorreo"));
 		c.setTelefono(request.getParameter("txtTelefono"));
 		c.setNick(request.getParameter("txtUsuario"));
-		c.setPassword(request.getParameter("txtContraseña"));
-		String contrasenia2 = request.getParameter("txtContraseña2");
 		String nombrePais = request.getParameter("ddlPais"); 
 		String nombreProv = request.getParameter("ddlProvincia");
 		String nombreLocalidad = request.getParameter("ddlLocalidad");
-		
+		List<Cliente> listaClientes = clienteNeg.listar();
 		
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
@@ -107,9 +103,8 @@ public class abmlClientesServlet extends HttpServlet {
 		    request.setAttribute("correoIngresado", c.getEmail());
 		    request.setAttribute("telefonoIngresado", c.getTelefono());
 		    request.setAttribute("usuarioIngresado", c.getNick());
-		    request.setAttribute("contraseniaIngresada", c.getPassword());
-		    request.setAttribute("contrasenia2Ingresada", contrasenia2);
 		    request.setAttribute("paisSeleccionado", nombrePais);
+		    request.setAttribute("listaClientes", listaClientes);
 
 		    if (nombreProv != null && !nombreProv.equals("")) {
 		    	List<Localidad> listaLocalidades = locNeg.obtenerLocalidadesXProvXPais(nombrePais, nombreProv);
@@ -138,15 +133,22 @@ public class abmlClientesServlet extends HttpServlet {
 			String nombre = request.getParameter("txtNombre");
 			String apellido = request.getParameter("txtApellido");
 			String sexo = request.getParameter("ddlSexo");
-			String nacionalidad = request.getParameter("ddlNacionalidad");
-			Pais pais = new Pais();
-			pais.setNacionalidad(nacionalidad);
-			String provincia = request.getParameter("ddlProvincia");
+			
+			String nomNac = request.getParameter("ddlNacionalidad");
+			String nomPais = request.getParameter("ddlPais");
+			Pais paisNac = new Pais(); //PARA NACIONALIDAD
+			Pais paisRe = new Pais(); //PARA PAIS DE RESIDENCIA
+			paisNac = pNeg.obtenerPaisxNacionalidad(nomNac);
+			paisRe = pNeg.obtenerPaisxNombre(nomPais);
+			
+			String nomProv = request.getParameter("ddlProvincia");
 			Provincia prov = new Provincia();
-			prov.setNombre(provincia);
-			String localidad = request.getParameter("ddlLocalidad");
+			prov = provNeg.obtenerProvinciaPorNombre(nomProv);
+			
+			String nomLoc = request.getParameter("ddlLocalidad");
 			Localidad loc = new Localidad();
-			loc.setNombre(localidad);
+			loc = locNeg.obtenerLocalidadPorNombre(nomLoc);
+			
 			String domicilio = request.getParameter("txtDomicilio");
 			String fechaNac = request.getParameter("txtFechaDeNacimiento");
 	    	Date fechaDeNac = null;
@@ -163,12 +165,12 @@ public class abmlClientesServlet extends HttpServlet {
 	    	    mensajeError += "* Debe seleccionar una fecha de nacimiento.<br>";
 	    	    hayErrores = true;
 	    	}
+	    	
 			String mail = request.getParameter("txtCorreo");
 			String telefono  = request.getParameter("txtTelefono");
 			String nick  = request.getParameter("txtUsuario");
-			String contraseña  = request.getParameter("txtContraseña");
-			String reContraseña = request.getParameter("txtContraseña2");
-
+			String contrasenia  = request.getParameter("txtContrasenia");
+			String reContrasenia = request.getParameter("txtContrasenia2");
 
 		    
 		    if(DNI == null || DNI.trim().isEmpty()) {
@@ -216,17 +218,17 @@ public class abmlClientesServlet extends HttpServlet {
 		    	hayErrores = true;
 		    }
 		    
-		    if(nacionalidad == null || nacionalidad.trim().isEmpty()) {
+		    if(nomNac == null || nomNac.trim().isEmpty()) {
 		        mensajeError += "* Debe seleccionar una nacionalidad.<br>";
 		        hayErrores = true;
 		    }
 		    
-		    if(provincia == null || provincia.trim().isEmpty()) {
+		    if(nomProv == null || nomProv.trim().isEmpty()) {
 		        mensajeError += "* Debe seleccionar una provincia.<br>";
 		        hayErrores = true;
 		    }
 		    
-		    if(localidad == null || localidad.trim().isEmpty()) {
+		    if(nomLoc == null || nomLoc.trim().isEmpty()) {
 		        mensajeError += "* Debe seleccionar una localidad.<br>";
 		        hayErrores = true;
 		    }
@@ -246,16 +248,23 @@ public class abmlClientesServlet extends HttpServlet {
 		        hayErrores = true;
 		    }
 		    
-		    if(contraseña == null || contraseña.trim().isEmpty()) {
+		    if(contrasenia == null || contrasenia.trim().isEmpty()) {
 		        mensajeError += "* La contraseña es obligatoria.<br>";
 		        hayErrores = true;
 		    }
 		    
-		    if(reContraseña == null || reContraseña.trim().isEmpty()) {
+		    if(reContrasenia == null || reContrasenia.trim().isEmpty()) {
 		        mensajeError += "* Repetir la contraseña es obligatorio.<br>";
 		        hayErrores = true;
 		    }
 		    
+		    if(reContrasenia != null && !reContrasenia.trim().isEmpty() && contrasenia != null && !contrasenia.trim().isEmpty()) {
+			    if (!contrasenia.equals(reContrasenia)) {
+			        mensajeError += "* Las contraseñas no coinciden.<br>";
+			        hayErrores = true;
+			    }
+		    }
+
 		    if(hayErrores) {
 		    	//SI HAY ERRORES SETEAMOS EL MENSAJE DE ERROR A LA REQUEST
 		    	request.setAttribute("mensajeError", mensajeError);
@@ -271,21 +280,24 @@ public class abmlClientesServlet extends HttpServlet {
 		    	cliente.setNombre(nombre);
 		    	cliente.setApellido(apellido);
 		    	cliente.setSexo(sexo);
-		    	cliente.setNacionalidad(pais);
+		    	cliente.setNacionalidad(paisNac);
+		    	cliente.setPais(paisRe);
 		    	cliente.setProvincia(prov);
 		    	cliente.setLocalidad(loc);
 		    	cliente.setDomicilio(domicilio);
 		    	cliente.setFechaNacimiento(fechaDeNac);
 		    	cliente.setEmail(mail);
 		    	cliente.setTelefono(telefono);
-		    	
+		    	cliente.setBaja(0);
 		    	user.setNickUsuario(nick);
-		    	user.setContraseñaUsuario(contraseña);
+		    	user.setContraseñaUsuario(contrasenia);
+		    	user.setTipoUsuario("CLIENTE");
 		    	
 		    	//obtenemos las filas
-		    	filas = clienteNeg.agregar(cliente);	
+		    	filas = clienteNeg.agregar(cliente, user);	
 		    	
 		    	//SETEAMOS LAS FILAS A LA REQUEST
+		    	request.setAttribute("listaClientes", listaClientes);
 		    	request.setAttribute("cantFilas", filas);
 		    }
 		    
@@ -298,6 +310,10 @@ public class abmlClientesServlet extends HttpServlet {
 
 		    request.setAttribute("cantFilasE", filasE);
 		    request.setAttribute("listaClientes", clienteNeg.listar());
+		}
+		
+		if(request.getParameter("btnAgregarCliente") != null) {
+			
 		}
 		
 		//DISPATCHER

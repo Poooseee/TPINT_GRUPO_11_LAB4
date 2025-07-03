@@ -294,7 +294,7 @@
                     %>
                   	<option value="" selected>Seleccione</option>
                   <% }else{%>
-                  	<option selected><%= nacionalidadSeleccionada.getNacionalidad() %></option>
+                  	<option value="<%= nacionalidadSeleccionada.getNacionalidad() %>" selected><%= nacionalidadSeleccionada.getNacionalidad() %></option>
                   	<option value="">Seleccione</option>
       			<%} %>
                       <%   
@@ -321,7 +321,7 @@
               %>
             	<option value="" selected>Seleccione</option>
             <% }else{%>
-            	<option selected><%= paisSeleccionado %></option>
+            	<option value="<%= paisSeleccionado%>" selected><%= paisSeleccionado %></option>
             	<option value="">Seleccione</option>
 			<%} %>
                 <%   
@@ -348,7 +348,7 @@
                     %>
                 	<option value="" selected>Seleccione</option>
                 <% }else{%>
-                	<option selected><%= provinciaSeleccionada %></option>
+                	<option value="<%= provinciaSeleccionada%>" selected><%= provinciaSeleccionada %></option>
                 	<option value="">Seleccione</option>
     			<%} %>
                   <%
@@ -378,7 +378,7 @@
                        %>
                    	<option value="" selected>Seleccione</option>
                    <% }else{%>
-                   	<option selected><%= localidadSeleccionada %></option>
+                   	<option value="<%= localidadSeleccionada%>" selected><%= localidadSeleccionada %></option>
                    	<option value="">Seleccione</option>
        			<%} %>
                   <%
@@ -459,13 +459,13 @@
             </div>
 
             <div>
-              <label for="txtContraseña">Contraseña</label>
-			  <input type="password" id="txtContraseña" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContraseña" placeholder="Ingresar contraseña" required/>  
+              <label for="txtContrasenia">Contraseña</label>
+			  <input type="password" id="txtContrasenia" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContrasenia" placeholder="Ingresar contraseña" required/>  
             </div>
 
             <div>
-              <label for="txtContraseña2">Confirmar Contraseña</label>
-			  <input type="password" id="txtContraseña2" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContraseña2" placeholder="Repetir contraseña" required/>
+              <label for="txtContrasenia2">Confirmar Contraseña</label>
+			  <input type="password" id="txtContrasenia2" pattern="^[^\s]{1,16}$" title="Máximo 16 caractéres. Sin espacios en blanco" name="txtContrasenia2" placeholder="Repetir contraseña" required/>
             </div>
           </div>
 
@@ -593,6 +593,7 @@
               <th>Sexo</th>
               <th>Fecha de Nacimiento</th>
               <th>Nacionalidad</th>
+              <th>País</th>
               <th>Provincia</th>
               <th>Localidad</th>
               <th>Direccion</th>
@@ -620,7 +621,8 @@
     <td><input type="text" value="<%= c.getApellido() %>" /></td>
     <td><input type="text" value="<%= c.getSexo() %>" /></td>
     <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
-    <td><input type="text" value="<%= c.getNacionalidad().getNombre() %>" /></td>
+    <td><input type="text" value="<%= c.getNacionalidad().getNacionalidad() %>" /></td>
+    <td><input type="text" value="<%= c.getPais().getNombre() %>" /></td>
     <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
     <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
     <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
@@ -638,8 +640,8 @@
     } else {
 %>
 <tr>
-  <td>No hay clientes para mostrar.</td>
-  <% for (int i = 1; i < 16; i++) { %>
+  <td style="text-align:center;">No hay clientes para mostrar.</td>
+  <% for (int i = 1; i < 17; i++) { %>
     <td></td>
   <% } %>
 </tr>
