@@ -290,7 +290,7 @@
                   	if (request.getAttribute("nacionalidadSeleccionada") != null) {
                   		nacionalidadSeleccionada = (Pais) request.getAttribute("nacionalidadSeleccionada");
                   	}
-                  	if(nacionalidadSeleccionada == null || nacionalidadSeleccionada.getNacionalidad() == ""){
+                  	if(nacionalidadSeleccionada.getNacionalidad() == null || nacionalidadSeleccionada.getNacionalidad() == ""){
                     %>
                   	<option value="" selected>Seleccione</option>
                   <% }else{%>
