@@ -70,6 +70,7 @@
         margin: 0 auto;
         padding: 1em;
         box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+        overflow-x:scroll;
       }
       #tabla table {
           border-collapse: collapse;
@@ -210,10 +211,10 @@
 								pendiente = true;
 							}
 							%>
-                               <input name="btnAutorizar" type="submit" value="Autorizar" class="btn" <%= pendiente? "" : "disabled" %>>				
+                               <input name="btnAutorizar" type="submit" value="Autorizar" style="<%= pendiente ? "background-color:green" : "background-color: grey; cursor:not-allowed" %>" class="btn" <%= pendiente? "" : "disabled" %>>				
 							</td>  
 							<td>
-							<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="background-color:red" <%= pendiente? "" : "disabled" %>>
+							<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="<%= pendiente ? "background-color:red" : "background-color: grey; cursor:not-allowed" %>"  <%= pendiente? "" : "disabled" %>>
 							
 							</td>                          
                         </tr>
@@ -233,5 +234,6 @@
         </div>
 
     </main>
+    <script src="./ConfirmacionForm.js"></script>
 </body>
 </html>

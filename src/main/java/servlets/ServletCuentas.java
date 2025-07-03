@@ -183,7 +183,7 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 }
 
 private boolean eliminarCuenta(HttpServletRequest request) {
-	CuentaNegocio neg = new CuentaNegocioImpl();
+	CuentaNegocioImpl neg = new CuentaNegocioImpl();
 	int numeroCuenta = Integer.parseInt(request.getParameter("txtTablaNumero").trim());
 	return neg.eliminarCuenta(numeroCuenta);
 }
