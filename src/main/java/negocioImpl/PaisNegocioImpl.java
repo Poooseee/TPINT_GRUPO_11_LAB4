@@ -22,4 +22,10 @@ public class PaisNegocioImpl implements PaisNegocio{
 		return p;
 	}
 
+	@Override
+	public Pais obtenerPaisxNacionalidad(String nacionalidad) {
+		Pais p = paisDao.obtenerPaisxNacionalidad(nacionalidad);
+		return p;
+	}
+
 }
