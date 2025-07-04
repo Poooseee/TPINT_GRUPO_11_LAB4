@@ -30,6 +30,12 @@ public class Pais {
 		this.nombre = nombre;
 		this.nacionalidad = nacionalidad;
 	}
+	
+	public Pais(String nombre,String nacionalidad) {
+		super();
+		this.nombre = nombre;
+		this.nacionalidad = nacionalidad;
+	}
 	public Pais() {};
 	@Override
 	public String toString() {
