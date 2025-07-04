@@ -36,6 +36,11 @@ public class Localidad {
 		this.idPais = idPais;
 		Nombre = nombre;
 	}
+	public Localidad(String nombre) {
+		super();
+		
+		Nombre = nombre;
+	}
 	public Localidad() {}
 	@Override
 	public String toString() {
