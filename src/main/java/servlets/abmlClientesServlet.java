@@ -18,6 +18,7 @@ import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
 import entidades.Usuario;
+import negocio.ClienteNegocio;
 import negocioImpl.ClienteNegocioImpl;
 import negocioImpl.LocalidadNegocioImpl;
 import negocioImpl.PaisNegocioImpl;
@@ -315,7 +316,9 @@ public class abmlClientesServlet extends HttpServlet {
 		if(request.getParameter("btnAgregarCliente") != null) {
 			
 		}
-		
+		if(request.getParameter("btnModificar")!=null) {
+			
+		}
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 		
@@ -326,7 +329,104 @@ public class abmlClientesServlet extends HttpServlet {
 		rd.forward(request, response);
 		
 	}
+	private String verificacionDeCampos(Cliente infoCli) {
+		String mensajeError="";
+		 if(infoCli.getDNI() == null || infoCli.getDNI().trim().isEmpty()) {
+		        mensajeError += "* El DNI es obligatorio.<br>";
+		        
+		    }
+		    
+		    if(infoCli.getDNI() != null && NaN(infoCli.getDNI().trim())){
+		        mensajeError += "* El DNI debe estar formado solo por números.<br>";
+		        
+		    }
 
+		    if(infoCli.getCUIL() == null || infoCli.getCUIL().isEmpty()) {
+		        mensajeError += "* El CUIL es obligatorio.<br>";
+		       
+		    }
+		    
+		    if(infoCli.getCUIL() != null && NaN(infoCli.getCUIL().trim())){
+		        mensajeError += "* El CUIL debe estar formado solo por números.<br>";
+		       
+		    }
+
+		    if(infoCli.getNombre() == null || infoCli.getNombre().trim().isEmpty()) {
+		        mensajeError += "* El nombre es obligatorio.<br>";
+		        
+		    }
+		    
+		    if(infoCli.getNombre() != null && !NaN(infoCli.getNombre().trim())){
+		        mensajeError += "* El nombre debe estar formado solo por letras.<br>";
+		        
+		    }
+
+		    if(apellido == null || apellido.trim().isEmpty()) {
+		        mensajeError += "* El apellido es obligatorio.<br>";
+		        
+		    }
+		    
+		    if(apellido != null && !NaN(apellido.trim())){
+		        mensajeError += "* El apellido debe estar formado solo por letras.<br>";
+		       
+		    }
+		    
+		    if(sexo == null || sexo.trim().isEmpty()) {
+		    	mensajeError += "* Debe seleccionar un sexo.<br>";
+		    	
+		    }
+		    
+		    if(nomNac == null || nomNac.trim().isEmpty()) {
+		        mensajeError += "* Debe seleccionar una nacionalidad.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(nomProv == null || nomProv.trim().isEmpty()) {
+		        mensajeError += "* Debe seleccionar una provincia.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(nomLoc == null || nomLoc.trim().isEmpty()) {
+		        mensajeError += "* Debe seleccionar una localidad.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(mail == null || mail.trim().isEmpty()) {
+		        mensajeError += "* El mail es obligatorio.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(telefono == null || telefono.trim().isEmpty()) {
+		        mensajeError += "* El telefono es obligatorio.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(nick == null || nick.trim().isEmpty()) {
+		        mensajeError += "* El usuario es obligatorio.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(contrasenia == null || contrasenia.trim().isEmpty()) {
+		        mensajeError += "* La contraseña es obligatoria.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(reContrasenia == null || reContrasenia.trim().isEmpty()) {
+		        mensajeError += "* Repetir la contraseña es obligatorio.<br>";
+		        hayErrores = true;
+		    }
+		    
+		    if(reContrasenia != null && !reContrasenia.trim().isEmpty() && contrasenia != null && !contrasenia.trim().isEmpty()) {
+			    if (!contrasenia.equals(reContrasenia)) {
+			        mensajeError += "* Las contraseñas no coinciden.<br>";
+			        hayErrores = true;
+			    }
+		    }
+	}
+private boolean modificarCliente() {
+	ClienteNegocio neg = new ClienteNegocioImpl();
+	
+}
 	public boolean NaN(String texto) {
 	    try {
 	    	Long.parseLong(texto);

@@ -634,7 +634,7 @@
     <td><input type="text" value="<%= c.getTelefono() %>" /></td>
     <td><input type="text" value="<%= c.getNick() %>" readonly /></td>
     <td><input type="text" value="<%= c.getPassword() %>" /></td>
-    <td><input type="submit" class="btn btn-warning" value="Modificar" /></td>
+    <td><input type="submit" class="btn btn-warning" value="Modificar" name="btnModificar" /></td>
     <td><input type="submit" class="btn btn-danger" value="Eliminar" name="btnEliminarCliente" /></td>
   </tr>
 </form>
