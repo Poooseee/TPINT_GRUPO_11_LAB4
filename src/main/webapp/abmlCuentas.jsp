@@ -45,6 +45,7 @@
     display: flex;
     flex-direction: column;
     gap: 1em;
+	
   }
   #form-alta > div {
     display: flex;
@@ -83,6 +84,15 @@
     flex-direction: column;
     gap: 2em;
   }
+  #form-buscar{
+	display: flex;
+	flex-direction:row;
+	margin:0 auto;
+	gap:2em;
+	text-align:right;
+	align-items:center;
+	justify-content:center;
+  }
   #form-buscar input[type="submit"] {
     margin: 0 auto;
     padding: 0.5em;
@@ -100,6 +110,7 @@
     margin: 0 auto;
     padding: 1em;
     box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+    overflow-x:scroll;
   }
   #listado-cuenta table {
     border-collapse: collapse;
@@ -145,6 +156,7 @@
   .btn-danger {
     background-color: #dc3545;
   }
+
 </style>
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -224,11 +236,18 @@
         <div id="contenedor-listado-cuenta">
           <div id="buscar-cuenta">
             <form method="post"  action="ServletCuentas" id="form-buscar">
-              <label>Ingrese DNI del cliente</label>
-              <input type="text" name="DNIClienteBuscar" />
-              <input type="submit" value="Buscar Cuentas" name="btnBuscar" />
+            <div>
+              <input type="text" value="<%= (String) request.getAttribute("dni") %>" name="DNIClienteBuscar" placeholder="DNI cliente"/>
+              </br>
+              <label>Mostrar cuentas inactivas</label>
+              <input type="checkbox" name="chkCuentaBaja" <%= (Boolean) request.getAttribute("cuentasInactivas") ? "checked" : "" %> />
+            </div>
+            <div>
+              <input type="submit" value="Filtrar Cuentas" name="btnBuscar" />
+            </div>
             </form>
           </div>
+          
           <form method="post" class="form-confirm" action="ServletCuentas">
           <div id="listado-cuenta">
             <table id="tabla-cuentas">
@@ -240,6 +259,7 @@
                   <th>Tipo de Cuenta</th>
                   <th>Saldo</th>
                   <th>Fecha de Creacion</th>
+                  <th>Estado</th>
                   <th>Modificar</th>
                   <th>Eliminar</th>
                 </tr>
@@ -261,7 +281,8 @@
 				    <%= cuenta.getDni() %>
 				  </td>
 				  <td>
-				    <input type="text" value="<%= cuenta.getCbu() %>" name="txtTablaCbu">
+				    <input type="hidden" value="<%= cuenta.getCbu() %>" name="txtTablaCbu">
+				    <%= cuenta.getCbu() %>
 				  </td>
 				  <td>
 				    <select name="ddlTablaTipoCuenta">
@@ -282,7 +303,14 @@
 				    <input type="text" value="<%= cuenta.getSaldo() %>" name="txtTablaSaldo">
 				  </td>
 				  <td>
-				    <input type="text" value="<%= cuenta.getFechaCreacion() %>" name="txtTablaFecha">
+				    <input type="hidden" value="<%= cuenta.getFechaCreacion() %>" name="txtTablaFecha">
+				  	<%= cuenta.getFechaCreacion() %>
+				  </td>
+				  <td>
+				  	<select name="ddlEstado">
+				  		<option value="activo" <%= cuenta.getBaja() == false ? "selected":"" %> >Activo</option>
+				  		<option value="baja" <%= cuenta.getBaja() == true ? "selected":"" %>>Baja</option>
+				  	</select>
 				  </td>
 				  <td>
 				    <input type="submit" name="btnModificar" class="btn btn-warning" value="Modificar" />
@@ -305,13 +333,17 @@
 				</tbody>
 
             </table>
-            <%
-            String resultModificacion = "";
-            if(request.getAttribute("mensajeModificacion")!=null){
-            	 resultModificacion = (String)request.getAttribute("mensajeModificacion");
-            }
-            %>
-            <span><%= resultModificacion %></span>
+				<%
+				    String resultModificacion = (String) request.getAttribute("mensajeModificacion");
+				    if (resultModificacion != null && !resultModificacion.isEmpty()) {
+				        boolean exito = resultModificacion.equals("Modificado correctamente");
+				%>
+				    <p style="color:<%= exito ? "green" : "red" %>;">
+				        <%= resultModificacion %>
+				    </p>
+				<%
+				    }
+				%>
             <%
             String resultEliminacion = "";
             if(request.getAttribute("mensajeEliminado")!=null){

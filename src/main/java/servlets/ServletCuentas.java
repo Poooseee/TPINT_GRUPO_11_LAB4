@@ -35,11 +35,13 @@ public class ServletCuentas extends HttpServlet {
 			int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 			ArrayList <TipoCuenta> ListaTiposCuentas = obtenerTiposCuentas();
 			String dni="";
-			ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni);
+			ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni,false);
 			
 			request.setAttribute("ListaCuentas", listaCuentas);
 			request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
 			request.setAttribute("listaTiposCuentas", ListaTiposCuentas);
+			request.setAttribute("dni", dni);
+			request.setAttribute("cuentasInactivas",false);
 			System.out.println("Tipos de cuenta obtenidos: " + ListaTiposCuentas.size());
 			System.out.println("Cuentas obtenidas: " + listaCuentas.size());
 			
@@ -56,16 +58,17 @@ public class ServletCuentas extends HttpServlet {
 		return neg.obtenerTiposCuentas();
 	}
 	
-	private ArrayList<Cuenta> obtenerCuentas(String dni){
-		CuentaNegocio neg = new CuentaNegocioImpl();
+	private ArrayList<Cuenta> obtenerCuentas(String dni,Boolean cuentasInactivas){
+		CuentaNegocioImpl neg = new CuentaNegocioImpl();
 		
-		return neg.obtenerListaCuentas(dni);
+		return neg.obtenerListaCuentas(dni,cuentasInactivas);
 	}
 	
 	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		//AGREGAR
 		if(request.getParameter("btnAgregar")!=null) {
 			
 			int codigoInsercion = agregarCuenta(request);
@@ -99,36 +102,68 @@ public class ServletCuentas extends HttpServlet {
 
 		}
 		
-		
+		//MODIFICAR
 		if(request.getParameter("btnModificar")!=null) {
 		
 			String mensajeUpdate = "no se pudo modificar";
-			if(modificarCuenta(request)) {
-				 mensajeUpdate = "Modificado correctamente";
+			
+			int resultado = modificarCuenta(request);
+			
+			switch(resultado) {
+			case -1:
+			{
+				mensajeUpdate = "El cliente YA TIENE 3 cuentas ACTIVAS";	
 			}
+			break;
+			case -2:
+			{
+				mensajeUpdate = "Hubo un ERROR al modificar la cuenta";
+			}
+			break;
+			case 1:
+			{
+				mensajeUpdate = "Modificado correctamente";
+			}
+			break;
+			
+			}
+
 			request.setAttribute("mensajeModificacion",mensajeUpdate);
 			
 		}
 		
+		//ELIMINAR
 		if(request.getParameter("btnEliminar")!=null) {
 			String mensajeEliminado = "No se pudo eliminar";
 			if(eliminarCuenta(request)) {
 				mensajeEliminado = "Eliminado correctamente";
 			}
 			request.setAttribute("mensajeEliminado", mensajeEliminado);
+			
 		}
 		
+		//FILTRAR
 		String dni="";
-		if(request.getParameter("btnBuscar")!=null) {
-           dni = request.getParameter("DNIClienteBuscar");			
-		}
-		ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni);
+		Boolean cuentasInactivas = false;
+
+		//NO VALIDAMOS QUE APRETEMOS EL BOTON PARA SIEMPRE MANTENER LOS FILTROS
+        dni = request.getParameter("DNIClienteBuscar");
+        if(dni == null) dni = "";
+        
+        cuentasInactivas = request.getParameter("chkCuentaBaja")!=null;
+		
+		ArrayList<Cuenta> listaCuentas = obtenerCuentas(dni,cuentasInactivas);
 		ArrayList<TipoCuenta> listaTipoCuentas = obtenerTiposCuentas();
 		int nuevoNumCuenta = actualizarProximoNumeroDeCuenta();
 
 		request.setAttribute("ListaCuentas", listaCuentas);
 		request.setAttribute("listaTiposCuentas", listaTipoCuentas);
 		request.setAttribute("numeroDeCuenta", nuevoNumCuenta);
+		request.setAttribute("cuentasInactivas", cuentasInactivas);
+		request.setAttribute("dni", dni);
+		
+		System.out.println(dni);
+		System.out.println(cuentasInactivas);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 		dispatcher.forward(request, response);
@@ -161,8 +196,8 @@ private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	return cuenta;
 }
 
-private boolean modificarCuenta(HttpServletRequest request) {
-	CuentaNegocio neg = new CuentaNegocioImpl();
+private int modificarCuenta(HttpServletRequest request) {
+	CuentaNegocioImpl neg = new CuentaNegocioImpl();
     Cuenta cuenta = cargarCuentaConDatosDeLaTabla(request);
     return neg.update(cuenta);
 	
@@ -179,6 +214,11 @@ private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
 	cuenta.setNumero(Integer.parseInt(request.getParameter("txtTablaNumero").trim()));
 	cuenta.setTipo(tipC);
 	cuenta.setSaldo(Float.parseFloat(request.getParameter("txtTablaSaldo").trim()));
+
+	boolean baja = request.getParameter("ddlEstado").equals("baja");
+	cuenta.setBaja(baja);
+	
+	System.out.println("DDL DE ESTADO MARCA:"+ baja);
 	return cuenta;
 }
 

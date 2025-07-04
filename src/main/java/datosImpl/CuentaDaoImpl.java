@@ -67,8 +67,9 @@ public class CuentaDaoImpl implements CuentaDao {
 				+ " fechaCreacion_Ctas = ?, "
 				+ " tipoCta_Ctas = ?, "
 				+ " CBU_Ctas = ?, "
-				+ " saldo_Ctas = ? "
-				+ "WHERE numeroCuenta_Ctas = ? AND DNI_Ctas = ?";
+				+ " saldo_Ctas = ?, "
+				+ " baja_Ctas = ? "
+				+ " WHERE numeroCuenta_Ctas = ? AND DNI_Ctas = ?";
 		cn = new Conexion();
 		cn.Open();
 		try {
@@ -77,8 +78,9 @@ public class CuentaDaoImpl implements CuentaDao {
 			pst.setInt(2, cuenta.getTipo().getIdTipo());
 			pst.setString(3, cuenta.getCbu());
 			pst.setFloat(4, cuenta.getSaldo());
-			pst.setInt(5,cuenta.getNumero());
-			pst.setString(6, cuenta.getDni());
+			pst.setBoolean(5, cuenta.getBaja());
+			pst.setInt(6,cuenta.getNumero());
+			pst.setString(7, cuenta.getDni());
 			
 			if(pst.executeUpdate() == 1) {
 				update = true;
@@ -90,18 +92,30 @@ public class CuentaDaoImpl implements CuentaDao {
 		return update;
 	}
 	
-	public ArrayList<Cuenta> obtenerCuentas(String dni) {
+	public ArrayList<Cuenta> obtenerCuentas(String dni, Boolean cuentasInactivas) {
 		ArrayList<Cuenta> listaCuentas = new ArrayList<Cuenta>();
 		try {
 			cn = new Conexion();
 			cn.Open();
 			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
-					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId"
+					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId, baja_Ctas as baja"
 					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
-					+ " WHERE cuentas.baja_Ctas = '0' ";
-			if(dni!=null || !(dni.isBlank())) {
+					+ " WHERE 1 = 1 ";
+			if(dni!=null && !dni.isBlank()) {
 				query+=" AND DNI_Ctas LIKE '%"+dni+"%'";
 			}
+			
+			if(cuentasInactivas!=null) {
+				System.out.println("DIFF NULL");
+				System.out.println(cuentasInactivas);
+				if(cuentasInactivas != true) {
+					query+=" AND cuentas.baja_Ctas = FALSE";
+				}
+				
+			}else {
+				System.out.println("NULL");
+			}
+			
 			ResultSet rs = cn.query(query);
 			while(rs.next()) {
 				Cuenta cuenta = new Cuenta();
@@ -114,6 +128,7 @@ public class CuentaDaoImpl implements CuentaDao {
 				tipoCuenta.setIdTipo(rs.getInt("tipoId"));
 				tipoCuenta.setNombre(rs.getString("tipoNombre"));
 				cuenta.setTipo(tipoCuenta);
+				cuenta.setBaja(rs.getBoolean("baja"));
 				listaCuentas.add(cuenta);
 			}
 			rs.close();

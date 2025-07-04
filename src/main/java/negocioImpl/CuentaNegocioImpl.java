@@ -32,12 +32,19 @@ CuentaDaoImpl dao = new CuentaDaoImpl();
 	}
 	
 	@Override
-	public boolean update(Cuenta cuenta) {
-		return dao.update(cuenta);
+	public int update(Cuenta cuenta) {
+		
+		if(cuenta.getBaja()== false) {
+			if(!tieneMenosDe3Cuentas(cuenta.getDni())) return -1;
+		}
+		if(! dao.update(cuenta)) return -2;
+		
+		return 1;
+		
 	}
 	
-	public ArrayList<Cuenta> obtenerListaCuentas(String dni) {
-		return dao.obtenerCuentas(dni);
+	public ArrayList<Cuenta> obtenerListaCuentas(String dni,Boolean cuentasInactivas) {
+		return dao.obtenerCuentas(dni,cuentasInactivas);
 	}
 	@Override
 	public boolean eliminarCuenta(int numeroCuenta) {

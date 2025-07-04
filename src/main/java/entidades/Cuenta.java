@@ -50,14 +50,15 @@ public void setSaldo(float saldo) {
 	this.saldo = saldo;
 }
 
-@Override
-public String toString() {
-	return "Cuenta [numero=" + numero + ", dni=" + dni + ", fechaCreacion=" + fechaCreacion + ", tipo=" + tipo
-			+ ", cbu=" + cbu + ", saldo=" + saldo + "]";
-}
 
 public Boolean getBaja() {
 	return baja;
+}
+
+@Override
+public String toString() {
+	return "Cuenta [numero=" + numero + ", dni=" + dni + ", fechaCreacion=" + fechaCreacion + ", tipo=" + tipo
+			+ ", cbu=" + cbu + ", saldo=" + saldo + ", baja=" + baja + "]";
 }
 
 public void setBaja(Boolean baja) {
