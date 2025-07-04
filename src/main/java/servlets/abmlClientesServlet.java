@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -31,20 +32,78 @@ public class abmlClientesServlet extends HttpServlet {
     public abmlClientesServlet() {
         super();
     }
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
-		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
-	
-	    List<Pais> listaPaises = paisNeg.obtenerPaises(); 
-	    List<Cliente> listaClientes = clienteNeg.listar();
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+        ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+        LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+        ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 
-	    request.setAttribute("listaClientes", listaClientes);
-	    request.setAttribute("listaPaises", listaPaises);
-	    
+        List<Pais> listaNacionalidades = paisNeg.obtenerPaises(); 
+        List<Cliente> listaClientes = clienteNeg.listar();
 
-	    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
-	    rd.forward(request, response);
-	}
+        // CARGAMOS SI HAY PAIS O PROVINCIA SELECCIONADOS
+        String nombrePais = request.getParameter("ddlPais");
+        String nombreProv = request.getParameter("ddlProvincia");
+
+        if (nombrePais != null && !nombrePais.isEmpty()) {
+            List<Provincia> listaProvincias = provNeg.obtenerProvinciasPorPais(nombrePais);
+            request.setAttribute("listaProvincias", listaProvincias);
+
+            if (nombreProv != null && !nombreProv.isEmpty()) {
+                List<Localidad> listaLocalidades = locNeg.obtenerLocalidadesXProvXPais(nombrePais, nombreProv);
+                request.setAttribute("listaLocalidades", listaLocalidades);
+                request.setAttribute("provinciaSeleccionada", nombreProv);
+            }
+            request.setAttribute("paisSeleccionado", nombrePais);
+        }
+
+        request.setAttribute("listaNacionalidades", listaNacionalidades);
+        request.setAttribute("listaClientes", listaClientes);
+
+        // FILTRADO
+        String dni = request.getParameter("txtDni");
+        String cuil = request.getParameter("txtCuil");
+        String nombre = request.getParameter("txtNombre");
+        String apellido = request.getParameter("txtApellido");
+        String sexo = request.getParameter("ddlSexo");
+        String nacionalidad = request.getParameter("ddlNacionalidad");
+        String localidad = request.getParameter("ddlLocalidad");
+        String fechaNac = request.getParameter("txtFechaDeNacimiento");
+
+        if ((dni != null && !dni.isEmpty()) || (cuil != null && !cuil.isEmpty()) || 
+            (nombre != null && !nombre.isEmpty()) || (apellido != null && !apellido.isEmpty()) ||
+            (sexo != null && !sexo.isEmpty()) || (nacionalidad != null && !nacionalidad.isEmpty()) ||
+            (nombreProv != null && !nombreProv.isEmpty()) || (localidad != null && !localidad.isEmpty()) ||
+            (fechaNac != null && !fechaNac.isEmpty())) {
+
+            List<Cliente> filtrados = new ArrayList<>();
+
+            for (Cliente c : listaClientes) {
+                boolean coincide = true;
+
+                if (dni != null && !dni.isEmpty() && !c.getDNI().contains(dni)) coincide = false;
+                if (cuil != null && !cuil.isEmpty() && !c.getCUIL().contains(cuil)) coincide = false;
+                if (nombre != null && !nombre.isEmpty() && !c.getNombre().toLowerCase().contains(nombre.toLowerCase())) coincide = false;
+                if (apellido != null && !apellido.isEmpty() && !c.getApellido().toLowerCase().contains(apellido.toLowerCase())) coincide = false;
+                if (sexo != null && !sexo.isEmpty() && !c.getSexo().equalsIgnoreCase(sexo)) coincide = false;
+                if (nacionalidad != null && !nacionalidad.isEmpty() && c.getNacionalidad() != null && !(""+c.getNacionalidad().getId()).equals(nacionalidad)) coincide = false;
+                if (nombreProv != null && !nombreProv.isEmpty() && c.getProvincia() != null && !c.getProvincia().getNombre().equalsIgnoreCase(nombreProv)) coincide = false;
+                if (localidad != null && !localidad.isEmpty() && c.getLocalidad() != null && !c.getLocalidad().getNombre().equalsIgnoreCase(localidad)) coincide = false;
+                if (fechaNac != null && !fechaNac.isEmpty()) {
+                    Date fecha = Date.valueOf(fechaNac);
+                    if (!c.getFechaNacimiento().equals(fecha)) coincide = false;
+                }
+
+                if (coincide) filtrados.add(c);
+            }
+
+            request.setAttribute("listaClientes", filtrados);
+        }
+
+        RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
+        rd.forward(request, response);
+    }
 	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
