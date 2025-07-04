@@ -71,6 +71,7 @@
         padding: 1em;
         box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
         overflow-x:scroll;
+        margin-bottom: 3em;
       }
       #tabla table {
           border-collapse: collapse;
@@ -116,6 +117,9 @@
     }
 
     </style>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 <body>
 <%@ include file="./HeaderAdmin.jsp" %>
@@ -152,7 +156,7 @@
 
             </div>
             <div id="tabla">
-                <table>
+                <table id="tabla-prestamos">
                     <thead>
                         <tr>
                             <th>ID Préstamo</th>
@@ -174,34 +178,44 @@
                     if(listaPrestamos != null){
                     	for(Prestamo prestamo : listaPrestamos){
                     %>
-                    <form method="post" action="PrestamosServlet">
+                    <form method="post" class="form-confirm" action="PrestamosServlet">
                         <tr>
                             <td>
-                                <input name="txtIdPrestamo" type="text" value="<%= prestamo.getIdPrestamo() %>" readonly>
+                                <input name="txtIdPrestamo" type="hidden" value="<%= prestamo.getIdPrestamo() %>">
+                                <%= prestamo.getIdPrestamo() %>
                             </td>
                             <td>
-                                <input type="text" value="<%= prestamo.getDni()%>" disabled>
+                                <input type="hidden" value="<%= prestamo.getDni()%>">
+                                <%= prestamo.getDni()%>
                             </td>
                              <td>
-                                <input type="text" value="<%= prestamo.getImportePagar() %>" disabled>
+                                <input type="hidden" value="<%= prestamo.getImportePagar() %>" >
+                            	<%= prestamo.getImportePagar() %>
                             </td>
                              <td>
-                                <input type="text" value="<%= prestamo.getImportePedido() %>" disabled>
+                                <input type="hidden" value="<%= prestamo.getImportePedido() %>" >
+                            	<%= prestamo.getImportePedido() %>
                             </td>
                              <td>
-                                <input type="text" value="<%= prestamo.getMontoPorMes()%>" disabled>
+                                <input type="hidden" value="<%= prestamo.getMontoPorMes()%>" >
+                            	<%= prestamo.getMontoPorMes() %>
                             </td>
                              <td>
-                                <input type="text" value="<%= prestamo.getPlazoPagos() %>" disabled>
+                                <input type="hidden" value="<%= prestamo.getPlazoPagos() %>" >
+                            	<%= prestamo.getPlazoPagos() %>
                             </td>
                              <td>
-                                <input type="date" value="<%= prestamo.getFecha() %>" disabled>
+                                <input type="hidden" value="<%= prestamo.getFecha() %>" >
+                            	<%= prestamo.getFecha()%>
                             </td>
                             <td>
-                             <input type="text" value="<%= prestamo.getCuenta() %>" disabled>
+                             <input type="hidden" value="<%= prestamo.getCuenta() %>">
+                           		<%= prestamo.getCuenta()%>
                             </td>
                             <td id="estado-td">
-                            <input type="text" value="<%= prestamo.getEstado() %>" disabled>
+                            
+                            <input type="hidden" value="<%= prestamo.getEstado() %>">
+                            <%= prestamo.getEstado()%>
                             </td>
                             
 							<td>
@@ -235,5 +249,17 @@
 
     </main>
     <script src="./ConfirmacionForm.js"></script>
+    <script>
+  $(document).ready(function() {
+    $('#tabla-prestamos').DataTable({
+      "pageLength": 4,
+      "lengthChange": false,
+      "searching": false,
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
 </body>
 </html>
