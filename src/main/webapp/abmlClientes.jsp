@@ -204,8 +204,10 @@
 				}
              if(dniIngresado == null || dniIngresado == ""){
                     %>
-			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" placeholder="Ingresar DNI" required /><% }else{%>
-			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" value="<%=dniIngresado %>" required /><%} %>
+			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni"
+			 placeholder="Ingresar DNI" required /><% }else{%>
+			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" 
+			value="<%=dniIngresado %>" required /><%} %>
             </div>
             <div>
               <label for="txtCuil">CUIL</label>
@@ -216,8 +218,10 @@
 				}
              if(cuilIngresado == null || cuilIngresado == ""){
                     %>
-			<input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" placeholder="Ingresar CUIL" required /><% }else{%>
-			<input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" value="<%= cuilIngresado %>" required /><%} %>   
+			<input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil" 
+			placeholder="Ingresar CUIL" required /><% }else{%>
+			<input type="text" id="txtCuil"  pattern="^\d{1,11}$" title="Solo números. Máximo 11 caractéres" name="txtCuil"
+			 value="<%= cuilIngresado %>" required /><%} %>   
             </div>
 
             <div>
