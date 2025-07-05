@@ -17,13 +17,16 @@ import entidades.Cliente;
 import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
+import entidades.TelefonosXclientes;
 import entidades.Usuario;
 import negocio.ClienteNegocio;
 import negocio.PaisNegocio;
+import negocio.TelefonosXclientesNegocio;
 import negocioImpl.ClienteNegocioImpl;
 import negocioImpl.LocalidadNegocioImpl;
 import negocioImpl.PaisNegocioImpl;
 import negocioImpl.ProvinciaNegocioImpl;
+import negocioImpl.TelefonosXclientesNegocioImpl;
 
 @WebServlet("/abmlClientesServlet")
 public class abmlClientesServlet extends HttpServlet {
@@ -325,7 +328,7 @@ public class abmlClientesServlet extends HttpServlet {
 			boolean modificado = modificarCliente(request);
 			request.setAttribute("resultadoModificar", modificado);
 			request.setAttribute("listaClientes", clienteNeg.listar());
-			System.out.println("click en modificar");
+			
 		}
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
@@ -338,9 +341,16 @@ public class abmlClientesServlet extends HttpServlet {
 		
 	}
 private boolean modificarCliente(HttpServletRequest request) {
+	boolean modificado = false;
 	ClienteNegocio neg = new ClienteNegocioImpl();
+	TelefonosXclientesNegocio negTel = new TelefonosXclientesNegocioImpl();
 	Cliente CliAModificar = cargarClienteConDatosDeLaTabla(request);
-	return neg.modificar(CliAModificar);
+	
+	if(neg.modificar(CliAModificar)) {
+		modificado = true;
+		//modificado = negTel.modificar(new TelefonosXclientes(CliAModificar.getTelefono(),CliAModificar.getDNI()));
+	}
+	return modificado;
 }
 private Cliente cargarClienteConDatosDeLaTabla(HttpServletRequest request) {
 	Cliente cli = new Cliente();
@@ -373,6 +383,7 @@ private Cliente cargarClienteConDatosDeLaTabla(HttpServletRequest request) {
 	return cli;
 	
 }
+
 
 	public boolean NaN(String texto) {
 	    try {
