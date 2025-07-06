@@ -510,78 +510,119 @@
 		%>
       </div>
 
-      <h2>FILTRAR CLIENTES</h2>
-      <div id="div-filtrar">
-        <form>
-          <div class="form-filter">
-            <div>
-              <label for="txtDni">DNI</label>
-              <input type="text" id="txtDni" name="txtDni" />
-            </div>
-
-            <div>
-              <label for="txtCuil">CUIL</label>
-              <input type="text" id="txtCuil" name="txtCuil" />
-            </div>
-
-            <div>
-              <label for="txtNombre">Nombre</label>
-              <input type="text" id="txtNombre" name="txtNombre" />
-            </div>
-
-            <div>
-              <label for="txtApellido">Apellido</label>
-              <input type="text" id="txtApellido" name="txtApellido" />
-            </div>
-
-            <div>
-              <label for="ddlSexo">Sexo</label>
-              <select id="ddlSexo" name="ddlSexo">
-                <option selected>Todos</option>
-                <option>Masculino</option>
-                <option>Femenino</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="ddlNacionalidad">Nacionalidad</label>
-              <select id="ddlNacionalidad" name="ddlNacionalidad">
-                <option selected>Todas</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="ddlProvincia">Provincia</label>
-              <select id="ddlProvincia" name="ddlProvincia">
-                <option selected>Todas</option>
-              </select>
-            </div>
-
-          
-            <div>
-              <label for="ddlLocalidad">Localidad</label>
-              <select id="ddlLocalidad" name="ddlLocalidad">
-                <option selected>Todas</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
-              <input
-                type="date"
-                id="txtFechaDeNacimiento"
-                name="txtFechaDeNacimiento"
-              />
-            </div>
-          </div>
-           
-          
-
-          <div class="form-submit">
-            <button type="submit">Filtrar</button>
-          </div>
-        </form>
-      </div>
+		<!-- FILTRAR CLIENTES -->
+		<h2>FILTRAR CLIENTES</h2>
+		<div id="div-filtrar">
+		  <form method="get" action="abmlClientesServlet">
+		    <div class="form-filter">
+		      <!-- DNI -->
+		      <div>
+		        <label for="txtDni">DNI</label>
+		        <input type="text" id="txtDni" name="txtDni"
+		          value="<%= request.getParameter("txtDni") != null ? request.getParameter("txtDni") : "" %>" />
+		      </div>
+		
+		      <!-- CUIL -->
+		      <div>
+		        <label for="txtCuil">CUIL</label>
+		        <input type="text" id="txtCuil" name="txtCuil"
+		          value="<%= request.getParameter("txtCuil") != null ? request.getParameter("txtCuil") : "" %>" />
+		      </div>
+		
+		      <!-- Nombre -->
+		      <div>
+		        <label for="txtNombre">Nombre</label>
+		        <input type="text" id="txtNombre" name="txtNombre"
+		          value="<%= request.getParameter("txtNombre") != null ? request.getParameter("txtNombre") : "" %>" />
+		      </div>
+		
+		      <!-- Apellido -->
+		      <div>
+		        <label for="txtApellido">Apellido</label>
+		        <input type="text" id="txtApellido" name="txtApellido"
+		          value="<%= request.getParameter("txtApellido") != null ? request.getParameter("txtApellido") : "" %>" />
+		      </div>
+		
+		      <!-- Sexo -->
+		      <div>
+		        <label for="ddlSexo">Sexo</label>
+		        <select id="ddlSexo" name="ddlSexo">
+		          <option value="" <%= (request.getParameter("ddlSexo")==null || request.getParameter("ddlSexo").isEmpty()) ? "selected" : "" %>>Todos</option>
+		          <option value="Masculino" <%= "Masculino".equals(request.getParameter("ddlSexo")) ? "selected" : "" %>>Masculino</option>
+		          <option value="Femenino" <%= "Femenino".equals(request.getParameter("ddlSexo")) ? "selected" : "" %>>Femenino</option>
+		        </select>
+		      </div>
+		
+		      <!-- Pais -->
+			<div>
+			  <label for="ddlPaisFiltro">Pais</label>
+			  <select id="ddlPaisFiltro" name="ddlPaisFiltro" onchange="this.form.submit()">
+			    <option value="" <%= (request.getParameter("ddlPaisFiltro")==null || request.getParameter("ddlPaisFiltro").isEmpty()) ? "selected" : "" %>>Todos</option>
+			    <%
+			    List<Pais> listaPaisesFiltro = (List<Pais>) request.getAttribute("listaPaisesFiltro");
+			      String paisSel = request.getParameter("ddlPaisFiltro");
+			      if (listaPaisesFiltro != null) {
+			        for (Pais p : listaPaisesFiltro) {
+			    %>
+			    <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(paisSel) ? "selected" : "" %>><%= p.getNombre() %></option>
+			    <%
+			        }
+			      }
+			    %>
+			  </select>
+			</div>
+			
+			<!-- Provincia -->
+			<div>
+			  <label for="ddlProvinciaFiltro">Provincia</label>
+			  <select id="ddlProvinciaFiltro" name="ddlProvinciaFiltro" onchange="this.form.submit()">
+			    <option value="" <%= (request.getParameter("ddlProvinciaFiltro")==null || request.getParameter("ddlProvinciaFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
+			    <%
+			    List<Provincia> listaProvinciasFiltro = (List<Provincia>) request.getAttribute("listaProvinciasFiltro");
+			      String provSel = request.getParameter("ddlProvinciaFiltro");
+			      if (listaProvinciasFiltro != null) {
+			        for (Provincia p : listaProvinciasFiltro) {
+			    %>
+			    <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(provSel) ? "selected" : "" %>><%= p.getNombre() %></option>
+			    <%
+			        }
+			      }
+			    %>
+			  </select>
+			</div>
+			
+			<!-- Localidad -->
+			<div>
+			  <label for="ddlLocalidadFiltro">Localidad</label>
+			  <select id="ddlLocalidadFiltro" name="ddlLocalidadFiltro">
+			    <option value="" <%= (request.getParameter("ddlLocalidadFiltro")==null || request.getParameter("ddlLocalidadFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
+			    <%
+			    List<Localidad> listaLocalidadesFiltro = (List<Localidad>) request.getAttribute("listaLocalidadesFiltro");
+			      String locSel = request.getParameter("ddlLocalidadFiltro");
+			      if (listaLocalidadesFiltro != null) {
+			        for (Localidad l : listaLocalidadesFiltro) {
+			    %>
+			    <option value="<%= l.getNombre() %>" <%= l.getNombre().equals(locSel) ? "selected" : "" %>><%= l.getNombre() %></option>
+			    <%
+			        }
+			      }
+			    %>
+			  </select>
+			</div>
+		
+		      <!-- Fecha de nacimiento -->
+		      <div>
+		        <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
+		        <input type="date" id="txtFechaDeNacimiento" name="txtFechaDeNacimiento"
+		          value="<%= request.getParameter("txtFechaDeNacimiento") != null ? request.getParameter("txtFechaDeNacimiento") : "" %>" />
+		      </div>
+		    </div>
+		
+		    <div class="form-submit">
+		      <button type="submit">Filtrar</button>
+		    </div>
+		  </form>
+		</div>
       
       <!-- LISTADO DE CLIENTES  -->
       
