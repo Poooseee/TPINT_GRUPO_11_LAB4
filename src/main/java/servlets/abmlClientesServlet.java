@@ -41,24 +41,45 @@ public class abmlClientesServlet extends HttpServlet {
         ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 
         // =========================
-        // DATOS PARA FORM DE ALTA
+        // DATOS PARA FORM DE ALTA (SEPARADOS)
         // =========================
-        List<Pais> listaPaisesAlta = paisNeg.obtenerPaises();
-        request.setAttribute("listaPaises", listaPaisesAlta);
+        List<Pais> listaPaises = paisNeg.obtenerPaises();
+        request.setAttribute("listaPaises", listaPaises);
+
+        // =========================
+        // FILTRADO
+        // =========================
+        String paisFiltro = request.getParameter("ddlPaisFiltro");
+        String provinciaFiltro = request.getParameter("ddlProvinciaFiltro");
+
+        // Listas para filtros
+        List<Pais> listaPaisesFiltro = paisNeg.obtenerPaises();
+        List<Provincia> listaProvinciasFiltro = new ArrayList<>();
+        List<Localidad> listaLocalidadesFiltro = new ArrayList<>();
+
+        if (paisFiltro != null && !paisFiltro.isEmpty()) {
+            listaProvinciasFiltro = provNeg.obtenerProvinciasPorPais(paisFiltro);
+            if (provinciaFiltro != null && !provinciaFiltro.isEmpty()) {
+                listaLocalidadesFiltro = locNeg.obtenerLocalidadesXProvXPais(paisFiltro, provinciaFiltro);
+            }
+        }
+
+        request.setAttribute("listaPaisesFiltro", listaPaisesFiltro);
+        request.setAttribute("listaProvinciasFiltro", listaProvinciasFiltro);
+        request.setAttribute("listaLocalidadesFiltro", listaLocalidadesFiltro);
 
         // =========================
         // FILTRADO DE CLIENTES
         // =========================
-        List<Cliente> listaClientes = clienteNeg.listar(); // Todos por default
+        List<Cliente> listaClientes = clienteNeg.listar();
+        List<Cliente> filtrados = new ArrayList<>();
 
-        // Parametros de filtrado
+        // Demás filtros
         String dni = request.getParameter("txtDni");
         String cuil = request.getParameter("txtCuil");
         String nombre = request.getParameter("txtNombre");
         String apellido = request.getParameter("txtApellido");
         String sexo = request.getParameter("ddlSexo");
-        String paisFiltro = request.getParameter("ddlPaisFiltro");
-        String provinciaFiltro = request.getParameter("ddlProvinciaFiltro");
         String localidadFiltro = request.getParameter("ddlLocalidadFiltro");
         String fechaNac = request.getParameter("txtFechaDeNacimiento");
 
@@ -67,8 +88,6 @@ public class abmlClientesServlet extends HttpServlet {
             (sexo != null && !sexo.isEmpty()) || (paisFiltro != null && !paisFiltro.isEmpty()) ||
             (provinciaFiltro != null && !provinciaFiltro.isEmpty()) || (localidadFiltro != null && !localidadFiltro.isEmpty()) ||
             (fechaNac != null && !fechaNac.isEmpty())) {
-
-            List<Cliente> filtrados = new ArrayList<>();
 
             for (Cliente c : listaClientes) {
                 boolean coincide = true;
@@ -85,21 +104,17 @@ public class abmlClientesServlet extends HttpServlet {
                         Date fechaParam = Date.valueOf(fechaNac);
                         if (!c.getFechaNacimiento().equals(fechaParam)) coincide = false;
                     } catch (IllegalArgumentException e) {
-                        // formato inválido, ignoramos
                     }
                 }
                 if (coincide) filtrados.add(c);
             }
-            request.setAttribute("listaClientes", filtrados);
         } else {
-            // Si no hay filtros, mostramos todos
-            request.setAttribute("listaClientes", listaClientes);
+            filtrados = listaClientes;
         }
 
-        // Lista de países siempre para el filtro
-        request.setAttribute("listaNacionalidades", listaPaisesAlta);
+        request.setAttribute("listaClientes", filtrados);
 
-        // Enviar a JSP
+        // Enviar
         RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
         rd.forward(request, response);
     }

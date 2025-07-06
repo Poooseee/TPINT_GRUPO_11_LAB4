@@ -7,12 +7,6 @@
 <%@ page import="entidades.Cliente" %>
 <%@ page import= "java.sql.Date"%>
 
-<%
-List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
-List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
-List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -321,7 +315,7 @@ List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("lista
               <label for="ddlPais">País</label>
               <select id="ddlPais" required  name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
               <%
-              	//List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
+              	List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
             	String paisSeleccionado = "";
             	if (request.getAttribute("paisSeleccionado") != null) {
             	    paisSeleccionado = request.getAttribute("paisSeleccionado").toString();
@@ -348,7 +342,7 @@ List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("lista
               <label for="ddlProvincia">Provincia</label>
               <select id="ddlProvincia" required name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
               <%
-              	//List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
+              	List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
             	String provinciaSeleccionada = "";
             	if (request.getAttribute("provinciaSeleccionada") != null) {
             	    provinciaSeleccionada = request.getAttribute("provinciaSeleccionada").toString();
@@ -378,7 +372,7 @@ List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("lista
               <label for="ddlLocalidad">Localidad</label>
               <select id="ddlLocalidad" required  name="ddlLocalidad" onchange="this.form.submit()">
               <%
-              	//List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+              	List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
             	String localidadSeleccionada = "";
                 if (request.getAttribute("localidadSeleccionada") != null) {
                	    localidadSeleccionada = request.getAttribute("localidadSeleccionada").toString();
@@ -559,64 +553,61 @@ List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("lista
 		      </div>
 		
 		      <!-- Pais -->
-		      <div>
-		        <label for="ddlPaisFiltro">Pais</label>
-		        <select id="ddlPaisFiltro" name="ddlPaisFiltro">
-		          <option value="" <%= (request.getParameter("ddlPaisFiltro")==null || request.getParameter("ddlPaisFiltro").isEmpty()) ? "selected" : "" %>>Todos</option>
-		          <%
-		            String paisSel = request.getParameter("ddlPaisFiltro");
-		            if (listaPaises != null) {
-		              for (Pais p : listaPaises) {
-		          %>
-		          <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(paisSel) ? "selected" : "" %>>
-		            <%= p.getNombre() %>
-		          </option>
-		          <%
-		              }
-		            }
-		          %>
-		        </select>
-		      </div>
-		
-		      <!-- Provincia -->
-		      <div>
-		        <label for="ddlProvinciaFiltro">Provincia</label>
-		        <select id="ddlProvinciaFiltro" name="ddlProvinciaFiltro">
-		          <option value="" <%= (request.getParameter("ddlProvinciaFiltro")==null || request.getParameter("ddlProvinciaFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
-		          <%
-		            String provSel = request.getParameter("ddlProvinciaFiltro");
-		            if (listaProvincias != null) {
-		              for (Provincia p : listaProvincias) {
-		          %>
-		          <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(provSel) ? "selected" : "" %>>
-		            <%= p.getNombre() %>
-		          </option>
-		          <%
-		              }
-		            }
-		          %>
-		        </select>
-		      </div>
-		
-		      <!-- Localidad -->
-		      <div>
-		        <label for="ddlLocalidadFiltro">Localidad</label>
-		        <select id="ddlLocalidadFiltro" name="ddlLocalidadFiltro">
-		          <option value="" <%= (request.getParameter("ddlLocalidadFiltro")==null || request.getParameter("ddlLocalidadFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
-		          <%
-		            String locSel = request.getParameter("ddlLocalidadFiltro");
-		            if (listaLocalidades != null) {
-		              for (Localidad l : listaLocalidades) {
-		          %>
-		          <option value="<%= l.getNombre() %>" <%= l.getNombre().equals(locSel) ? "selected" : "" %>>
-		            <%= l.getNombre() %>
-		          </option>
-		          <%
-		              }
-		            }
-		          %>
-		        </select>
-		      </div>
+			<div>
+			  <label for="ddlPaisFiltro">Pais</label>
+			  <select id="ddlPaisFiltro" name="ddlPaisFiltro" onchange="this.form.submit()">
+			    <option value="" <%= (request.getParameter("ddlPaisFiltro")==null || request.getParameter("ddlPaisFiltro").isEmpty()) ? "selected" : "" %>>Todos</option>
+			    <%
+			    List<Pais> listaPaisesFiltro = (List<Pais>) request.getAttribute("listaPaisesFiltro");
+			      String paisSel = request.getParameter("ddlPaisFiltro");
+			      if (listaPaisesFiltro != null) {
+			        for (Pais p : listaPaisesFiltro) {
+			    %>
+			    <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(paisSel) ? "selected" : "" %>><%= p.getNombre() %></option>
+			    <%
+			        }
+			      }
+			    %>
+			  </select>
+			</div>
+			
+			<!-- Provincia -->
+			<div>
+			  <label for="ddlProvinciaFiltro">Provincia</label>
+			  <select id="ddlProvinciaFiltro" name="ddlProvinciaFiltro" onchange="this.form.submit()">
+			    <option value="" <%= (request.getParameter("ddlProvinciaFiltro")==null || request.getParameter("ddlProvinciaFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
+			    <%
+			    List<Provincia> listaProvinciasFiltro = (List<Provincia>) request.getAttribute("listaProvinciasFiltro");
+			      String provSel = request.getParameter("ddlProvinciaFiltro");
+			      if (listaProvinciasFiltro != null) {
+			        for (Provincia p : listaProvinciasFiltro) {
+			    %>
+			    <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(provSel) ? "selected" : "" %>><%= p.getNombre() %></option>
+			    <%
+			        }
+			      }
+			    %>
+			  </select>
+			</div>
+			
+			<!-- Localidad -->
+			<div>
+			  <label for="ddlLocalidadFiltro">Localidad</label>
+			  <select id="ddlLocalidadFiltro" name="ddlLocalidadFiltro">
+			    <option value="" <%= (request.getParameter("ddlLocalidadFiltro")==null || request.getParameter("ddlLocalidadFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
+			    <%
+			    List<Localidad> listaLocalidadesFiltro = (List<Localidad>) request.getAttribute("listaLocalidadesFiltro");
+			      String locSel = request.getParameter("ddlLocalidadFiltro");
+			      if (listaLocalidadesFiltro != null) {
+			        for (Localidad l : listaLocalidadesFiltro) {
+			    %>
+			    <option value="<%= l.getNombre() %>" <%= l.getNombre().equals(locSel) ? "selected" : "" %>><%= l.getNombre() %></option>
+			    <%
+			        }
+			      }
+			    %>
+			  </select>
+			</div>
 		
 		      <!-- Fecha de nacimiento -->
 		      <div>
