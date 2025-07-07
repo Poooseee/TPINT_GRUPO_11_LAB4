@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <%@ page import="entidades.ClienteReporte" %>
+    <%@ page import="entidades.PrestamosReporte" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +27,7 @@
             margin: 0 auto;
             text-align: left;
         }
+
         
         #reporteCuotas{
         	background-color: white;
@@ -66,17 +70,26 @@
 		
         #reporte2-table {
             background-color: white;
-            width: 100%;
+            width: 50%;
             text-align: center;
             box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+            border-collapse:collapse;
         }
+        #reporte2-table thead{
+        	background-color: #3a3a3a;
+        	color:white;
+        }
+        
         #reporte3-table {
             background-color: white;
             width: 100%;
             text-align: center;
             box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
         }
-
+		
+		#reporteCuotas{
+			width:50%;
+		}
     </style>
 </head>
 <body>
@@ -86,14 +99,14 @@
             <h3>Transferencias totales entre fechas</h3>
             <form id="reporte1-form" method="post" action="ReportesServlet">
                 <div>
-                    <label>Fecha Inicio</label>
+                    <label>Desde</label>
                     <input type="date" name="dateDesde"
                			value="<%= (request.getAttribute("fechaDesde") != null) 
                         ? request.getAttribute("fechaDesde") 
                         : "2024-06-01" %>">
                 </div>
                 <div>
-                    <label>Fecha Fin</label>
+                    <label>Hasta</label>
                     <input type="date" name="dateHasta"
                			value="<%= (request.getAttribute("fechaHasta") != null) 
                         ? request.getAttribute("fechaHasta") 
@@ -109,63 +122,68 @@
             </form>
          </div>
          
-          <div class="reporte">
-            <h3>Cliente con mayor actividad</h3>
-            <table id="reporte2-table">
-                <tr>
-                	<th>Id Cliente</th>
-                    <th>Cantidad de Transferencias</th>
-                    <th>Cantidad de Préstamos</th>
-                </tr>
-                <tr>
-                  <td>*Insertar datos de la BD*</td>
-                    <td>*Insertar datos de la BD*</td>
-                    <td>*Insertar datos de la BD*</td>
-                </tr>
-              </table>
-       	</div>
+         <div class="reporte">
+		    <%
+		        ClienteReporte clienteTransfer = (ClienteReporte) request.getAttribute("clienteTransfer");
+		    %>
+		
+		    <h3>Cliente con más transferencias</h3>
+		    <table id="reporte2-table" >
+		        <thead>
+		            <tr>
+		                <th>Id Cliente</th>
+		                <th>Cantidad de Transferencias</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr>
+		                <td><%= clienteTransfer != null ? clienteTransfer.getId() : "N/A" %></td>
+		                <td><%= clienteTransfer != null ? clienteTransfer.getCantidad() : "0" %></td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
         <br>
         <div class="reporte">
+		    <%
+		        ClienteReporte clientePrestamos = (ClienteReporte) request.getAttribute("clientePrestamos");
+		    %>
+		
+		    <h3>Cliente que solicitó mas préstamos</h3>
+		    <table id="reporte2-table" >
+		        <thead>
+		            <tr>
+		                <th>Id Cliente</th>
+		                <th>Cantidad de Préstamos</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr>
+		                <td><%= clienteTransfer != null ? clientePrestamos.getId() : "N/A" %></td>
+		                <td><%= clienteTransfer != null ? clientePrestamos.getCantidad() : "0" %></td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
+       	<br>
+        <div class="reporte">
+        <h3>Estadísticas de los Préstamos</h3>
+        <%
+        	PrestamosReporte prestamosReporte = new PrestamosReporte();
+        
+        	prestamosReporte = (PrestamosReporte)request.getAttribute("prestamosReporte");
+        	
+        	int porcentajeAprobado = prestamosReporte.getAprobado();
+        	int porcentajeRechazado = prestamosReporte.getRechazado();
+        	int porcentajePendiente = prestamosReporte.getPendiente();
+        %>
         	<div id="reporteCuotas">
-                <form>
-                    <label>Porcentaje de cuotas ACEPTADAS</label>
-                    <input type="text" disabled value="25%">
-                </form>
-                <br>
-                <form>
-                    <label>Porcentaje de cuotas RECHAZADAS</label>
-                    <input type="text" disabled value="25%">
-                </form>
-                <br>
-                <form>
-                    <label>Porcentaje de cuotas PENDIENTES</label>
-                    <input type="text" disabled value="25%">
-                </form>
+        	<h4>ACEPTADOS: % <%= porcentajeAprobado %></h4>
+        	<h4>RECHAZADOS: % <%= porcentajeRechazado %></h4>
+        	<h4>PENDIENTES: % <%= porcentajePendiente %></h4>
         	</div>
         </div>
-        <div class="reporte">
-            <h3>Pago de cuotas</h3>
-            <table id="reporte3-table">
-                <tr>
-                    <th>Id cliente</th>
-                    <th>Id préstamo</th>
-                    <th>Numero de cuota</th>
-                    <th>Fecha de pago</th>
-                    <th>Estado</th>
-                </tr>
-                <tr>
-                    <td><select id="IdCliente"></select>
-                        <br>*Cargar con datos de la BD*
-                    </td>
-                    <td>*Insertar datos de la BD*</td>
-                    <td>*Insertar datos de la BD*</td>
-                    <td>*Insertar datos de la BD*</td>
-                    <td>*Insertar datos de la BD*</td>
-                </tr>
-                </table>
-                </div>
          
-            
     </main>
 
 </body>
