@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import negocioImpl.ReporteNegocioImpl;
-
+import entidades.ClienteReporte;
+import entidades.PrestamosReporte;
 /**
  * Servlet implementation class ReportesServlet
  */
@@ -29,9 +30,9 @@ public class ReportesServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//AL CARGAR
+		ReporteNegocioImpl neg = new ReporteNegocioImpl();
 		
 		//MOSTRAR TRANSFERENCIAS DEFAULT
-		ReporteNegocioImpl neg = new ReporteNegocioImpl();
 		Date fechaDesde = Date.valueOf(LocalDate.of(2024, 6, 1));
 		Date fechaHasta = Date.valueOf(LocalDate.of(2026, 6, 1));
 		
@@ -40,6 +41,22 @@ public class ReportesServlet extends HttpServlet {
 		request.setAttribute("cantidadTransferencias", cantidad);
 		System.out.println(cantidad);
 		
+		//MOSTRAR CLIENTE CON MAYOR ACTIVIDAD
+		ClienteReporte clientePrestamos = neg.obtenerClienteConMasPrestamos();
+		ClienteReporte clienteTransfer = neg.obtenerClienteConMasTransferencias();
+
+		request.setAttribute("clientePrestamos", clientePrestamos);
+		request.setAttribute("clienteTransfer", clienteTransfer);
+		
+		//PORCENTAJE DE PRESTAMOS
+		PrestamosReporte prestamosReporte = neg.obtenerPorcentajesPrestamos();
+		request.setAttribute("prestamosReporte", prestamosReporte);
+		
+		System.out.println(prestamosReporte.getAprobado());
+		System.out.println(prestamosReporte.getPendiente());
+		System.out.println(prestamosReporte.getRechazado());
+		
+		//DESPACHAR 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/reporte.jsp");
 		dispatcher.forward(request, response);
 	}
