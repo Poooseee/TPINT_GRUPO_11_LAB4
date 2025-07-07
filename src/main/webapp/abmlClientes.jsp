@@ -518,28 +518,28 @@
 		      <!-- DNI -->
 		      <div>
 		        <label for="txtDni">DNI</label>
-		        <input type="text" id="txtDni" name="txtDni"
+		        <input type="text" id="txtDni" name="txtDni" placeholder="Ingresar DNI a buscar" 
 		          value="<%= request.getParameter("txtDni") != null ? request.getParameter("txtDni") : "" %>" />
 		      </div>
 		
 		      <!-- CUIL -->
 		      <div>
 		        <label for="txtCuil">CUIL</label>
-		        <input type="text" id="txtCuil" name="txtCuil"
+		        <input type="text" id="txtCuil" name="txtCuil" placeholder="Ingresar CUIL a buscar" 
 		          value="<%= request.getParameter("txtCuil") != null ? request.getParameter("txtCuil") : "" %>" />
 		      </div>
 		
 		      <!-- Nombre -->
 		      <div>
 		        <label for="txtNombre">Nombre</label>
-		        <input type="text" id="txtNombre" name="txtNombre"
+		        <input type="text" id="txtNombre" name="txtNombre" placeholder="Ingresar nombre a buscar" 
 		          value="<%= request.getParameter("txtNombre") != null ? request.getParameter("txtNombre") : "" %>" />
 		      </div>
 		
 		      <!-- Apellido -->
 		      <div>
 		        <label for="txtApellido">Apellido</label>
-		        <input type="text" id="txtApellido" name="txtApellido"
+		        <input type="text" id="txtApellido" name="txtApellido" placeholder="Ingresar apellido a buscar" 
 		          value="<%= request.getParameter("txtApellido") != null ? request.getParameter("txtApellido") : "" %>" />
 		      </div>
 		
