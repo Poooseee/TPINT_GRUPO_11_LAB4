@@ -1,13 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page import="entidades.Cliente" %>
+    <%@ page import="entidades.Usuario" %>
+    <%@ page import="javax.servlet.RequestDispatcher" %>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="imgs/logo_Honse-nombre.png" type="image/png">
     <title>Menú Cliente - Banco Honse</title>
 </head>
+   
 <style>
     body{
         margin: 0;
@@ -48,7 +53,7 @@
         border-radius: 100%;
     }
     .saldo{
-        margin: 10% auto 0 auto;
+        margin: 6% auto 0 auto;
         width: 75%;
         height: 20vh;
         background-color: rgba(255, 252, 253, 1);
@@ -94,18 +99,53 @@
         justify-content: space-around;
         margin-right: 1%;
     }
+    .cuentas{
+     display: flex;              /* Activa Flexbox */
+     flex-direction: row;        /* (opcional) Alineación horizontal */
+     justify-content: center ;/* Alinea horizontalmente: start, center, end, space-between... */
+     align-items: center;        /* Alineación vertical (en la misma línea) */
+     gap: 1rem;  
+     margin: 5% auto 0 auto;
+        width: 75%;
+        height: 12vh;
+        background-color: rgba(255, 252, 253, 1);
+        border-radius: 10px;
+    }
+    select{
+        width: 300px;               
+  font-size: 18px;            
+  padding: 0.5em 1em;         
+  box-sizing: border-box; 
+    }
 </style>
 <body>
+
     <header>
         <div class="inicio">
             <a href="menuCliente.jsp"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
-            <p>Hola, *introducir nombre*</p>    
+            <%
+            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+            String nombreUs = "Invitado";
+            if (usuario != null) {
+                nombreUs = usuario.getNickUsuario();
+            }
+            	%>
+            <p>Hola, <%=nombreUs %></p>    
         </div>
         <div class="perfil">
             <a href="perfilCliente.jsp"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
         </div>
     </header>
     <main>
+    <div class="cuentas">
+
+     <h2 style=margin-left:15px>Cuentas</h2>
+    
+     <select>
+     <option>CBU: 12345</option>
+     <option>CBU: 6789</option>
+     </select>
+    </div>
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
@@ -116,6 +156,7 @@
                 <button><img src="imgs/logoOcultar.png" alt="logoOcultar"></button>    
             </div>
         </div>
+        
         <div class="btnsAcciones">
             <div class="btnsAccionesImgs">
                 <a href="transferenciasCliente.jsp"><img src="imgs/logoTransferencia.png" alt="logoTransferencia"></a>
