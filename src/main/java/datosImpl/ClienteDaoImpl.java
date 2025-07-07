@@ -22,8 +22,9 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "SELECT C.*, TxC.telefono_TxC, U.nick_usr, U.tipo_Usr, U.contraseña_Usr FROM CLIENTES C "
+            String query = "SELECT C.*, T.telefono_Tel, U.nick_usr, U.tipo_Usr, U.contraseña_Usr FROM CLIENTES C "
             		+ "LEFT JOIN TELEFONOSXCLIENTES TxC ON C.DNI_Cl = TxC.DNI_TxC "
+            		+ "LEFT JOIN TELEFONOS T ON TxC.idTelefono_TxC = T.idTelefono_Tel "
             		+ "LEFT JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
             		+ "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
             		+ "WHERE U.tipo_Usr = 'CLIENTE';";
@@ -62,9 +63,9 @@ public class ClienteDaoImpl implements ClienteDao {
                 c.setDomicilio(rs.getString("domicilio_Cl"));
                 c.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
                 c.setEmail(rs.getString("mail_Cl"));
-                c.setTelefono(rs.getString("telefono_TxC"));
-                c.setNick(rs.getString("nick_usr"));
-                c.setPassword(rs.getString("contraseña_usr"));
+                c.setTelefono(rs.getString("telefono_Tel"));
+                c.setNick(rs.getString("nick_Usr"));
+                c.setPassword(rs.getString("contraseña_Usr"));
                 c.setBaja(rs.getInt("baja_Cl"));
 
                 lista.add(c);
@@ -101,14 +102,21 @@ public class ClienteDaoImpl implements ClienteDao {
             filas = ps.executeUpdate();
             
             String queryTelefono = "INSERT INTO TELEFONOS (telefono_Tel) VALUES (?)";
-            PreparedStatement psTel = cn.prepare(queryTelefono);
+            PreparedStatement psTel = cn.prepare(queryTelefono, Statement.RETURN_GENERATED_KEYS);
             psTel.setString(1, cliente.getTelefono());
             psTel.executeUpdate();
+            int idTelefono = -1;
+            ResultSet rsTel = psTel.getGeneratedKeys();
+            if(rsTel.next()) {
+            	idTelefono = rsTel.getInt(1);
+            }else {
+            	throw new SQLException("No se generó ID de Télefono");
+            }
             
-            String queryTxC = "INSERT INTO TELEFONOSxCLIENTES (dni_TxC, telefono_TxC) VALUES (?, ?)";
+            String queryTxC = "INSERT INTO TELEFONOSxCLIENTES (dni_TxC, idTelefono_TxC) VALUES (?, ?)";
             PreparedStatement psTxC = cn.prepare(queryTxC);
             psTxC.setString(1, cliente.getDNI());
-            psTxC.setString(2, cliente.getTelefono());
+            psTxC.setInt(2, idTelefono);
             psTxC.executeUpdate();
             
             String queryUser = "INSERT INTO USUARIOS (nick_Usr, contraseña_Usr, tipo_Usr) VALUES (?, ?, ?)";
@@ -132,6 +140,8 @@ public class ClienteDaoImpl implements ClienteDao {
             psUxC.setString(2, cliente.getDNI());
             psUxC.executeUpdate();
             
+            rsTel.close();
+            rsUsr.close();
             ps.close();
             psTel.close();
             psTxC.close();
@@ -150,21 +160,45 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "UPDATE CLIENTES SET CUIL_Cl=?, nombre_Cl=?, apellido_Cl=?, sexo_Cl=?, pais_Cl=?, nacionalidad_Cl=?, provincia_Cl=?, localidad_Cl=?, nacimiento_Cl=?, domicilio_Cl=?, mail_Cl=? WHERE dni_cl = ?";
+            String query = "UPDATE CLIENTES SET nombre_Cl=?, apellido_Cl=?, sexo_Cl=?, pais_Cl=?, nacionalidad_Cl=?, provincia_Cl=?, localidad_Cl=?, nacimiento_Cl=?, domicilio_Cl=?, mail_Cl=? WHERE dni_cl = ?";
             PreparedStatement ps = cn.prepare(query);
-            ps.setString(1, cliente.getCUIL());
-            ps.setString(2, cliente.getNombre());
-            ps.setString(3, cliente.getApellido());
-            ps.setString(4, cliente.getSexo());
-            ps.setInt(5, cliente.getPais().getId());
-            ps.setInt(6, cliente.getNacionalidad().getId());
-            ps.setInt(7, cliente.getProvincia().getId());
-            ps.setInt(8, cliente.getLocalidad().getId());
-            ps.setDate(9, cliente.getFechaNacimiento());
-            ps.setString(10, cliente.getDomicilio());
-            ps.setString(11, cliente.getEmail());
-            ps.setString(12, cliente.getDNI());
+            ps.setString(1, cliente.getNombre());
+            ps.setString(2, cliente.getApellido());
+            ps.setString(3, cliente.getSexo());
+            ps.setInt(4, cliente.getPais().getId());
+            ps.setInt(5, cliente.getNacionalidad().getId());
+            ps.setInt(6, cliente.getProvincia().getId());
+            ps.setInt(7, cliente.getLocalidad().getId());
+            ps.setDate(8, cliente.getFechaNacimiento());
+            ps.setString(9, cliente.getDomicilio());
+            ps.setString(10, cliente.getEmail());
+            ps.setString(11, cliente.getDNI());
             resultado = ps.executeUpdate() > 0;
+            System.out.println("Cliente actualizado: " + resultado);
+            
+            int idTel = 0;
+            
+            String queryTxC = "SELECT idTelefono_TxC FROM TELEFONOSXCLIENTES WHERE DNI_TxC = '" + cliente.getDNI() + "'";
+            ResultSet rs = cn.query(queryTxC);
+            while (rs.next()) {
+            	idTel = rs.getInt("idTelefono_TxC");
+            }
+            rs.close();
+            
+            String queryTelefono = "UPDATE TELEFONOS SET telefono_Tel=? WHERE idTelefono_Tel=?";
+            PreparedStatement psTel = cn.prepare(queryTelefono);
+            psTel.setString(1, cliente.getTelefono());
+            psTel.setInt(2, idTel);
+            psTel.executeUpdate();
+            
+            String queryUser = "UPDATE USUARIOS SET contraseña_Usr=? WHERE nick_Usr=?";
+            PreparedStatement psUser = cn.prepare(queryUser, Statement.RETURN_GENERATED_KEYS);
+            psUser.setString(1, cliente.getPassword());
+            psUser.setString(2, cliente.getNick());
+            psUser.executeUpdate();
+            
+            psTel.close();
+            psUser.close();
             ps.close();
             cn.close();
         } catch (Exception e) {

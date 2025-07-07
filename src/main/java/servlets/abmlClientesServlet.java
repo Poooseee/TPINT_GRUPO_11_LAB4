@@ -153,6 +153,7 @@ public class abmlClientesServlet extends HttpServlet {
 		String nombrePais = request.getParameter("ddlPais"); 
 		String nombreProv = request.getParameter("ddlProvincia");
 		String nombreLocalidad = request.getParameter("ddlLocalidad");
+		
 		List<Cliente> listaClientes = clienteNeg.listar();
 		
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
@@ -387,9 +388,6 @@ public class abmlClientesServlet extends HttpServlet {
 		    request.setAttribute("listaClientes", clienteNeg.listar());
 		}
 		
-		if(request.getParameter("btnAgregarCliente") != null) {
-			
-		}
 		if(request.getParameter("btnModificar")!=null) {
 			
 			boolean modificado = modificarCliente(request);
@@ -410,12 +408,10 @@ public class abmlClientesServlet extends HttpServlet {
 private boolean modificarCliente(HttpServletRequest request) {
 	boolean modificado = false;
 	ClienteNegocio neg = new ClienteNegocioImpl();
-	//TelefonosXclientesNegocio negTel = new TelefonosXclientesNegocioImpl();
 	Cliente CliAModificar = cargarClienteConDatosDeLaTabla(request);
 	
 	if(neg.modificar(CliAModificar)) {
 		modificado = true;
-		//modificado = negTel.modificar(new TelefonosXclientes(CliAModificar.getTelefono(),CliAModificar.getDNI()));
 	}
 	return modificado;
 }

@@ -407,8 +407,8 @@
 				}
              if(domicilioIngresado == null || domicilioIngresado == ""){
                     %>
-			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" placeholder="Ingresar domicilio" required /><% }else{%>
-			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" value="<%= domicilioIngresado %> " required /><%} %>
+			<input type="text" title ="Máximo 50 caractéres" pattern="^[A-Za-z0-9\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" placeholder="Ingresar domicilio" required /><% }else{%>
+			<input type="text" title ="Máximo 50 caractéres" pattern="^[A-Za-z0-9\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" value="<%= domicilioIngresado %> " required /><%} %>
             </div>
             <div>
               <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
@@ -669,13 +669,25 @@
     
     <td><input type="date" value="<%= c.getFechaNacimiento() %>" name="listFecha"/></td>
     
-    <td><input type="text" value="<%= c.getNacionalidad().getNacionalidad() %>"name="listNacionalidad" /></td>
+   	<td><select id="ddlNacionalidadList" required name="ddlNacionalidadList" >
+		<option value="<%= c.getNacionalidad().getNacionalidad() %>" name="ddlNacionalidadList" selected><%= c.getNacionalidad().getNacionalidad()%></option>
+    <%   
+	    List<Pais> listaNacionalidadesList = (List<Pais>) request.getAttribute("listaPaises");
+	    if (listaNacionalidadesList != null) {
+	        for (Pais nac : listaNacionalidadesList) {
+	%>  
+	      <option value="<%= nac.getNacionalidad() %>"><%= nac.getNacionalidad() %></option>
+	<%
+	        }
+	    }
+	%>
+    </select></td>
     
-    <td><input type="text" value="<%= c.getPais().getNombre() %>" name="listPais" /></td>
+   	<td><input type="text" value="<%= c.getPais().getNombre() %>" name="listPais" readonly /></td>
+
+    <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" name="listLocalidad" readonly /></td>
     
-    <td><input type="text" value="<%= c.getProvincia().getNombre() %>" name="listProvincia"/></td>
-    
-    <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" name="listLocalidad" /></td>
+    <td><input type="text" value="<%= c.getProvincia().getNombre() %>" name="listProvincia" readonly /></td>
     
     <td><input type="text" value="<%= c.getDomicilio() %>" name="listDireccion" /></td>
     <td><input type="text" value="<%= c.getEmail() %>" name="listEmail" /></td>
