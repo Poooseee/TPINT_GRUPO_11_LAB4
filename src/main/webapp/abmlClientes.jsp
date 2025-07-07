@@ -7,6 +7,7 @@
 <%@ page import="entidades.Cliente" %>
 <%@ page import= "java.sql.Date"%>
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -508,8 +509,8 @@
 		}
 		%>
       </div>
-      
-      <!-- FILTRAR CLIENTES -->
+
+		<!-- FILTRAR CLIENTES -->
 		<h2>FILTRAR CLIENTES</h2>
 		<div id="div-filtrar">
 		  <form method="get" action="abmlClientesServlet">
@@ -657,27 +658,34 @@
         	if(c.getBaja()!=1)
         	{
 %>
-<form method="post" class="form-confirm" action="abmlClientesServlet">
   <tr>
+<form method="post" class="form-confirm" action="abmlClientesServlet">
     <td><input type="text" value="<%= c.getDNI() %>" name="listDNI" readonly /></td>
-    <td><input type="text" value="<%= c.getCUIL() %>" readonly /></td>
-    <td><input type="text" value="<%= c.getNombre() %>" /></td>
-    <td><input type="text" value="<%= c.getApellido() %>" /></td>
-    <td><input type="text" value="<%= c.getSexo() %>" /></td>
-    <td><input type="date" value="<%= c.getFechaNacimiento() %>" /></td>
-    <td><input type="text" value="<%= c.getNacionalidad().getNacionalidad() %>" /></td>
-    <td><input type="text" value="<%= c.getPais().getNombre() %>" /></td>
-    <td><input type="text" value="<%= c.getProvincia().getNombre() %>" /></td>
-    <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" /></td>
-    <td><input type="text" value="<%= c.getDomicilio() %>" /></td>
-    <td><input type="text" value="<%= c.getEmail() %>" /></td>
-    <td><input type="text" value="<%= c.getTelefono() %>" /></td>
-    <td><input type="text" value="<%= c.getNick() %>" readonly /></td>
-    <td><input type="text" value="<%= c.getPassword() %>" /></td>
-    <td><input type="submit" class="btn btn-warning" value="Modificar" /></td>
+    <td><input type="text" value="<%= c.getCUIL() %>" name="listCUIL" readonly /></td>
+    <td><input type="text" value="<%= c.getNombre() %>" name="listNombre" /></td>
+    <td><input type="text" value="<%= c.getApellido() %>" name="listApellido"/></td>
+    
+    <td><input type="text" value="<%= c.getSexo() %>" name="listSexo" /></td>
+    
+    <td><input type="date" value="<%= c.getFechaNacimiento() %>" name="listFecha"/></td>
+    
+    <td><input type="text" value="<%= c.getNacionalidad().getNacionalidad() %>"name="listNacionalidad" /></td>
+    
+    <td><input type="text" value="<%= c.getPais().getNombre() %>" name="listPais" /></td>
+    
+    <td><input type="text" value="<%= c.getProvincia().getNombre() %>" name="listProvincia"/></td>
+    
+    <td><input type="text" value="<%= c.getLocalidad().getNombre() %>" name="listLocalidad" /></td>
+    
+    <td><input type="text" value="<%= c.getDomicilio() %>" name="listDireccion" /></td>
+    <td><input type="text" value="<%= c.getEmail() %>" name="listEmail" /></td>
+    <td><input type="text" value="<%= c.getTelefono() %>" name="listTelefono"/></td>
+    <td><input type="text" value="<%= c.getNick() %>" readonly name="listNick"/></td>
+    <td><input type="text" value="<%= c.getPassword() %>" name="listPassword" /></td>
+    <td><input type="submit" class="btn btn-warning" value="Modificar" name="btnModificar" /></td>
     <td><input type="submit" class="btn btn-danger" value="Eliminar" name="btnEliminarCliente" /></td>
-  </tr>
 </form>
+  </tr>
 <%
         	}
         }
@@ -709,6 +717,30 @@
 		%>
 		    <div style = "color:red;" id="div-error-agregado">
 		         Hubo un ERROR al eliminar el cliente.
+		    </div>
+		<%
+			}
+		}
+		%>
+<!-- CONDICIONAL MODIFICAR EN LA DB -->		
+<%
+		 boolean modificado;
+		if (request.getAttribute("resultadoModificar") != null) {
+			modificado = (boolean)request.getAttribute("resultadoModificar"); 
+		
+		%>
+		
+		<%
+			if (modificado) {
+		%>
+		    <div style = "color:green;" id="div-agregado-exito">
+		         Cliente modificado con éxito.
+		    </div>
+		<%
+			} else {
+		%>
+		    <div style = "color:red;" id="div-error-agregado">
+		         Hubo un ERROR al modificar el cliente.
 		    </div>
 		<%
 			}

@@ -18,11 +18,16 @@ import entidades.Cliente;
 import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
+import entidades.TelefonosXclientes;
 import entidades.Usuario;
+import negocio.ClienteNegocio;
+import negocio.PaisNegocio;
+import negocio.TelefonosXclientesNegocio;
 import negocioImpl.ClienteNegocioImpl;
 import negocioImpl.LocalidadNegocioImpl;
 import negocioImpl.PaisNegocioImpl;
 import negocioImpl.ProvinciaNegocioImpl;
+import negocioImpl.TelefonosXclientesNegocioImpl;
 
 @WebServlet("/abmlClientesServlet")
 public class abmlClientesServlet extends HttpServlet {
@@ -40,15 +45,11 @@ public class abmlClientesServlet extends HttpServlet {
         LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
         ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 
-        // =========================
-        // DATOS PARA FORM DE ALTA (SEPARADOS)
-        // =========================
+        // DATOS PARA FORM DE ALTA 
         List<Pais> listaPaises = paisNeg.obtenerPaises();
         request.setAttribute("listaPaises", listaPaises);
 
-        // =========================
         // FILTRADO
-        // =========================
         String paisFiltro = request.getParameter("ddlPaisFiltro");
         String provinciaFiltro = request.getParameter("ddlProvinciaFiltro");
 
@@ -68,9 +69,7 @@ public class abmlClientesServlet extends HttpServlet {
         request.setAttribute("listaProvinciasFiltro", listaProvinciasFiltro);
         request.setAttribute("listaLocalidadesFiltro", listaLocalidadesFiltro);
 
-        // =========================
         // FILTRADO DE CLIENTES
-        // =========================
         List<Cliente> listaClientes = clienteNeg.listar();
         List<Cliente> filtrados = new ArrayList<>();
 
@@ -136,6 +135,8 @@ public class abmlClientesServlet extends HttpServlet {
 		p = pNeg.obtenerPaisxNacionalidad(request.getParameter("ddlNacionalidad"));
 		c.setNacionalidad(p);
 		c.setDomicilio(request.getParameter("txtDomicilio"));
+		if(request.getParameter("txtFechaDeNacimiento")!=null) {
+			
 		String fechaStr = request.getParameter("txtFechaDeNacimiento");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -144,6 +145,7 @@ public class abmlClientesServlet extends HttpServlet {
 		    c.setFechaNacimiento(sqlDate); // si espera java.sql.Date
 		} catch (ParseException e) {
 		    e.printStackTrace();
+		}
 		}
 		c.setEmail(request.getParameter("txtCorreo"));
 		c.setTelefono(request.getParameter("txtTelefono"));
@@ -388,7 +390,13 @@ public class abmlClientesServlet extends HttpServlet {
 		if(request.getParameter("btnAgregarCliente") != null) {
 			
 		}
-		
+		if(request.getParameter("btnModificar")!=null) {
+			
+			boolean modificado = modificarCliente(request);
+			request.setAttribute("resultadoModificar", modificado);
+			request.setAttribute("listaClientes", clienteNeg.listar());
+			
+		}
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 		
@@ -399,6 +407,50 @@ public class abmlClientesServlet extends HttpServlet {
 		rd.forward(request, response);
 		
 	}
+private boolean modificarCliente(HttpServletRequest request) {
+	boolean modificado = false;
+	ClienteNegocio neg = new ClienteNegocioImpl();
+	TelefonosXclientesNegocio negTel = new TelefonosXclientesNegocioImpl();
+	Cliente CliAModificar = cargarClienteConDatosDeLaTabla(request);
+	
+	if(neg.modificar(CliAModificar)) {
+		modificado = true;
+		//modificado = negTel.modificar(new TelefonosXclientes(CliAModificar.getTelefono(),CliAModificar.getDNI()));
+	}
+	return modificado;
+}
+private Cliente cargarClienteConDatosDeLaTabla(HttpServletRequest request) {
+	Cliente cli = new Cliente();
+	cli.setDNI(request.getParameter("listDNI").toString());
+	cli.setCUIL(request.getParameter("listCUIL"));
+	cli.setNombre(request.getParameter("listNombre"));
+	cli.setApellido(request.getParameter("listApellido"));
+	cli.setSexo(request.getParameter("listSexo"));
+	String fechaNac = request.getParameter("listFecha");	
+	cli.setFechaNacimiento( Date.valueOf(fechaNac));
+	
+	PaisNegocio negPais = new PaisNegocioImpl() ;
+	Pais pais = negPais.obtenerPaisxNombre(request.getParameter("listPais"));
+	cli.setNacionalidad(pais);
+	cli.setPais(pais);
+	ProvinciaNegocioImpl neg = new ProvinciaNegocioImpl();
+	Provincia provincia = neg.obtenerProvinciaPorNombre(request.getParameter("listProvincia"));
+	cli.setProvincia(provincia);
+	LocalidadNegocioImpl negLoc = new LocalidadNegocioImpl();
+	System.out.println("localidad recibida por param "+request.getParameter("listLocalidad"));
+	Localidad localidad = negLoc.obtenerLocalidadPorNombre(request.getParameter("listLocalidad"));
+	
+	cli.setLocalidad(localidad);
+	cli.setDomicilio(request.getParameter("listDireccion"));
+	cli.setEmail(request.getParameter("listEmail"));
+	cli.setTelefono(request.getParameter("listTelefono"));
+	cli.setPassword(request.getParameter("listPassword"));
+	cli.setNick(request.getParameter("listNick"));
+	
+	return cli;
+	
+}
+
 
 	public boolean NaN(String texto) {
 	    try {

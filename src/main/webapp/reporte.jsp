@@ -42,13 +42,28 @@
         }
 
         #reporte1-form input {
-            min-width: 20em;
+            
             padding: 0.4em;
             border-radius: 0.5em;
             outline: none;
             border: 1px solid darkgray;
         }
-
+		
+		#reporte1-form input[type=submit] {
+        padding: .6em;
+        border-radius: .5em;
+        cursor: pointer;
+        outline: none;
+        background-color: rgba(77, 180, 187, 0.637);
+        border: none;
+        transition: all .2s ease;
+        margin: 0 auto;
+    	}
+    	
+	   #reporte1-form input[type=submit]:hover{
+	        background-color: rgba(38, 117, 122, 0.637);
+	    }
+		
         #reporte2-table {
             background-color: white;
             width: 100%;
@@ -69,18 +84,27 @@
     <main>
         <div class="reporte">
             <h3>Transferencias totales entre fechas</h3>
-            <form id="reporte1-form">
+            <form id="reporte1-form" method="post" action="ReportesServlet">
                 <div>
                     <label>Fecha Inicio</label>
-                    <input type="date">
+                    <input type="date" name="dateDesde"
+               			value="<%= (request.getAttribute("fechaDesde") != null) 
+                        ? request.getAttribute("fechaDesde") 
+                        : "2024-06-01" %>">
                 </div>
                 <div>
                     <label>Fecha Fin</label>
-                    <input type="date">
+                    <input type="date" name="dateHasta"
+               			value="<%= (request.getAttribute("fechaHasta") != null) 
+                        ? request.getAttribute("fechaHasta") 
+                        : "2026-06-01" %>">
+                </div>
+                <div>
+                	<input type="submit" value="Filtrar" name="btnFiltrarFechas"/>
                 </div>
                 <div>
                     <label>Cantidad Total de transferencias</label>
-                    <input type="text" disabled value="CANTIDAD">
+                    <input type="text" disabled value="<%= request.getAttribute("cantidadTransferencias") %>">
                 </div>
             </form>
          </div>

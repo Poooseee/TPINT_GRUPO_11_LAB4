@@ -29,6 +29,11 @@ public class Provincia {
 		this.idPais = idPais;
 		this.nombre = nombre;
 	}
+	public Provincia( String nombre) {
+		super();
+		
+		this.nombre = nombre;
+	}
 	public Provincia(){}
 	@Override
 	public String toString() {
