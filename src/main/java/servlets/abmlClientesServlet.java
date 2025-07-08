@@ -39,6 +39,10 @@ public class abmlClientesServlet extends HttpServlet {
     }
     
     private void atributoListaPaises(HttpServletRequest request) {
+    	if(request.getParameter("btnAgregarCliente")!=null) {
+    		// 
+    	}
+    	
     	 PaisNegocioImpl paisNeg = new PaisNegocioImpl();
     	 List<Pais> listaPaises = paisNeg.obtenerPaises();
     	 
@@ -233,52 +237,20 @@ public class abmlClientesServlet extends HttpServlet {
 		Pais p = new Pais();
 		PaisNegocioImpl pNeg = new PaisNegocioImpl();
 		
-		//RECUPERAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
-		c.setDNI(request.getParameter("txtDni"));
-		c.setCUIL(request.getParameter("txtCuil"));
-		c.setNombre(request.getParameter("txtNombre"));
-		c.setApellido(request.getParameter("txtApellido"));
-		c.setSexo(request.getParameter("ddlSexo"));
-		p = pNeg.obtenerPaisxNacionalidad(request.getParameter("ddlNacionalidad"));
-		c.setNacionalidad(p);
-		c.setDomicilio(request.getParameter("txtDomicilio"));
-		if(request.getParameter("txtFechaDeNacimiento")!=null) {
-			
-		String fechaStr = request.getParameter("txtFechaDeNacimiento");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-		    java.util.Date utilDate = sdf.parse(fechaStr);
-		    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		    c.setFechaNacimiento(sqlDate); // si espera java.sql.Date
-		} catch (ParseException e) {
-		    e.printStackTrace();
-		}
-		}
-		c.setEmail(request.getParameter("txtCorreo"));
-		c.setTelefono(request.getParameter("txtTelefono"));
-		c.setNick(request.getParameter("txtUsuario"));
 		
+		//RECUPERAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
+		// obtiene y guarda en un objeto los valores de los parametros del form
+	    Cliente valoresDeLosControles = guardarCamposDelAltaEnAtributos(request);
+	    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
+	    // setea atributos
+		enviarValoresRecuperadosDelAlta(request,valoresDeLosControles);
+	
 		List<Cliente> listaClientes = clienteNeg.listar();
 		
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
 		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
 		
-	
-		    
-		    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
-		    request.setAttribute("dniIngresado", c.getDNI());
-		    request.setAttribute("cuilIngresado", c.getCUIL());
-		    request.setAttribute("nombreIngresado", c.getNombre());
-		    request.setAttribute("apellidoIngresado", c.getApellido());
-		    request.setAttribute("sexoSeleccionado", c.getSexo());
-		    request.setAttribute("nacionalidadSeleccionada", c.getNacionalidad());
-		    request.setAttribute("domicilioIngresado", c.getDomicilio());
-		    request.setAttribute("fechaIngresada", c.getFechaNacimiento());
-		    request.setAttribute("correoIngresado", c.getEmail());
-		    request.setAttribute("telefonoIngresado", c.getTelefono());
-		    request.setAttribute("usuarioIngresado", c.getNick());
-		   
 		    request.setAttribute("listaClientes", listaClientes);
 
 		
@@ -492,6 +464,48 @@ public class abmlClientesServlet extends HttpServlet {
 		//MANDAMOS LA REQUEST
 		rd.forward(request, response);
 		
+	}
+	private Cliente guardarCamposDelAltaEnAtributos(HttpServletRequest request) {
+		PaisNegocioImpl pNeg = new PaisNegocioImpl();
+		Cliente c = new Cliente();
+		Pais p = new Pais();
+		c.setDNI(request.getParameter("txtDni"));
+		c.setCUIL(request.getParameter("txtCuil"));
+		c.setNombre(request.getParameter("txtNombre"));
+		c.setApellido(request.getParameter("txtApellido"));
+		c.setSexo(request.getParameter("ddlSexo"));
+		p = pNeg.obtenerPaisxNacionalidad(request.getParameter("ddlNacionalidad"));
+		c.setNacionalidad(p);
+		c.setDomicilio(request.getParameter("txtDomicilio"));
+		if(request.getParameter("txtFechaDeNacimiento")!=null) {
+			
+		String fechaStr = request.getParameter("txtFechaDeNacimiento");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+		    java.util.Date utilDate = sdf.parse(fechaStr);
+		    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		    c.setFechaNacimiento(sqlDate); // si espera java.sql.Date
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}
+		}
+		c.setEmail(request.getParameter("txtCorreo"));
+		c.setTelefono(request.getParameter("txtTelefono"));
+		c.setNick(request.getParameter("txtUsuario"));
+		return c;
+	}
+	private void enviarValoresRecuperadosDelAlta(HttpServletRequest request,Cliente c) {
+		  request.setAttribute("dniIngresado", c.getDNI());
+		    request.setAttribute("cuilIngresado", c.getCUIL());
+		    request.setAttribute("nombreIngresado", c.getNombre());
+		    request.setAttribute("apellidoIngresado", c.getApellido());
+		    request.setAttribute("sexoSeleccionado", c.getSexo());
+		    request.setAttribute("nacionalidadSeleccionada", c.getNacionalidad());
+		    request.setAttribute("domicilioIngresado", c.getDomicilio());
+		    request.setAttribute("fechaIngresada", c.getFechaNacimiento());
+		    request.setAttribute("correoIngresado", c.getEmail());
+		    request.setAttribute("telefonoIngresado", c.getTelefono());
+		    request.setAttribute("usuarioIngresado", c.getNick());
 	}
 private boolean modificarCliente(HttpServletRequest request) {
 	boolean modificado = false;
