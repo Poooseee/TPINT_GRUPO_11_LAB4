@@ -133,7 +133,9 @@
             <p>Hola, <%=nombreUs %></p>    
         </div>
         <div class="perfil">
-            <a href="perfilCliente.jsp"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
+            <a href="${pageContext.request.contextPath}/ServletClientes/perfil">
+    <img src="${pageContext.request.contextPath}/imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil">
+</a>
         </div>
     </header>
     <main>
