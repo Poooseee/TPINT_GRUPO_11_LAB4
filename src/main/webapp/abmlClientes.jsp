@@ -557,18 +557,28 @@
 			<div>
 			  <label for="ddlPaisFiltro">Pais</label>
 			  <select id="ddlPaisFiltro" name="ddlPaisFiltro" onchange="this.form.submit()">
-			    <option value="" <%= (request.getParameter("ddlPaisFiltro")==null || request.getParameter("ddlPaisFiltro").isEmpty()) ? "selected" : "" %>>Todos</option>
+			    <option value="">Todos</option>
 			    <%
 			    List<Pais> listaPaisesFiltro = (List<Pais>) request.getAttribute("listaPaises");
-			      String paisSel = request.getParameter("ddlPaisFiltro");
-			      if (listaPaisesFiltro != null) {
-			        for (Pais p : listaPaisesFiltro) {
-			    %>
-			    <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(paisSel) ? "selected" : "" %>><%= p.getNombre() %></option>
-			    <%
-			        }
+			      String paisSeleccionadoFiltro = "";
+			      if(request.getAttribute("paisSeleccionadoFiltro")!=null){
+			    	  paisSeleccionadoFiltro = request.getAttribute("paisSeleccionadoFiltro").toString();
 			      }
-			    %>
+			      if (listaPaisesFiltro != null) {
+				        for (Pais p : listaPaisesFiltro) {
+				        	boolean selected = false;
+				        	// si hay un pais previamente seleccionado
+				        	if(paisSeleccionadoFiltro != null && paisSeleccionadoFiltro != ""){
+				        		if(paisSeleccionadoFiltro.equals(p.getNombre())){
+				        			selected = true;
+				        		}
+				        	}
+				  %>
+				      <option <%=selected? "selected" : "" %> value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
 			  </select>
 			</div>
 			
@@ -576,18 +586,28 @@
 			<div>
 			  <label for="ddlProvinciaFiltro">Provincia</label>
 			  <select id="ddlProvinciaFiltro" name="ddlProvinciaFiltro" onchange="this.form.submit()">
-			    <option value="" <%= (request.getParameter("ddlProvinciaFiltro")==null || request.getParameter("ddlProvinciaFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
+			    <option value="">Todas</option>
 			    <%
 			    List<Provincia> listaProvinciasFiltro = (List<Provincia>) request.getAttribute("listaProvinciasFiltro");
-			      String provSel = request.getParameter("ddlProvinciaFiltro");
-			      if (listaProvinciasFiltro != null) {
-			        for (Provincia p : listaProvinciasFiltro) {
-			    %>
-			    <option value="<%= p.getNombre() %>" <%= p.getNombre().equals(provSel) ? "selected" : "" %>><%= p.getNombre() %></option>
-			    <%
-			        }
+			    String provSeleccionadaFiltro = "";
+			      if(request.getAttribute("provSeleccionadaFiltro")!=null){
+			    	  provSeleccionadaFiltro = request.getAttribute("provSeleccionadaFiltro").toString();
 			      }
-			    %>
+			      if (listaProvinciasFiltro != null) {
+				        for (Provincia p : listaProvinciasFiltro) {
+				        	boolean selected = false;
+				        	// si hay un pais previamente seleccionado
+				        	if(provSeleccionadaFiltro != null && provSeleccionadaFiltro != ""){
+				        		if(provSeleccionadaFiltro.equals(p.getNombre())){
+				        			selected = true;
+				        		}
+				        	}
+				  %>
+				      <option <%=selected? "selected" : "" %> value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
 			  </select>
 			</div>
 			
@@ -595,18 +615,28 @@
 			<div>
 			  <label for="ddlLocalidadFiltro">Localidad</label>
 			  <select id="ddlLocalidadFiltro" name="ddlLocalidadFiltro">
-			    <option value="" <%= (request.getParameter("ddlLocalidadFiltro")==null || request.getParameter("ddlLocalidadFiltro").isEmpty()) ? "selected" : "" %>>Todas</option>
+			   <option value="">Todas</option>
 			    <%
 			    List<Localidad> listaLocalidadesFiltro = (List<Localidad>) request.getAttribute("listaLocalidadesFiltro");
-			      String locSel = request.getParameter("ddlLocalidadFiltro");
-			      if (listaLocalidadesFiltro != null) {
-			        for (Localidad l : listaLocalidadesFiltro) {
-			    %>
-			    <option value="<%= l.getNombre() %>" <%= l.getNombre().equals(locSel) ? "selected" : "" %>><%= l.getNombre() %></option>
-			    <%
-			        }
+			    String locSeleccionadaFiltro = "";
+			      if(request.getAttribute("locSeleccionadaFiltro")!=null){
+			    	  locSeleccionadaFiltro = request.getAttribute("locSeleccionadaFiltro").toString();
 			      }
-			    %>
+			      if (listaLocalidadesFiltro != null) {
+				        for (Localidad l : listaLocalidadesFiltro) {
+				        	boolean selected = false;
+				        	// si hay un pais previamente seleccionado
+				        	if(locSeleccionadaFiltro != null && locSeleccionadaFiltro != ""){
+				        		if(locSeleccionadaFiltro.equals(l.getNombre())){
+				        			selected = true;
+				        		}
+				        	}
+				  %>
+				      <option <%=selected? "selected" : "" %> value="<%= l.getNombre() %>"><%= l.getNombre() %></option>
+				  <%
+				        }
+				    }
+				  %>
 			  </select>
 			</div>
 		

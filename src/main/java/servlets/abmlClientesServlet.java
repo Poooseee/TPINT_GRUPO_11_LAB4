@@ -49,30 +49,53 @@ public class abmlClientesServlet extends HttpServlet {
     	 request.setAttribute("paisSeleccionado", paisSeleccionado);
          request.setAttribute("listaPaises", listaPaises);
     }
+    private void atributoListaPaisesFiltro(HttpServletRequest request) {
+   	 PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+	 List<Pais> listaPaises = paisNeg.obtenerPaises();
+	 
+	 String paisSeleccionado = "";
+	 if(request.getParameter("ddlPaisFiltro")!=null && !request.getParameter("ddlPaisFiltro").isBlank()) {
+		 paisSeleccionado = request.getParameter("ddlPaisFiltro");
+	 }
+	 request.setAttribute("paisSeleccionadoFiltro", paisSeleccionado);
+     request.setAttribute("listaPaises", listaPaises);
+    }
     private void atributoListaProvinciasAlta(HttpServletRequest request) {
     	ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
     	 List<Provincia> listaProvinciasAlta = new ArrayList<>();
+    	 
     	 String paisAlta = request.getParameter("ddlPais");
     	 if(paisAlta!=null && !paisAlta.isBlank()) {
     		 listaProvinciasAlta = provNeg.obtenerProvinciasPorPais(paisAlta);
     	 }	
+    	 
     	 String provSeleccionada = "";
     	 if(request.getParameter("ddlProvincia")!=null && !request.getParameter("ddlProvincia").isBlank()) {
     		 provSeleccionada = request.getParameter("ddlProvincia");
     	 } 
+    	 
     	 request.setAttribute("listaProvinciasAlta", listaProvinciasAlta);
     	 request.setAttribute("provSeleccionada", provSeleccionada);
     }
    
     private void atributoListaProvinciasFiltro(HttpServletRequest request) {
     	ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
-    	 List<Provincia> listaProvinciasFiltro = new ArrayList<>();
-    	 String paisFiltro = request.getParameter("ddlPaisFiltro");
-    	 if(paisFiltro!=null && !paisFiltro.isBlank()) {
-    		 listaProvinciasFiltro = provNeg.obtenerProvinciasPorPais(paisFiltro);
-    	 }
-    	 request.setAttribute("listaProvinciasFiltro", listaProvinciasFiltro);
+   	  List<Provincia> listaProvinciasAlta = new ArrayList<>();
+   	 
+   	 String paisAlta = request.getParameter("ddlPaisFiltro");
+   	 if(paisAlta!=null && !paisAlta.isBlank()) {
+   		 listaProvinciasAlta = provNeg.obtenerProvinciasPorPais(paisAlta);
+   	 }	
+   	 
+   	 String provSeleccionada = "";
+   	 if(request.getParameter("ddlProvinciaFiltro")!=null && !request.getParameter("ddlProvinciaFiltro").isBlank()) {
+   		 provSeleccionada = request.getParameter("ddlProvinciaFiltro");
+   	 } 
+   	 
+   	 request.setAttribute("listaProvinciasFiltro", listaProvinciasAlta);
+   	 request.setAttribute("provSeleccionadaFiltro", provSeleccionada);
     }
+    
     private void atributoListaLocalidadesAlta(HttpServletRequest request) {
     	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
     	List<Localidad> listaLocalidadesAlta = new ArrayList<>();
@@ -88,16 +111,32 @@ public class abmlClientesServlet extends HttpServlet {
     	request.setAttribute("listaLocalidadesAlta", listaLocalidadesAlta);
     	request.setAttribute("localidadSeleccionada", localidadSeleccionada);
     }
+    private void atributoListaLocalidadesFiltro(HttpServletRequest request) {
+    	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+    	List<Localidad> listaLocalidadesAlta = new ArrayList<>();
+    	String paisAlta = request.getParameter("ddlPaisFiltro");
+    	String provinciaAlta = request.getParameter("ddlProvinciaFiltro");
+    	if(paisAlta !=null && !paisAlta.isBlank() && provinciaAlta!=null && !provinciaAlta.isBlank()) {
+    		listaLocalidadesAlta = locNeg.obtenerLocalidadesXProvXPais(paisAlta, provinciaAlta);
+    	}
+    	String localidadSeleccionada = "";
+   	 if(request.getParameter("ddlLocalidadFiltro")!=null && !request.getParameter("ddlLocalidadFiltro").isBlank()) {
+   		localidadSeleccionada = request.getParameter("ddlProvinciaFiltro");
+   	 } 
+    	request.setAttribute("listaLocalidadesFiltro", listaLocalidadesAlta);
+    	request.setAttribute("locSeleccionadaFiltro", localidadSeleccionada);
+    }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
     	atributoListaPaises(request);
-    	// obtiene lista de provincias dependiendo del pais seleccionado en filtros
-    	atributoListaProvinciasFiltro(request);
+    	atributoListaPaisesFiltro(request);
     	// obtiene lista de provincias dependiendo del pais seleccionado en alta
     	atributoListaProvinciasAlta(request);
+    	atributoListaProvinciasFiltro(request);
     	// obtiene lista de localidades dependiendo del pais y provincia seleccionado en alta
     	atributoListaLocalidadesAlta(request);
+    	atributoListaLocalidadesFiltro(request);
     	// Negocios
         
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
@@ -180,10 +219,13 @@ public class abmlClientesServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		atributoListaPaises(request);
+		atributoListaPaisesFiltro(request);
 		// carga las provincias segun pais en alta y setea la provincia seleccionada
 		atributoListaProvinciasAlta(request);
-
+		atributoListaProvinciasFiltro(request);
+		// obtiene lista de localidades dependiendo del pais y provincia seleccionado en alta
 		atributoListaLocalidadesAlta(request);
+		atributoListaLocalidadesFiltro(request);
 		
 		int filas = 0;
 		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
@@ -215,21 +257,14 @@ public class abmlClientesServlet extends HttpServlet {
 		c.setEmail(request.getParameter("txtCorreo"));
 		c.setTelefono(request.getParameter("txtTelefono"));
 		c.setNick(request.getParameter("txtUsuario"));
-		//String nombrePais = request.getParameter("ddlPais"); 
-		//String nombreProv = request.getParameter("ddlProvincia");
-		//String nombreLocalidad = request.getParameter("ddlLocalidad");
+		
 		List<Cliente> listaClientes = clienteNeg.listar();
 		
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
 		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
 		
-		//if (nombrePais != null && !nombrePais.equals("") && request.getParameter("btnAgregarCliente") == null) {
-		  //  List<Pais> listaPaises = paisNeg.obtenerPaises();
-		  //  List<Provincia> listaProvincias = provNeg.obtenerProvinciasPorPais(nombrePais);
-
-		 //   request.setAttribute("listaPaises", listaPaises);
-		  //  request.setAttribute("listaProvincias", listaProvincias);
+	
 		    
 		    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
 		    request.setAttribute("dniIngresado", c.getDNI());
@@ -243,24 +278,9 @@ public class abmlClientesServlet extends HttpServlet {
 		    request.setAttribute("correoIngresado", c.getEmail());
 		    request.setAttribute("telefonoIngresado", c.getTelefono());
 		    request.setAttribute("usuarioIngresado", c.getNick());
-		   // request.setAttribute("paisSeleccionado", nombrePais);
+		   
 		    request.setAttribute("listaClientes", listaClientes);
 
-		   // if (nombreProv != null && !nombreProv.equals("")) {
-		//    	List<Localidad> listaLocalidades = locNeg.obtenerLocalidadesXProvXPais(nombrePais, nombreProv);
-		//    	request.setAttribute("listaLocalidades", listaLocalidades);
-		    //    request.setAttribute("provinciaSeleccionada", nombreProv);
-		   // }
-
-		   // if(nombreLocalidad != null && !nombreLocalidad.equals("")) {
-		 //   	request.setAttribute("localidadSeleccionada", nombreLocalidad);
-		    //}
-		    /*
-		    RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
-		    rd.forward(request, response);
-		    return;
-		    */
-	//	}
 		
 		//Si se hizo click en agregar
 		if(request.getParameter("btnAgregarCliente") != null) {
