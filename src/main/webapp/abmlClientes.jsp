@@ -202,12 +202,12 @@
               if (request.getAttribute("dniIngresado") != null) {
             	  dniIngresado = request.getAttribute("dniIngresado").toString();
 				}
-             if(dniIngresado == null || dniIngresado == ""){
-                    %>
-			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni"
-			 placeholder="Ingresar DNI" required /><% }else{%>
+              %>
+   
 			<input type="text" id="txtDni" pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres" name="txtDni" 
-			value="<%=dniIngresado %>" required /><%} %>
+			value="<%=dniIngresado%>" required />
+			
+			
             </div>
             <div>
               <label for="txtCuil">CUIL</label>
@@ -287,25 +287,27 @@
             <div>
               <label for="ddlNacionalidad">Nacionalidad</label>
               <select id="ddlNacionalidad" required name="ddlNacionalidad" >
+              <option value="">Seleccione</option>
   				<%
 				    List<Pais> listaNacionalidades = (List<Pais>) request.getAttribute("listaPaises");
             		Pais nacionalidadSeleccionada = new Pais();
-            		  
+            		  // si hay una nacionalidad seleccionada la guardo sino queda en null
                   	if (request.getAttribute("nacionalidadSeleccionada") != null) {
                   		nacionalidadSeleccionada = (Pais) request.getAttribute("nacionalidadSeleccionada");
                   	}
-                  	if(nacionalidadSeleccionada.getNacionalidad() == null || nacionalidadSeleccionada.getNacionalidad() == ""){
-                    %>
-                  	<option value="" selected>Seleccione</option>
-                  <% }else{%>
-                  	<option value="<%= nacionalidadSeleccionada.getNacionalidad() %>" selected><%= nacionalidadSeleccionada.getNacionalidad() %></option>
-                  	<option value="">Seleccione</option>
-      			<%} %>
-                      <%   
 				    if (listaNacionalidades != null) {
 				        for (Pais p : listaNacionalidades) {
+				        	boolean selected = false;
+				        	// si hay una nacionalidad previamente seleccionada... busco que pais es 
+				        	if(nacionalidadSeleccionada.getNacionalidad() != null && nacionalidadSeleccionada.getNacionalidad() != ""){
+				        		// pregunto si coincide con el pais de la vuelta actual, y lo notifico 
+				        		if(nacionalidadSeleccionada.getNacionalidad().equals(p.getNacionalidad())){
+				        			selected = true;
+				        		}
+				        	}		
+				        	// si coinciden la pongo como selected
 				  %>
-				      <option value="<%= p.getNacionalidad() %>"><%= p.getNacionalidad() %></option>
+				      <option <%=selected? "selected" : "" %> value="<%= p.getNacionalidad() %>"><%= p.getNacionalidad() %></option>
 				  <%
 				        }
 				    }
@@ -315,24 +317,24 @@
             <div>
               <label for="ddlPais">País</label>
               <select id="ddlPais" required  name="ddlPais" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <option value="">Seleccione</option>
               <%
               	List<Pais> listaPaises = (List<Pais>) request.getAttribute("listaPaises");
             	String paisSeleccionado = "";
             	if (request.getAttribute("paisSeleccionado") != null) {
             	    paisSeleccionado = request.getAttribute("paisSeleccionado").toString();
-            	}
-            	if(paisSeleccionado == null || paisSeleccionado == ""){
-              %>
-            	<option value="" selected>Seleccione</option>
-            <% }else{%>
-            	<option value="<%= paisSeleccionado%>" selected><%= paisSeleccionado %></option>
-            	<option value="">Seleccione</option>
-			<%} %>
-                <%   
+            	}  
 				    if (listaPaises != null) {
 				        for (Pais p : listaPaises) {
+				        	boolean selected = false;
+				        	// si hay un pais previamente seleccionado
+				        	if(paisSeleccionado != null && paisSeleccionado != ""){
+				        		if(paisSeleccionado.equals(p.getNombre())){
+				        			selected = true;
+				        		}
+				        	}
 				  %>
-				      <option value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
+				      <option <%=selected? "selected" : "" %> value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
 				  <%
 				        }
 				    }
@@ -342,24 +344,24 @@
             <div>
               <label for="ddlProvincia">Provincia</label>
               <select id="ddlProvincia" required name="ddlProvincia" onchange="document.getElementById('form-agregar-cliente').submit();">
+              <option value="">Seleccione</option>
               <%
-              	List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvincias");
+              	List<Provincia> listaProvincias = (List<Provincia>) request.getAttribute("listaProvinciasAlta");
             	String provinciaSeleccionada = "";
-            	if (request.getAttribute("provinciaSeleccionada") != null) {
-            	    provinciaSeleccionada = request.getAttribute("provinciaSeleccionada").toString();
+            	if (request.getAttribute("provSeleccionada") != null) {
+            	    provinciaSeleccionada = request.getAttribute("provSeleccionada").toString();
             	}
-            	if(provinciaSeleccionada == null || provinciaSeleccionada == ""){
-                    %>
-                	<option value="" selected>Seleccione</option>
-                <% }else{%>
-                	<option value="<%= provinciaSeleccionada%>" selected><%= provinciaSeleccionada %></option>
-                	<option value="">Seleccione</option>
-    			<%} %>
-                  <%
 				    if (listaProvincias != null) {
 				        for (Provincia p : listaProvincias) {
+				        	boolean selected = false;
+				        	if(provinciaSeleccionada != null && provinciaSeleccionada != ""){
+				        		if(provinciaSeleccionada.equals(p.getNombre())){
+				        			selected = true;
+				        		}
+				        	}
 				  %>
-				      <option value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
+				      	<option <%=selected? "selected" : "" %> value="<%= p.getNombre() %>"><%= p.getNombre() %></option>
+
 				  <%
 				        }
 				    }
@@ -371,26 +373,24 @@
           <div class="form-lado">
             <div>
               <label for="ddlLocalidad">Localidad</label>
-              <select id="ddlLocalidad" required  name="ddlLocalidad" onchange="this.form.submit()">
+              <select id="ddlLocalidad" required  name="ddlLocalidad">
+              <option value="">Seleccione</option>
               <%
-              	List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidades");
+              	List<Localidad> listaLocalidades = (List<Localidad>) request.getAttribute("listaLocalidadesAlta");
             	String localidadSeleccionada = "";
                 if (request.getAttribute("localidadSeleccionada") != null) {
                	    localidadSeleccionada = request.getAttribute("localidadSeleccionada").toString();
                	}
-               	if(localidadSeleccionada == null || localidadSeleccionada == ""){
-                       %>
-                   	<option value="" selected>Seleccione</option>
-                   <% }else{%>
-                   	<option value="<%= localidadSeleccionada%>" selected><%= localidadSeleccionada %></option>
-                   	<option value="">Seleccione</option>
-       			<%} %>
-                  <%
-				    
 				    if (listaLocalidades != null) {
 				        for (Localidad l : listaLocalidades) {
+				        	boolean selected = false;
+				        	if(localidadSeleccionada != null && localidadSeleccionada != ""){
+				        		if(localidadSeleccionada.equals(l.getNombre())){
+				        			selected = true;
+				        		}
+				        	}
 				  %>
-				      <option value="<%= l.getNombre() %>"><%= l.getNombre() %></option>
+				      <option <%=selected? "selected" : "" %> value="<%= l.getNombre() %>"><%= l.getNombre() %></option>
 				  <%
 				        }
 				    }
@@ -559,7 +559,7 @@
 			  <select id="ddlPaisFiltro" name="ddlPaisFiltro" onchange="this.form.submit()">
 			    <option value="" <%= (request.getParameter("ddlPaisFiltro")==null || request.getParameter("ddlPaisFiltro").isEmpty()) ? "selected" : "" %>>Todos</option>
 			    <%
-			    List<Pais> listaPaisesFiltro = (List<Pais>) request.getAttribute("listaPaisesFiltro");
+			    List<Pais> listaPaisesFiltro = (List<Pais>) request.getAttribute("listaPaises");
 			      String paisSel = request.getParameter("ddlPaisFiltro");
 			      if (listaPaisesFiltro != null) {
 			        for (Pais p : listaPaisesFiltro) {
