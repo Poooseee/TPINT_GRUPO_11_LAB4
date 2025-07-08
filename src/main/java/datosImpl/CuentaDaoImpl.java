@@ -2,7 +2,6 @@ package datosImpl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import datos.CuentaDao;
@@ -189,48 +188,6 @@ public class CuentaDaoImpl implements CuentaDao {
 		return cantidad < 3;
 
 	}
-    @Override
-    public Cuenta obtenerCuentaPorDni(String dni) {
-        Cuenta cuenta = null;
-        String query = "SELECT * FROM cuentas WHERE DNI_Ctas = ?"; // Ajusta el nombre de la columna si es necesario
 
-        cn = new Conexion();
-        try {
-            cn.Open(); // Abre la conexión
-            PreparedStatement ps = cn.prepare(query);
-            ps.setString(1, dni);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                cuenta = new Cuenta();
-                cuenta.setNumero(rs.getInt("numeroCuenta_Ctas"));
-                cuenta.setDni(rs.getString("DNI_Ctas"));
-                cuenta.setFechaCreacion(rs.getString("fechaCreacion_Ctas"));
-                // ... (Mapea el resto de los campos de la tabla "cuentas" a la clase Cuenta) ...
-                // Obtener el tipo de cuenta (asumiendo que hay una columna tipoCta_Ctas con el ID del tipo de cuenta)
-                int tipoCuentaId = rs.getInt("tipoCta_Ctas");
-                // Aquí necesitas obtener el TipoCuenta correspondiente al tipoCuentaId, probablemente llamando a otro método en tu DAO o servicio
-                TipoCuenta tipoCuenta = obtenerTipoCuentaPorId(tipoCuentaId); //Método que debes implementar
-                cuenta.setTipo(tipoCuenta);
-                cuenta.setCbu(rs.getString("CBU_Ctas"));
-                cuenta.setSaldo(rs.getFloat("saldo_Ctas"));
-                cuenta.setBaja(rs.getBoolean("baja_Ctas"));
-
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            // Manejo de excepciones:  Loggear el error en un entorno de producción
-            e.printStackTrace(); // Reemplazar con un logger apropiado en producción
-        } finally {
-            cn.close(); // Cierra la conexión
-        }
-        return cuenta;
-    }
-    
-	private TipoCuenta obtenerTipoCuentaPorId(int tipoCuentaId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

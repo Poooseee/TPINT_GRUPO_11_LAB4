@@ -39,16 +39,12 @@ public class UsuarioDaoImpl implements UsuarioDao {
 			ps.close();
 			cn.close();
 		}
-	    catch(Exception e) {
-	        System.out.println("\nERROR en UsuarioDaoImpl:");
-	        e.printStackTrace();
-	    }
-	    finally {
-	        if(cn != null) {
-	            cn.close();
-	        }
-	    }
-	    
-	    return u;
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return u;
 	}
+
 }
