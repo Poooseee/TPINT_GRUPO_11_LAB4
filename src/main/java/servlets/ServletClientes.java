@@ -7,13 +7,12 @@ import javax.servlet.http.*;
 
 import entidades.Cliente;
 import entidades.Cuenta;
-import entidades.Usuario;
 import negocio.CuentaNegocio;
 import negocioImpl.CuentaNegocioImpl;
 import negocio.ClienteNegocio;
 import negocioImpl.ClienteNegocioImpl;
 
-@WebServlet(name = "ServletClientes", urlPatterns = {"/ServletClientes", "/ServletClientes/perfil"})
+@WebServlet(urlPatterns = {"/ServletClientes", "/ServletClientes/perfil"})
 public class ServletClientes extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
