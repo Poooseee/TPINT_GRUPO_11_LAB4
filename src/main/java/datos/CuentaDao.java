@@ -11,4 +11,5 @@ public boolean update(Cuenta cuenta);
 public ArrayList<Cuenta> obtenerCuentas(String dni,Boolean cuentasInactivas);
 public boolean eliminar(int NumeroCuenta);
 public boolean tieneMenosDe3Cuentas(String dni);
+Cuenta obtenerCuentaPorDni(String dni);
 }

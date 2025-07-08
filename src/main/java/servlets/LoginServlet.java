@@ -5,9 +5,12 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import entidades.Cliente;
 import entidades.Usuario;
 import negocio.UsuarioNegocio;
 import negocioImpl.UsuarioNegocioImpl;
+import negocio.ClienteNegocio;
+import negocioImpl.ClienteNegocioImpl;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -42,13 +45,23 @@ public class LoginServlet extends HttpServlet {
     					rutaVistaDestino = "/menuAdministrador.jsp";
     				}
     				else if(tipo.equals("CLIENTE")){
-    					rutaVistaDestino = "/menuCliente.jsp";
-    				}				    			
-    			  }
-    			}
-    		  request.setAttribute("errorLogin", mensajeError);
-    		  request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
-    			
+    					ClienteNegocio clienteNeg = new ClienteNegocioImpl();
+                    Cliente cliente = clienteNeg.obtenerPorUsuarioNick(nick); // Usamos el nick directamente
+                    
+                    if (cliente != null) {
+                        session.setAttribute("clienteLogueado", cliente);
+                        // Redirección absoluta para evitar problemas
+                        response.sendRedirect(request.getContextPath() + "/ServletClientes");
+                        return;
+                    } else {
+                        request.setAttribute("errorLogin", "No se encontraron datos del cliente");
+                    }
+                }
+            }
+            
+            request.setAttribute("errorLogin", "Usuario o contraseña incorrectos");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+        }
     	}
 
     }

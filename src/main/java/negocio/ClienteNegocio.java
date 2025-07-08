@@ -10,4 +10,6 @@ public interface ClienteNegocio {
     public boolean modificar(Cliente cliente);
     public int eliminar(String dni);
     public boolean existe(String dni);
+	public Cliente obtenerPorUsuarioNick(String nickUsuario);
+	public Cliente obtenerClienteCompleto(String dni);
 }
