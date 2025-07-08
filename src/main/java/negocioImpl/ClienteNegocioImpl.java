@@ -36,6 +36,11 @@ public class ClienteNegocioImpl implements ClienteNegocio {
 		return existe;
 	}
 
+	@Override
+    public Cliente obtenerPorUsuarioNick(String nick) {
+        return clienteDao.obtenerPorUsuarioNick(nick);
+    }
+
 	
 	
 }

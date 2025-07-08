@@ -11,6 +11,9 @@ import negocioImpl.ProvinciaNegocioImpl;
 public class ClienteDaoImpl implements ClienteDao {
 
     private Conexion cn;
+    
+    private static final String GET_CLIENTE_BY_NICK = 
+            "SELECT * FROM Cliente WHERE nick_usuario = ?";
 
     @Override
     public List<Cliente> listar() {
@@ -18,6 +21,7 @@ public class ClienteDaoImpl implements ClienteDao {
         PaisNegocioImpl paNeg = new PaisNegocioImpl();
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
         LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+        
         
         try {
             cn = new Conexion();
@@ -210,6 +214,62 @@ public class ClienteDaoImpl implements ClienteDao {
 	            e.printStackTrace();
 	        }
 	        return existe;
+	}
+
+	@Override
+	public Cliente obtenerPorUsuarioNick(String nick) {
+	    Cliente cliente = null;
+	    try {
+	        cn = new Conexion();
+	        cn.Open();
+	        String query = "SELECT C.* FROM CLIENTES C "
+	                     + "INNER JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
+	                     + "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
+	                     + "WHERE U.nick_Usr = ?";
+	        PreparedStatement stmt = cn.prepare(query);
+	        stmt.setString(1, nick);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            cliente = new Cliente();
+	            cliente.setDNI(rs.getString("DNI_Cl"));
+	            cliente.setCUIL(rs.getString("CUIL_Cl"));
+	            cliente.setNombre(rs.getString("nombre_Cl"));
+	            cliente.setApellido(rs.getString("apellido_Cl"));
+	            
+	            Sexo sexo = new Sexo();
+	            sexo.setSexo(rs.getString("sexo_Cl"));
+	            cliente.setSexo(sexo.getSexo());
+
+	            PaisNegocioImpl paNeg = new PaisNegocioImpl();
+	            ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+	            LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+	            
+	            int idNac = rs.getInt("nacionalidad_Cl");
+	            cliente.setNacionalidad(paNeg.obtenerPaisxId(idNac));
+
+	            int idPa = rs.getInt("pais_Cl");
+	            cliente.setPais(paNeg.obtenerPaisxId(idPa));
+
+	            int idProv = rs.getInt("provincia_Cl");
+	            cliente.setProvincia(provNeg.obtenerProvinciaPorId(idProv, idPa));
+
+	            int idLoc = rs.getInt("localidad_Cl");
+	            cliente.setLocalidad(locNeg.obtenerLocalidadPorId(idLoc, idProv, idPa));
+
+	            cliente.setDomicilio(rs.getString("domicilio_Cl"));
+	            cliente.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
+	            cliente.setEmail(rs.getString("mail_Cl"));
+	            cliente.setBaja(rs.getInt("baja_Cl"));
+	        }
+
+	        rs.close();
+	        stmt.close();
+	        cn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return cliente;
 	}
 
 }

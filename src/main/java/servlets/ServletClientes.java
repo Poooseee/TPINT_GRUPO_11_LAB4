@@ -1,31 +1,49 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-import negocio.ClienteNegocio;
-import negocioImpl.ClienteNegocioImpl;
 import entidades.Cliente;
+import entidades.Cuenta;
+import negocio.CuentaNegocio;
+import negocioImpl.CuentaNegocioImpl;
 
 @WebServlet("/ServletClientes")
 public class ServletClientes extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private ClienteNegocio clienteNegocio = new ClienteNegocioImpl();
+    private CuentaNegocio cuentaNegocio = new CuentaNegocioImpl();
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("✔ Entró al doGet de ServletCuentas");
-		List<Cliente> clientes = clienteNegocio.listar();
-		request.setAttribute("clientes", clientes);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("✔ Entró al doGet de ServletClientes (menú cliente)");
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlClientes.jsp");
-		dispatcher.forward(request, response);
-	}
+        HttpSession session = request.getSession();
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+
+        if (cliente == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String nombre = cliente.getNombre();
+        String apellido = cliente.getApellido(); //Agrega el apellido
+        Cuenta cuenta = cuentaNegocio.obtenerCuentaPorDni(cliente.getDNI()); //Método para obtener la cuenta
+
+        double saldo = 0;
+        if (cuenta != null) {
+            saldo = cuenta.getSaldo();
+        } else {
+            //Manejo de error: No se encontró la cuenta
+            request.setAttribute("error", "No se encontró la cuenta asociada al cliente.");
+        }
+
+        request.setAttribute("nombreCliente", nombre);
+        request.setAttribute("apellidoCliente", apellido); //Agrega el atributo al request
+        request.setAttribute("saldoDisponible", saldo);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/menuCliente.jsp");
+        dispatcher.forward(request, response);
+    }
 }
