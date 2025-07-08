@@ -3,6 +3,8 @@
     
     <%@ page import="entidades.ClienteReporte" %>
     <%@ page import="entidades.PrestamosReporte" %>
+    <%@ page import="entidades.CuotasReporte" %>
+    <%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,7 +92,56 @@
 		#reporteCuotas{
 			width:50%;
 		}
+		
+	#form-cuotas input[type="text"] {
+	    min-width: 20em;
+	    padding: 0.4em;
+	    border-radius: 0.5em;
+	    outline: none;
+	    border: 1px solid darkgray;
+	  }
+	  #form-cuotas > input[type="submit"] {
+	    margin: 0 auto;
+	    padding: .5em;
+	    border-radius: 0.5em;
+	    cursor: pointer;
+	    outline: none;
+	    background-color: rgba(77, 180, 187, 0.637);
+	    border: none;
+	    transition: all 0.2s ease;
+	    border:1px solid white;
+	  }
+	    #form-cuotas input[type="submit"]:hover {
+    background-color: rgba(38, 117, 122, 0.637);
+  }
+  
+  #tabla-cuotas thead {
+    background-color: #343a40;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  #tabla-cuotas th,
+  #tabla-cuotas td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    min-width: 120px;
+  }
+    #listado-cuotas {
+    background-color: white;
+    width: auto%;
+    margin: 0 auto;
+    padding: 0em;
+    box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
+    overflow-x:scroll;
+  }
+	  
     </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 <body>
     <%@ include file="./HeaderAdmin.jsp" %> 
@@ -172,7 +223,7 @@
         	PrestamosReporte prestamosReporte = new PrestamosReporte();
         
         	prestamosReporte = (PrestamosReporte)request.getAttribute("prestamosReporte");
-        	
+
         	int porcentajeAprobado = prestamosReporte.getAprobado();
         	int porcentajeRechazado = prestamosReporte.getRechazado();
         	int porcentajePendiente = prestamosReporte.getPendiente();
@@ -183,8 +234,78 @@
         	<h4>PENDIENTES: % <%= porcentajePendiente %></h4>
         	</div>
         </div>
-         
+         <div class="reporte">
+         	<h3>Información de Cuotas</h3>
+         	<div>
+         	<form method="post" action="ReportesServlet" id="form-cuotas">
+         		<input type="text" value="<%= request.getAttribute("dni")!=null ?request.getAttribute("dni"):"" %>" placeholder="DNI Cliente" name="DNI" required pattern="^\d{1,8}$" title="Solo números. Máximo 8 caractéres">
+         		<input type="submit" value="Buscar Cliente" name="buscarCliente">
+         	</form>
+         	</div>
+         	<br></br>
+         	<div id="listado-cuotas">
+         		<table id="tabla-cuotas">
+         			<thead>
+				        <tr>
+				            <th>ID Préstamo</th>
+				            <th>Cuenta</th>
+				            <th>Fecha</th>
+				            <th>Importe Pedido</th>
+				            <th>Importe a Pagar</th>
+				            <th>Total de Cuotas</th>
+				            <th>Cuotas Pagadas</th>
+				            <th>Monto Mensual</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				    <%
+				    	ArrayList<CuotasReporte> lista = (ArrayList<CuotasReporte>) request.getAttribute("listaCuotas");
+				    	if(lista != null){
+				    		for(CuotasReporte cuota : lista){
+				    			%>
+				    			<tr>
+				    			<td><%= cuota.getIdPrestamo() %></td>
+				                <td><%= cuota.getCuenta() %></td>
+				                <td><%= cuota.getFecha() %></td>
+				                <td>$<%= cuota.getImportePedido() %></td>
+				                <td>$<%= cuota.getImportePagar() %></td>
+				                <td><%= cuota.getCuotas() %></td>
+				                <td><%= cuota.getCuotasPagas() %></td>
+				                <td>$<%= cuota.getMontoMensual() %></td>
+				    			</tr>
+				                <%
+				    		}
+				    	}
+				    	else{
+				    		%>
+				    		<tr>
+				    			<%
+				    			for(int i = 0; i<8;i++){
+				    				%>
+				    				<td>-</td>
+				    				<%
+				    			}
+				    			%>
+				    		</tr>
+				    		<% 
+				    	}
+				    %>
+				    </tbody>
+         		</table>
+         	</div>
+         </div>
     </main>
-
+<script>
+  $(document).ready(function() {
+    $('#tabla-cuotas').DataTable({
+      "pageLength": 8,
+      "lengthChange": false,
+      "searching": false,
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
 </body>
 </html>
