@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
     		String pass = request.getParameter("password");
     		
     		String rutaVistaDestino = "/menuLog.jsp";
-    		String mensajeError = "usuario Incorrecto";
+    		String mensajeError = "Usuario o contraseña incorrectos";
     		
     		Usuario usuario = new Usuario(nick,pass);  
     		
@@ -54,13 +54,13 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect(request.getContextPath() + "/ServletClientes");
                         return;
                     } else {
-                        request.setAttribute("errorLogin", "No se encontraron datos del cliente");
+                       mensajeError =  "No se encontraron datos del cliente";
                     }
                 }
             }
             
-            request.setAttribute("errorLogin", "Usuario o contraseña incorrectos");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.setAttribute("errorLogin", mensajeError);
+            request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
         }
     	}
 

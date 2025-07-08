@@ -26,7 +26,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 			ps.setString(2, usuario.getContraseñaUsuario());
 			
 			ResultSet rs = ps.executeQuery();
-			System.out.println();
+			
 			if(rs.next()) {
 				u = new Usuario();
 				u.setIdUsuario(rs.getInt("id"));
