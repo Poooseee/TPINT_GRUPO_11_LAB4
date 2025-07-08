@@ -2,7 +2,6 @@ package negocioImpl;
 
 import entidades.Cuenta;
 import negocio.CuentaNegocio;
-
 import java.util.ArrayList;
 
 import datos.CuentaDao;
@@ -55,4 +54,15 @@ CuentaDaoImpl dao = new CuentaDaoImpl();
 		return dao.tieneMenosDe3Cuentas(dni);
 	}
 
+	@Override
+	public Cuenta obtenerCuentaPorDni(String dni) {
+	    try {
+	        return dao.obtenerCuentaPorDni(dni); // Asumiendo que tienes este método en CuentaDao
+	    } catch (Exception e) {
+	        // Manejo de excepciones:  Loggear el error y retornar null o lanzar una excepción personalizada
+	        e.printStackTrace(); //En producción, usar un logger adecuado
+	        return null; // O lanzar una excepción: throw new RuntimeException("Error al obtener la cuenta", e);
+	    }
+	}
+	
 }

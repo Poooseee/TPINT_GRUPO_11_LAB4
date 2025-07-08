@@ -11,13 +11,14 @@ import negocioImpl.ProvinciaNegocioImpl;
 public class ClienteDaoImpl implements ClienteDao {
 
     private Conexion cn;
-
+    
     @Override
     public List<Cliente> listar() {
         List<Cliente> lista = new ArrayList<>();
         PaisNegocioImpl paNeg = new PaisNegocioImpl();
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
         LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+        
         
         try {
             cn = new Conexion();
@@ -210,6 +211,175 @@ public class ClienteDaoImpl implements ClienteDao {
 	            e.printStackTrace();
 	        }
 	        return existe;
+	}
+
+	@Override
+	public Cliente obtenerPorUsuarioNick(String nick) {
+	    Cliente cliente = null;
+	    try {
+	        cn = new Conexion();
+	        cn.Open();
+	        String query = "SELECT C.* FROM CLIENTES C "
+	                     + "INNER JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
+	                     + "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
+	                     + "WHERE U.nick_Usr = ?";
+	        PreparedStatement stmt = cn.prepare(query);
+	        stmt.setString(1, nick);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            cliente = new Cliente();
+	            cliente.setDNI(rs.getString("DNI_Cl"));
+	            cliente.setCUIL(rs.getString("CUIL_Cl"));
+	            cliente.setNombre(rs.getString("nombre_Cl"));
+	            cliente.setApellido(rs.getString("apellido_Cl"));
+	            
+	            Sexo sexo = new Sexo();
+	            sexo.setSexo(rs.getString("sexo_Cl"));
+	            cliente.setSexo(sexo.getSexo());
+
+	            PaisNegocioImpl paNeg = new PaisNegocioImpl();
+	            ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+	            LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+	            
+	            int idNac = rs.getInt("nacionalidad_Cl");
+	            cliente.setNacionalidad(paNeg.obtenerPaisxId(idNac));
+
+	            int idPa = rs.getInt("pais_Cl");
+	            cliente.setPais(paNeg.obtenerPaisxId(idPa));
+
+	            int idProv = rs.getInt("provincia_Cl");
+	            cliente.setProvincia(provNeg.obtenerProvinciaPorId(idProv, idPa));
+
+	            int idLoc = rs.getInt("localidad_Cl");
+	            cliente.setLocalidad(locNeg.obtenerLocalidadPorId(idLoc, idProv, idPa));
+
+	            cliente.setDomicilio(rs.getString("domicilio_Cl"));
+	            cliente.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
+	            cliente.setEmail(rs.getString("mail_Cl"));
+	            cliente.setBaja(rs.getInt("baja_Cl"));
+	        }
+
+	        rs.close();
+	        stmt.close();
+	        cn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return cliente;
+	}
+	
+	@Override
+	public Cliente obtenerClienteCompleto(String dni) {
+	    Cliente cliente = null;
+	    try {
+	        cn = new Conexion();
+	        cn.Open();
+	        
+	        String query = "SELECT c.*, " +
+	                "p.nombre_Pa as pais_nombre, p.idPais_Pa as pais_id, " +
+	                "p.nacionalidad_Pa as nacionalidad_nombre, " + // Solo el nombre, no el ID
+	                "pr.nombre_prov as provincia_nombre, pr.idProvincia_Prov as provincia_id, pr.idPais_Prov as provincia_idPais, " +
+	                "l.nombre_Loc as localidad_nombre, l.idLocalidad_Loc as localidad_id, l.idProvincia_Loc as localidad_idProvincia, " +
+	                "s.sexo_Sex as sexo_nombre, " +
+	                "txc.telefono_TxC, " +
+	                "u.nick_usr, u.contraseña_usr " +
+	                "FROM CLIENTES c " +
+	                "LEFT JOIN PAISES p ON c.pais_Cl = p.idPais_Pa " +
+	                "LEFT JOIN PROVINCIAS pr ON c.provincia_Cl = pr.idProvincia_Prov " +
+	                "LEFT JOIN LOCALIDADES l ON c.localidad_Cl = l.idLocalidad_Loc " +
+	                "LEFT JOIN SEXOS s ON c.sexo_Cl = s.sexo_Sex " +
+	                "LEFT JOIN TELEFONOSXCLIENTES txc ON c.DNI_Cl = txc.DNI_TxC " +
+	                "LEFT JOIN USUARIOSXCLIENTES uxc ON c.DNI_Cl = uxc.DNI_UxC " +
+	                "LEFT JOIN USUARIOS u ON uxc.idUsuario_UxC = u.idUsuario_Usr " +
+	                "WHERE c.DNI_Cl = ?";
+	        
+	        PreparedStatement stmt = cn.prepare(query);
+	        stmt.setString(1, dni);
+	        
+	        // ************ AQUÍ VAN LOS LOGS DE DEPURACIÓN ************
+	        System.out.println("\n🔍 Ejecutando consulta para DNI: " + dni);
+	        System.out.println("📝 Consulta SQL:\n" + query);
+	        
+	        long startTime = System.currentTimeMillis();
+	        ResultSet rs = stmt.executeQuery();
+	        long endTime = System.currentTimeMillis();
+	        
+	        System.out.println("⏱ Tiempo ejecución consulta: " + (endTime - startTime) + "ms");
+	        
+	        if (!rs.next()) {
+	            System.out.println("❌ No se encontraron resultados para DNI: " + dni);
+	        } else {
+	            System.out.println("\n✅ Datos encontrados en BD:");
+	            System.out.println("Nombre: " + rs.getString("nombre_Cl"));
+	            System.out.println("Apellido: " + rs.getString("apellido_Cl"));
+	            System.out.println("DNI: " + rs.getString("DNI_Cl"));
+	            System.out.println("Email: " + rs.getString("mail_Cl"));
+	            System.out.println("Teléfono: " + rs.getString("telefono_TxC"));
+	            //System.out.println("Nacionalidad ID: " + rs.getInt("nacionalidad_id"));
+	            System.out.println("País ID: " + rs.getInt("pais_id"));
+	            
+	            // Necesitamos volver al inicio del ResultSet para procesarlo
+	            rs.beforeFirst();
+	        }
+	     // ************ FIN DE LOS LOGS DE DEPURACIÓN ************
+
+	        if (rs.next()) {
+	            cliente = new Cliente();
+	            
+	            // 1. Mapeo de campos directos
+	            cliente.setDNI(rs.getString("DNI_Cl"));
+	            cliente.setCUIL(rs.getString("CUIL_Cl"));
+	            cliente.setNombre(rs.getString("nombre_Cl"));
+	            cliente.setApellido(rs.getString("apellido_Cl"));
+	            cliente.setSexo(rs.getString("sexo_nombre")); // Cambiado sexo_desc por sexo_nombre
+	            cliente.setDomicilio(rs.getString("domicilio_Cl"));
+	            cliente.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
+	            cliente.setEmail(rs.getString("mail_Cl"));
+	            cliente.setTelefono(rs.getString("telefono_TxC"));
+	            cliente.setNick(rs.getString("nick_usr"));
+	            cliente.setPassword(rs.getString("contraseña_usr"));
+	            cliente.setBaja(rs.getInt("baja_Cl"));
+	            
+	            // 2. Mapeo de Pais (nacionalidad)
+	            Pais nacionalidad = new Pais();
+	            nacionalidad.setNombre(rs.getString("nacionalidad_nombre"));
+	            // Si necesitas un ID para nacionalidad, podrías usar el mismo que pais_id o un valor por defecto
+	            nacionalidad.setId(0); // o rs.getInt("pais_id") si quieres usar el mismo ID
+	            cliente.setNacionalidad(nacionalidad);
+	            
+	            // 3. Mapeo de Pais (país residencia)
+	            Pais pais = new Pais();
+	            pais.setId(rs.getInt("pais_id"));
+	            pais.setNombre(rs.getString("pais_nombre")); // Cambiado setDescripcion por setNombre
+	            cliente.setPais(pais);
+	            
+	            // 4. Mapeo de Provincia
+	            Provincia provincia = new Provincia();
+	            provincia.setId(rs.getInt("provincia_id"));
+	            provincia.setIdPais(rs.getInt("provincia_idPais"));
+	            provincia.setNombre(rs.getString("provincia_nombre"));
+	            cliente.setProvincia(provincia);
+	            
+	            // 5. Mapeo de Localidad
+	            Localidad localidad = new Localidad();
+	            localidad.setId(rs.getInt("localidad_id"));
+	            localidad.setIdProvincia(rs.getInt("localidad_idProvincia"));
+	            localidad.setNombre(rs.getString("localidad_nombre"));
+	            cliente.setLocalidad(localidad);
+	        }
+
+	        rs.close();
+	        stmt.close();
+	    } catch (Exception e) {
+	        System.out.println("\n❌ ERROR en obtenerClienteCompleto: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        if(cn != null) {
+	            cn.close();
+	        }
+	    }
+	    return cliente;
 	}
 
 }

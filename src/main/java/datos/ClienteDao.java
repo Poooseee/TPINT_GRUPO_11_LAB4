@@ -9,4 +9,6 @@ public interface ClienteDao {
     public boolean modificar(Cliente cliente);
     public int eliminar(String dni);
     public boolean existe(String dni);
+	Cliente obtenerPorUsuarioNick(String nick);
+	Cliente obtenerClienteCompleto(String dni);
 }
