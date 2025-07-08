@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@ page import="entidades.Usuario" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +93,14 @@
     <header>
         <div class="inicio">
             <a href="menuCliente.jsp"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
-            <p>Hola, *introducir nombre*</p>    
+            <%
+            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+            String nombreUs = "Invitado";
+            if (usuario != null) {
+                nombreUs = usuario.getNickUsuario();
+            }
+            	%>
+            <p>Hola, <%=nombreUs %></p>      
         </div>
         <div class="perfil">
             <a href="perfilCliente.jsp"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>

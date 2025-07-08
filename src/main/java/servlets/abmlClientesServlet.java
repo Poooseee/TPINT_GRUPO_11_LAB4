@@ -18,16 +18,16 @@ import entidades.Cliente;
 import entidades.Localidad;
 import entidades.Pais;
 import entidades.Provincia;
-import entidades.TelefonosXclientes;
+//import entidades.TelefonosXclientes;
 import entidades.Usuario;
 import negocio.ClienteNegocio;
 import negocio.PaisNegocio;
-import negocio.TelefonosXclientesNegocio;
+//import negocio.TelefonosXclientesNegocio;
 import negocioImpl.ClienteNegocioImpl;
 import negocioImpl.LocalidadNegocioImpl;
 import negocioImpl.PaisNegocioImpl;
 import negocioImpl.ProvinciaNegocioImpl;
-import negocioImpl.TelefonosXclientesNegocioImpl;
+//import negocioImpl.TelefonosXclientesNegocioImpl;
 
 @WebServlet("/abmlClientesServlet")
 public class abmlClientesServlet extends HttpServlet {
@@ -410,7 +410,7 @@ public class abmlClientesServlet extends HttpServlet {
 private boolean modificarCliente(HttpServletRequest request) {
 	boolean modificado = false;
 	ClienteNegocio neg = new ClienteNegocioImpl();
-	TelefonosXclientesNegocio negTel = new TelefonosXclientesNegocioImpl();
+	//TelefonosXclientesNegocio negTel = new TelefonosXclientesNegocioImpl();
 	Cliente CliAModificar = cargarClienteConDatosDeLaTabla(request);
 	
 	if(neg.modificar(CliAModificar)) {
