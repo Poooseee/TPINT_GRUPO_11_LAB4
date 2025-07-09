@@ -36,12 +36,7 @@
         all: unset;
         cursor: pointer;
     }
-    header{
-        display: flex;
-        justify-content: space-between;
-        width: 80%;
-        margin: 1% auto;
-    }
+
     .inicio{
         display: flex;
     }
@@ -51,10 +46,7 @@
     #logoBanco{
         width: 75px;
     }
-    #imgPerfil{
-        width: 75px;
-        border-radius: 100%;
-    }
+
     .saldo{
         margin: 6% auto 0 auto;
         width: 75%;
@@ -146,12 +138,13 @@
 		     		if(cuentas != null && !cuentas.isEmpty()){
 		     			for(Cuenta cuenta : cuentas){
 		     				String cbu = cuenta.getCbu();
+		     				int numeroCuenta = cuenta.getNumero();
 		                    Boolean seleccionado = false;
 		                    if(request.getParameter("cbuSeleccionado") != null && request.getParameter("cbuSeleccionado").equals(cbu)){
 		                        seleccionado = true;
 		                    }
 		     				%>
-		     					<option value=<%=cbu%> <%=seleccionado? "selected" : "" %>><%= cbu %></option>
+		     					<option value=<%=cbu%> <%=seleccionado? "selected" : "" %>><%= numeroCuenta +" - "+ cbu %></option>
 		     				<%
 		     			}
 		     		}else{
@@ -169,16 +162,26 @@
                 <h2>Saldo disponible:</h2>
                 <a href="movimientosCliente.jsp">Ir a movimientos</a>
             </div>
-            
+            <%
+				String saldoCuentaSeleccionada =  String.valueOf(request.getAttribute("saldoCuentaSeleccionada")) ;
+            	if(saldoCuentaSeleccionada == null) saldoCuentaSeleccionada = "00.0";
+            %>
 		<div class="saldoInferior">
-		    <p>$<%= request.getAttribute("saldoCuentaSeleccionada") != null ? request.getAttribute("saldoCuentaSeleccionada") : "0.00" %></p>
+		    <p>$<%= saldoCuentaSeleccionada %></p>
 		</div>
 		
         </div>
         
         <div class="btnsAcciones">
             <div class="btnsAccionesImgs">
-                <a href="transferenciasCliente.jsp"><img src="imgs/logoTransferencia.png" alt="logoTransferencia"></a>
+            	<%
+            		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
+            		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
+            		
+            		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
+            		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
+            	%>
+                <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>"><img src="imgs/logoTransferencia.png" alt="logoTransferencia"></a>
                 <a href="prestamosCliente.jsp"><img src="imgs/logoPrestamo.png" alt="logoPrestamo"></a>
             </div>
             <div class="btnsAccionesTxt">
