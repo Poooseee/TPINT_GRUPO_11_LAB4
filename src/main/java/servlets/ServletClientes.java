@@ -44,18 +44,32 @@ public class ServletClientes extends HttpServlet {
 	    		request.setAttribute("saldoCuentaSeleccionada", cuentas.get(0).getSaldo());
 	    	}
 	    	
-    	RequestDispatcher dispatcher = request.getRequestDispatcher("/menuCliente.jsp");
-		dispatcher.forward(request, response);
+	    	//4.Validar si ya habia un cbu seleccionado, caso positivo mandar ese
+	    	String cbuPreviamenteSeleccionado = request.getParameter("cbuSeleccionado");
+	    	System.out.println(cbuPreviamenteSeleccionado+ "cbu");
+	    	if(cbuPreviamenteSeleccionado !=null) {
+	    		Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbuPreviamenteSeleccionado);
+	        	float saldo = cuenta.getSaldo();
+	        	int numeroCuenta = cuenta.getNumero();
+	        	request.setAttribute("saldoCuentaSeleccionada",saldo);
+	        	request.setAttribute("cbuSeleccionado", cbuPreviamenteSeleccionado);
+	        	request.setAttribute("numeroCuenta", numeroCuenta);
+	    	}
+	    	
+	    	RequestDispatcher dispatcher = request.getRequestDispatcher("/menuCliente.jsp");
+	    	dispatcher.forward(request, response);
     }
  
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-    	System.out.println("POSTTTTT");
-    	//OBTENER SALDO DE LA CUENTA SELECCIONADA
+
+    	//OBTENER SALDO Y NUMERO DE LA CUENTA SELECCIONADA
     	String cbu = request.getParameter("cbuSeleccionado");
     	Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbu);
     	float saldo = cuenta.getSaldo();
+    	int numeroCuenta = cuenta.getNumero();
+    	request.setAttribute("numeroCuenta", numeroCuenta);
     	request.setAttribute("saldoCuentaSeleccionada",saldo);
     	request.setAttribute("cbuSeleccionado", cbu);
     	
