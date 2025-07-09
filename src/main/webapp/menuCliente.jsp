@@ -21,10 +21,9 @@
         margin: 0;
         background: #2C90AA;
         background: linear-gradient(0deg,rgba(44, 144, 170, 1) 0%, rgba(255, 252, 253, 1) 90%);
-        background:gray;
         background-repeat: no-repeat;
         background-size: cover;
-        height: 98vh;
+        min-height: 100dvh;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     a{
@@ -62,10 +61,13 @@
         height: 20vh;
         background-color: rgba(255, 252, 253, 1);
         border-radius: 10px;
+        display:flex;
+        flex-direction:column;
     }
     .saldoSuperior{
         display: flex;
         justify-content: space-between;
+        align-items:center;
     }
     .saldoSuperior a{
         margin: 0.5% 1% 0 0;
@@ -74,12 +76,15 @@
         padding-left: 1%;
     }
     .saldoInferior{
-        display: flex;
-        margin-top: 1%;
+      flex-grow: 1;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: 2em;
+	  overflow: hidden;
     }
     .saldoInferior p{
-        padding-left: 1%;
-        padding-right: 4%;
+		
     }
     .btnsAcciones{
         margin: 1% auto 10% auto;
@@ -124,27 +129,9 @@
 </style>
 <body>
 
-    <header>
-        <div class="inicio">
-            <a href="menuCliente.jsp"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
-            <%
-            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-            String nombreUs = "Invitado";
-            if (usuario != null) {
-                nombreUs = usuario.getNickUsuario();
-            }
-            	%>
-            <div style="display:flex; flex-direction:column">
-	            <p>Hola, <%=nombreUs %></p>
-	            <a href="LogoutServlet">Cerrar Sesión</a>   
-            </div>
-        </div>
-        <div class="perfil">
-            <a href="${pageContext.request.contextPath}/ServletClientes/perfil">
-    <img src="${pageContext.request.contextPath}/imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil">
-</a>
-        </div>
-    </header>
+    <%@ include file="./HeaderCliente.jsp" %>
+    
+    
     <main>
 	    <div class="cuentas">
 		<%
