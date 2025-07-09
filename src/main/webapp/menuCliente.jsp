@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
     <%@ page import="entidades.Cliente" %>
     <%@ page import="entidades.Usuario" %>
+    <%@ page import="entidades.Cuenta" %>
+    <%@ page import="java.util.ArrayList" %>
+    
     <%@ page import="javax.servlet.RequestDispatcher" %>
 <!DOCTYPE html>
 <html>
@@ -18,6 +21,7 @@
         margin: 0;
         background: #2C90AA;
         background: linear-gradient(0deg,rgba(44, 144, 170, 1) 0%, rgba(255, 252, 253, 1) 90%);
+        background:gray;
         background-repeat: no-repeat;
         background-size: cover;
         height: 98vh;
@@ -100,10 +104,10 @@
         margin-right: 1%;
     }
     .cuentas{
-     display: flex;              /* Activa Flexbox */
-     flex-direction: row;        /* (opcional) Alineación horizontal */
-     justify-content: center ;/* Alinea horizontalmente: start, center, end, space-between... */
-     align-items: center;        /* Alineación vertical (en la misma línea) */
+     display: flex;              
+     flex-direction: row;        
+     justify-content: center ;
+     align-items: center;       
      gap: 1rem;  
      margin: 5% auto 0 auto;
         width: 75%;
@@ -130,7 +134,10 @@
                 nombreUs = usuario.getNickUsuario();
             }
             	%>
-            <p>Hola, <%=nombreUs %></p>    
+            <div style="display:flex; flex-direction:column">
+	            <p>Hola, <%=nombreUs %></p>
+	            <a href="LogoutServlet">Cerrar Sesión</a>   
+            </div>
         </div>
         <div class="perfil">
             <a href="${pageContext.request.contextPath}/ServletClientes/perfil">
@@ -139,24 +146,47 @@
         </div>
     </header>
     <main>
-    <div class="cuentas">
-
-     <h2 style=margin-left:15px>Cuentas</h2>
+	    <div class="cuentas">
+		<%
+			ArrayList <Cuenta> cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
+			
+		%>
+	     <h2 style=margin-left:15px>Cuentas</h2>
+	    
+	    <form method="post" action="ServletClientes">
+		     <select id="selectCuentas" name="cbuSeleccionado" onchange="this.form.submit()">
+		     	<%
+		     		if(cuentas != null && !cuentas.isEmpty()){
+		     			for(Cuenta cuenta : cuentas){
+		     				String cbu = cuenta.getCbu();
+		                    Boolean seleccionado = false;
+		                    if(request.getParameter("cbuSeleccionado") != null && request.getParameter("cbuSeleccionado").equals(cbu)){
+		                        seleccionado = true;
+		                    }
+		     				%>
+		     					<option value=<%=cbu%> <%=seleccionado? "selected" : "" %>><%= cbu %></option>
+		     				<%
+		     			}
+		     		}else{
+		     			%>
+		     				<option value="-">Aún tiene cuentas</option>
+		     			<%
+		     		}
+		     	%>
+		     </select>
+		</form>
+	    </div>
     
-     <select>
-     <option>CBU: 12345</option>
-     <option>CBU: 6789</option>
-     </select>
-    </div>
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
                 <a href="movimientosCliente.jsp">Ir a movimientos</a>
             </div>
-            <div class="saldoInferior">
-                <p>*Ingresar saldo de la cuenta en la BD*</p>
-                <button><img src="imgs/logoOcultar.png" alt="logoOcultar"></button>    
-            </div>
+            
+		<div class="saldoInferior">
+		    <p>$<%= request.getAttribute("saldoCuentaSeleccionada") != null ? request.getAttribute("saldoCuentaSeleccionada") : "0.00" %></p>
+		</div>
+		
         </div>
         
         <div class="btnsAcciones">

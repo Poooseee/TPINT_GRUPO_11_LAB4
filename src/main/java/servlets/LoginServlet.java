@@ -4,13 +4,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-
-import entidades.Cliente;
 import entidades.Usuario;
 import negocio.UsuarioNegocio;
 import negocioImpl.UsuarioNegocioImpl;
-import negocio.ClienteNegocio;
-import negocioImpl.ClienteNegocioImpl;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -37,6 +33,8 @@ public class LoginServlet extends HttpServlet {
     			mensajeError = "";
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
+    			
+    			System.out.println(usuario.toString());
     			String tipo = usuario.getTipoUsuario();
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				
@@ -45,29 +43,31 @@ public class LoginServlet extends HttpServlet {
     					rutaVistaDestino = "/menuAdministrador.jsp";
     				}
     				else if(tipo.equals("CLIENTE")){
-    					ClienteNegocio clienteNeg = new ClienteNegocioImpl();
-                    Cliente cliente = clienteNeg.obtenerPorUsuarioNick(nick); // Usamos el nick directamente
+    					rutaVistaDestino = "/ServletClientes";
+    					/*
+    					ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
+    					Cliente cliente = clienteNeg.obtenerPorUsuarioNick(nick); // Usamos el nick directamente
                     
-                    if (cliente != null) {
-                        session.setAttribute("clienteLogueado", cliente);
-                        // Redirección absoluta para evitar problemas
-                        response.sendRedirect(request.getContextPath() + "/ServletClientes");
-                        return;
-                    } else {
-                       mensajeError =  "No se encontraron datos del cliente";
-                    }
-                }
+	                    if (cliente != null) {
+	                        session.setAttribute("clienteLogueado", cliente);
+	                        // Redirección absoluta para evitar problemas
+	                        response.sendRedirect(request.getContextPath() + "/ServletClientes");
+	                        return;
+	                    } 
+	                    else {
+	                       mensajeError =  "No se encontraron datos del cliente";
+	                    }
+	                    */
+    				}
             }
             
             request.setAttribute("errorLogin", mensajeError);
-            request.getRequestDispatcher(rutaVistaDestino).forward(request, response);
+            response.sendRedirect(request.getContextPath() + rutaVistaDestino);
         }
     	}
 
     }
-    // esta funcion verifica que el usuario este iniciado 
-    // y en ese caso le setea al objeto pasado por parametro
-    // los valores que le faltan (id y tipo )    
+
     
     private boolean login(Usuario usuario) {
     	boolean iniciado = false;
