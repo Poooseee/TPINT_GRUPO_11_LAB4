@@ -57,12 +57,17 @@ CuentaDaoImpl dao = new CuentaDaoImpl();
 	@Override
 	public Cuenta obtenerCuentaPorDni(String dni) {
 	    try {
-	        return dao.obtenerCuentaPorDni(dni); // Asumiendo que tienes este método en CuentaDao
+	        return dao.obtenerCuentaPorDni(dni);
 	    } catch (Exception e) {
-	        // Manejo de excepciones:  Loggear el error y retornar null o lanzar una excepción personalizada
-	        e.printStackTrace(); //En producción, usar un logger adecuado
-	        return null; // O lanzar una excepción: throw new RuntimeException("Error al obtener la cuenta", e);
+	         
+	        e.printStackTrace(); 
+	        return null;
 	    }
+	}
+
+	@Override
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+		return dao.obtenerCuentaPorCBU(cbu);
 	}
 	
 }
