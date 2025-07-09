@@ -3,19 +3,14 @@ package entidades;
 import java.sql.Date;
 
 public class Movimiento {
-	private int idMovimiento;
+
 	private int DniMovimiento;
 	private int numeroCuenta;
 	private Date fecha;
 	private String detalle;
 	private float importe;
 	private TipoMovimiento tipo;
-	public int getIdMovimiento() {
-		return idMovimiento;
-	}
-	public void setIdMovimiento(int idMovimiento) {
-		this.idMovimiento = idMovimiento;
-	}
+
 	public int getDniMovimiento() {
 		return DniMovimiento;
 	}
@@ -52,10 +47,10 @@ public class Movimiento {
 	public void setTipo(TipoMovimiento tipo) {
 		this.tipo = tipo;
 	}
-	public Movimiento(int idMovimiento, int dniMovimiento, int numeroCuenta, Date fecha, String detalle, float importe,
+	public Movimiento(int dniMovimiento, int numeroCuenta, Date fecha, String detalle, float importe,
 			TipoMovimiento tipo) {
 		super();
-		this.idMovimiento = idMovimiento;
+
 		DniMovimiento = dniMovimiento;
 		this.numeroCuenta = numeroCuenta;
 		this.fecha = fecha;
