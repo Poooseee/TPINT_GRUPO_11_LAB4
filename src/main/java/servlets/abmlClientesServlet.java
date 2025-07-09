@@ -132,7 +132,11 @@ public class abmlClientesServlet extends HttpServlet {
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
+    	request.setCharacterEncoding("UTF-8");
+    	response.setCharacterEncoding("UTF-8");
+    	response.setContentType("text/html; charset=UTF-8");
+    	
+    	// obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
     	atributoListaPaises(request);
     	atributoListaPaisesFiltro(request);
     	// obtiene lista de provincias dependiendo del pais seleccionado en alta
@@ -221,7 +225,10 @@ public class abmlClientesServlet extends HttpServlet {
 	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
 		atributoListaPaises(request);
 		atributoListaPaisesFiltro(request);
 		// carga las provincias segun pais en alta y setea la provincia seleccionada
