@@ -406,8 +406,8 @@
 				}
              if(domicilioIngresado == null || domicilioIngresado == ""){
                     %>
-			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" placeholder="Ingresar domicilio" required /><% }else{%>
-			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s]{1,50}$" id="txtDomicilio" name="txtDomicilio" value="<%= domicilioIngresado %> " required /><%} %>
+			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s\d]{1,50}$" id="txtDomicilio" name="txtDomicilio" placeholder="Ingresar domicilio" required /><% }else{%>
+			<input type="text" title ="Solo Letras. Máximo 50 caractéres" pattern="^[A-Za-z\s\d]{1,50}$" id="txtDomicilio" name="txtDomicilio" value="<%= domicilioIngresado %> " required /><%} %>
             </div>
             <div>
               <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
@@ -517,35 +517,35 @@
 		      <!-- DNI -->
 		      <div>
 		        <label for="txtDni">DNI</label>
-		        <input type="text" id="txtDni" name="txtDni" placeholder="Ingresar DNI a buscar" 
-		          value="<%= request.getParameter("txtDni") != null ? request.getParameter("txtDni") : "" %>" />
+		        <input type="text" id="txtDniFiltro" name="txtDniFiltro" placeholder="Ingresar DNI a buscar" 
+		          value="<%= request.getParameter("txtDniFiltro") != null ? request.getParameter("txtDniFiltro") : "" %>" />
 		      </div>
 		
 		      <!-- CUIL -->
 		      <div>
 		        <label for="txtCuil">CUIL</label>
-		        <input type="text" id="txtCuil" name="txtCuil" placeholder="Ingresar CUIL a buscar" 
-		          value="<%= request.getParameter("txtCuil") != null ? request.getParameter("txtCuil") : "" %>" />
+		        <input type="text" id="txtCuilFiltro" name="txtCuilFiltro" placeholder="Ingresar CUIL a buscar" 
+		          value="<%= request.getParameter("txtCuilFiltro") != null ? request.getParameter("txtCuilFiltro") : "" %>" />
 		      </div>
 		
 		      <!-- Nombre -->
 		      <div>
 		        <label for="txtNombre">Nombre</label>
-		        <input type="text" id="txtNombre" name="txtNombre" placeholder="Ingresar nombre a buscar" 
-		          value="<%= request.getParameter("txtNombre") != null ? request.getParameter("txtNombre") : "" %>" />
+		        <input type="text" id="txtNombreFiltro" name="txtNombreFiltro" placeholder="Ingresar nombre a buscar" 
+		          value="<%= request.getParameter("txtNombreFiltro") != null ? request.getParameter("txtNombreFiltro") : "" %>" />
 		      </div>
 		
 		      <!-- Apellido -->
 		      <div>
 		        <label for="txtApellido">Apellido</label>
-		        <input type="text" id="txtApellido" name="txtApellido" placeholder="Ingresar apellido a buscar" 
-		          value="<%= request.getParameter("txtApellido") != null ? request.getParameter("txtApellido") : "" %>" />
+		        <input type="text" id="txtApellidoFiltro" name="txtApellidoFiltro" placeholder="Ingresar apellido a buscar" 
+		          value="<%= request.getParameter("txtApellidoFiltro") != null ? request.getParameter("txtApellidoFiltro") : "" %>" />
 		      </div>
 		
 		      <!-- Sexo -->
 		      <div>
 		        <label for="ddlSexo">Sexo</label>
-		        <select id="ddlSexo" name="ddlSexo">
+		        <select id="ddlSexoFiltro" name="ddlSexoFiltro">
 		          <option value="" <%= (request.getParameter("ddlSexo")==null || request.getParameter("ddlSexo").isEmpty()) ? "selected" : "" %>>Todos</option>
 		          <option value="Masculino" <%= "Masculino".equals(request.getParameter("ddlSexo")) ? "selected" : "" %>>Masculino</option>
 		          <option value="Femenino" <%= "Femenino".equals(request.getParameter("ddlSexo")) ? "selected" : "" %>>Femenino</option>
@@ -642,8 +642,8 @@
 		      <!-- Fecha de nacimiento -->
 		      <div>
 		        <label for="txtFechaDeNacimiento">Fecha de nacimiento</label>
-		        <input type="date" id="txtFechaDeNacimiento" name="txtFechaDeNacimiento"
-		          value="<%= request.getParameter("txtFechaDeNacimiento") != null ? request.getParameter("txtFechaDeNacimiento") : "" %>" />
+		        <input type="date" id="txtFechaDeNacimientoFiltro" name="txtFechaDeNacimientoFiltro"
+		          value="<%= request.getParameter("txtFechaDeNacimientoFiltro") != null ? request.getParameter("txtFechaDeNacimientoFiltro") : "" %>" />
 		      </div>
 		    </div>
 		

@@ -53,6 +53,7 @@ public class abmlClientesServlet extends HttpServlet {
     	 request.setAttribute("paisSeleccionado", paisSeleccionado);
          request.setAttribute("listaPaises", listaPaises);
     }
+    
     private void atributoListaPaisesFiltro(HttpServletRequest request) {
    	 PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 	 List<Pais> listaPaises = paisNeg.obtenerPaises();
@@ -64,6 +65,7 @@ public class abmlClientesServlet extends HttpServlet {
 	 request.setAttribute("paisSeleccionadoFiltro", paisSeleccionado);
      request.setAttribute("listaPaises", listaPaises);
     }
+    
     private void atributoListaProvinciasAlta(HttpServletRequest request) {
     	ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
     	 List<Provincia> listaProvinciasAlta = new ArrayList<>();
@@ -115,6 +117,7 @@ public class abmlClientesServlet extends HttpServlet {
     	request.setAttribute("listaLocalidadesAlta", listaLocalidadesAlta);
     	request.setAttribute("localidadSeleccionada", localidadSeleccionada);
     }
+    
     private void atributoListaLocalidadesFiltro(HttpServletRequest request) {
     	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
     	List<Localidad> listaLocalidadesAlta = new ArrayList<>();
@@ -138,13 +141,13 @@ public class abmlClientesServlet extends HttpServlet {
     	
     	// obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
     	atributoListaPaises(request);
-    	atributoListaPaisesFiltro(request);
+    	//atributoListaPaisesFiltro(request);
     	// obtiene lista de provincias dependiendo del pais seleccionado en alta
     	atributoListaProvinciasAlta(request);
-    	atributoListaProvinciasFiltro(request);
+    	//atributoListaProvinciasFiltro(request);
     	// obtiene lista de localidades dependiendo del pais y provincia seleccionado en alta
     	atributoListaLocalidadesAlta(request);
-    	atributoListaLocalidadesFiltro(request);
+    	//atributoListaLocalidadesFiltro(request);
     	// Negocios
         
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
@@ -179,11 +182,11 @@ public class abmlClientesServlet extends HttpServlet {
         List<Cliente> filtrados = new ArrayList<>();
 
         // Demás filtros
-        String dni = request.getParameter("txtDni");
-        String cuil = request.getParameter("txtCuil");
-        String nombre = request.getParameter("txtNombre");
-        String apellido = request.getParameter("txtApellido");
-        String sexo = request.getParameter("ddlSexo");
+        String dni = request.getParameter("txtDniFiltro");
+        String cuil = request.getParameter("txtCuilFiltro");
+        String nombre = request.getParameter("txtNombreFiltro");
+        String apellido = request.getParameter("txtApellidoFiltro");
+        String sexo = request.getParameter("ddlSexoFiltro");
         String localidadFiltro = request.getParameter("ddlLocalidadFiltro");
         String fechaNac = request.getParameter("txtFechaDeNacimiento");
 

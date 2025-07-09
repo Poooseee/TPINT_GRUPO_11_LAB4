@@ -29,6 +29,9 @@ public class ClienteDaoImpl implements ClienteDao {
             		+ "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
             		+ "WHERE U.tipo_Usr = 'CLIENTE';";
             ResultSet rs = cn.query(query);
+            if(rs==null) {
+            System.out.println("RESULTSET NULO EN DAO");
+            }
             while (rs.next()) {
                 Cliente c = new Cliente();
                 c.setDNI(rs.getString("DNI_Cl"));
@@ -64,8 +67,8 @@ public class ClienteDaoImpl implements ClienteDao {
                 c.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
                 c.setEmail(rs.getString("mail_Cl"));
                 c.setTelefono(rs.getString("telefono_TxC"));
-                c.setNick(rs.getString("nick_usr"));
-                c.setPassword(rs.getString("contraseña_usr"));
+                c.setNick(rs.getString("nick_Usr"));
+                c.setPassword(rs.getString("contraseña_Usr"));
                 c.setBaja(rs.getInt("baja_Cl"));
 
                 lista.add(c);
