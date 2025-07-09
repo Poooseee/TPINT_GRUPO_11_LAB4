@@ -298,6 +298,10 @@ public class abmlClientesServlet extends HttpServlet {
     	user.setTipoUsuario("CLIENTE");
 		
 	}
+	private void limpiarAtributosPaisYProvincia(HttpServletRequest request) {
+		request.setAttribute("paisSeleccionado",null);
+		request.setAttribute("provSeleccionada",null);
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -324,8 +328,9 @@ public class abmlClientesServlet extends HttpServlet {
 	    Cliente valoresDeLosControles = guardarCamposDelAltaEnAtributos(request);
 	    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
 	    // setea atributos
-		enviarValoresRecuperadosDelAlta(request,valoresDeLosControles);
-	
+	    cargarAtributosParaElFormAlta(request,valoresDeLosControles);
+	//  seteaAtributosQueCarganInputsDelAlta
+	//  cargarAtributosParaElFormAlta  
 		List<Cliente> listaClientes = clienteNeg.listar();
 		
 		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
@@ -339,9 +344,14 @@ public class abmlClientesServlet extends HttpServlet {
 		if(request.getParameter("btnAgregarCliente") != null) {
 			
 			int filas = agregarCliente(request);
-				 
+			if(filas == 1) {
+				Cliente vacio = new Cliente();
+				// reutilizo funcion y limpio los inputs 
+				cargarAtributosParaElFormAlta(request,vacio);
+				limpiarAtributosPaisYProvincia(request);
+				request.setAttribute("listaClientes", listaClientes);
+			}
 			request.setAttribute("cantFilas", filas);			 
-			request.setAttribute("listaClientes", listaClientes);
 		}
 
 		if(request.getParameter("btnEliminarCliente") != null) {
@@ -353,9 +363,7 @@ public class abmlClientesServlet extends HttpServlet {
 		    request.setAttribute("listaClientes", clienteNeg.listar());
 		}
 		
-		if(request.getParameter("btnAgregarCliente") != null) {
-			
-		}
+		
 		if(request.getParameter("btnModificar")!=null) {
 			
 			boolean modificado = modificarCliente(request);
@@ -402,7 +410,7 @@ public class abmlClientesServlet extends HttpServlet {
 		c.setNick(request.getParameter("txtUsuario"));
 		return c;
 	}
-	private void enviarValoresRecuperadosDelAlta(HttpServletRequest request,Cliente c) {
+	private void cargarAtributosParaElFormAlta(HttpServletRequest request,Cliente c) {
 		  request.setAttribute("dniIngresado", c.getDNI());
 		    request.setAttribute("cuilIngresado", c.getCUIL());
 		    request.setAttribute("nombreIngresado", c.getNombre());
