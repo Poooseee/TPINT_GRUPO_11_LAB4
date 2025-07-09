@@ -242,11 +242,11 @@ public class abmlClientesServlet extends HttpServlet {
 	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
 		
 		//obtenemos todo lo del form 
-		String DNI = request.getParameter("txtDni");
-		String CUIL = request.getParameter("txtCuil");
-		String nombre = request.getParameter("txtNombre");
-		String apellido = request.getParameter("txtApellido");
-		String sexo = request.getParameter("ddlSexo");
+	    cliente.setDNI(request.getParameter("txtDni"));
+	    cliente.setCUIL(request.getParameter("txtCuil"));
+	    cliente.setNombre(request.getParameter("txtNombre"));
+	    cliente.setApellido(request.getParameter("txtApellido"));
+	    cliente.setSexo(request.getParameter("ddlSexo"));
 		
 		String nomNac = request.getParameter("ddlNacionalidad");
 		String nomPais = request.getParameter("ddlPais");
@@ -255,15 +255,23 @@ public class abmlClientesServlet extends HttpServlet {
 		paisNac = paisNeg.obtenerPaisxNacionalidad(nomNac);
 		paisRe = paisNeg.obtenerPaisxNombre(nomPais);
 		
+		cliente.setNacionalidad(paisNac);
+		cliente.setPais(paisRe);
+		
+		// provincia
 		String nomProv = request.getParameter("ddlProvincia");
 		Provincia prov = new Provincia();
 		prov = provNeg.obtenerProvinciaPorNombre(nomProv);
+		cliente.setProvincia(prov);
 		
+		// localidad
 		String nomLoc = request.getParameter("ddlLocalidad");
 		Localidad loc = new Localidad();
 		loc = locNeg.obtenerLocalidadPorNombre(nomLoc);
+		cliente.setLocalidad(loc);
 		
-		String domicilio = request.getParameter("txtDomicilio");
+		cliente.setDomicilio(request.getParameter("txtDomicilio"));
+		
 		String fechaNac = request.getParameter("txtFechaDeNacimiento");
 		Date fechaDeNac = null;
 		try {
@@ -271,36 +279,23 @@ public class abmlClientesServlet extends HttpServlet {
 	    } catch (IllegalArgumentException e) {
 	      e.printStackTrace();
 	    }
+		cliente.setFechaNacimiento(fechaDeNac);
 		
-		String mail = request.getParameter("txtCorreo");
-		String telefono  = request.getParameter("txtTelefono");
-		String nick  = request.getParameter("txtUsuario");
-		String contrasenia  = request.getParameter("txtContrasenia");
-		String reContrasenia = request.getParameter("txtContrasenia2");
-		
-    	
-    	cliente.setDNI(DNI);
-    	cliente.setCUIL(CUIL);
-    	cliente.setNombre(nombre);
-    	cliente.setApellido(apellido);
-    	cliente.setSexo(sexo);
-    	cliente.setNacionalidad(paisNac);
-    	cliente.setPais(paisRe);
-    	cliente.setProvincia(prov);
-    	cliente.setLocalidad(loc);
-    	cliente.setDomicilio(domicilio);
-    	cliente.setFechaNacimiento(fechaDeNac);
-    	cliente.setEmail(mail);
-    	cliente.setTelefono(telefono);
-    	cliente.setBaja(0);
-    	user.setNickUsuario(nick);
-    	user.setContraseñaUsuario(contrasenia);
-    	user.setTipoUsuario("CLIENTE");
-		
+		cliente.setEmail(request.getParameter("txtCorreo"));
+		cliente.setTelefono(request.getParameter("txtTelefono"));
+		cliente.setBaja(0);
+		user.setNickUsuario(request.getParameter("txtUsuario"));
+		user.setContraseñaUsuario(request.getParameter("txtContrasenia"));
+		user.setTipoUsuario("CLIENTE");
 	}
 	private void limpiarAtributosPaisYProvincia(HttpServletRequest request) {
 		request.setAttribute("paisSeleccionado",null);
 		request.setAttribute("provSeleccionada",null);
+	}
+	private void cargarTodosLosClientes(HttpServletRequest request) {
+		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
+        List<Cliente> listaClientes = clienteNeg.listar();
+		request.setAttribute("listaClientes", listaClientes);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -318,26 +313,13 @@ public class abmlClientesServlet extends HttpServlet {
 		atributoListaLocalidadesFiltro(request);
 		
 		
-		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
-		
-		
-		
-		
+
 		//RECUPERAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
-		// obtiene y guarda en un objeto los valores de los parametros del form
-	    Cliente valoresDeLosControles = guardarCamposDelAltaEnAtributos(request);
+	    Cliente valoresDeLosControles = obtenerValoresIngresadosDelFormAlta(request);
 	    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
-	    // setea atributos
 	    cargarAtributosParaElFormAlta(request,valoresDeLosControles);
-	//  seteaAtributosQueCarganInputsDelAlta
-	//  cargarAtributosParaElFormAlta  
-		List<Cliente> listaClientes = clienteNeg.listar();
+	
 		
-		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
-		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
-		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
-		
-		    request.setAttribute("listaClientes", listaClientes);
 
 		
 	
@@ -349,18 +331,17 @@ public class abmlClientesServlet extends HttpServlet {
 				// reutilizo funcion y limpio los inputs 
 				cargarAtributosParaElFormAlta(request,vacio);
 				limpiarAtributosPaisYProvincia(request);
-				request.setAttribute("listaClientes", listaClientes);
+				
 			}
 			request.setAttribute("cantFilas", filas);			 
 		}
 
 		if(request.getParameter("btnEliminarCliente") != null) {
+			ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 		    String DNI = request.getParameter("listDNI");
-
 		    int filasE = clienteNeg.eliminar(DNI);
-
 		    request.setAttribute("cantFilasE", filasE);
-		    request.setAttribute("listaClientes", clienteNeg.listar());
+		   
 		}
 		
 		
@@ -368,9 +349,9 @@ public class abmlClientesServlet extends HttpServlet {
 			
 			boolean modificado = modificarCliente(request);
 			request.setAttribute("resultadoModificar", modificado);
-			request.setAttribute("listaClientes", clienteNeg.listar());
 			
 		}
+		cargarTodosLosClientes(request);
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 		
@@ -381,7 +362,8 @@ public class abmlClientesServlet extends HttpServlet {
 		rd.forward(request, response);
 		
 	}
-	private Cliente guardarCamposDelAltaEnAtributos(HttpServletRequest request) {
+	// obtenerValoresIngresadosDelFormAlta
+	private Cliente obtenerValoresIngresadosDelFormAlta(HttpServletRequest request) {
 		PaisNegocioImpl pNeg = new PaisNegocioImpl();
 		Cliente c = new Cliente();
 		Pais p = new Pais();
