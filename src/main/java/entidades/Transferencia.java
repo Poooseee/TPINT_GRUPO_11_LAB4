@@ -1,16 +1,11 @@
 package entidades;
 
 public class Transferencia {
-	private int idTransferencia;
+	
 	private int numeroCuentaOrigen;
 	private int numeroCuentaDestino;
 	private float importe;
-	public int getIdTransferencia() {
-		return idTransferencia;
-	}
-	public void setIdTransferencia(int idTransferencia) {
-		this.idTransferencia = idTransferencia;
-	}
+
 	public int getNumeroCuentaOrigen() {
 		return numeroCuentaOrigen;
 	}
@@ -29,9 +24,8 @@ public class Transferencia {
 	public void setImporte(float importe) {
 		this.importe = importe;
 	}
-	public Transferencia(int idTransferencia, int numeroCuentaOrigen, int numeroCuentaDestino, float importe) {
+	public Transferencia(int numeroCuentaOrigen, int numeroCuentaDestino, float importe) {
 		super();
-		this.idTransferencia = idTransferencia;
 		this.numeroCuentaOrigen = numeroCuentaOrigen;
 		this.numeroCuentaDestino = numeroCuentaDestino;
 		this.importe = importe;

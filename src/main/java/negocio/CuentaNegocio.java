@@ -13,4 +13,5 @@ public boolean eliminarCuenta(int numeroCuenta);
 public boolean tieneMenosDe3Cuentas(String dni);
 public Cuenta obtenerCuentaPorDni(String dni);
 public Cuenta obtenerCuentaPorCBU(String cbu);
+public Cuenta obtenerCuentaPorNumero(int numeroCuenta);
 }

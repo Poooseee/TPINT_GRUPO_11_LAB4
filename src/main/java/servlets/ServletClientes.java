@@ -42,6 +42,7 @@ public class ServletClientes extends HttpServlet {
 	    	if(!cuentas.isEmpty()) {
 	    		request.setAttribute("cuentasCliente", cuentas);
 	    		request.setAttribute("saldoCuentaSeleccionada", cuentas.get(0).getSaldo());
+	    		request.setAttribute("numeroCuenta", cuentas.get(0).getNumero());
 	    	}
 	    	
 	    	//4.Validar si ya habia un cbu seleccionado, caso positivo mandar ese

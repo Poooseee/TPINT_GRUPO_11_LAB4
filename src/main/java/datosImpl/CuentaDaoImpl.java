@@ -261,5 +261,44 @@ public class CuentaDaoImpl implements CuentaDao {
 		
 		return cuenta;
 	}
+	@Override
+	public Cuenta obtenerCuentaPorNumero(int numeroCuenta) {
+		Cuenta cuenta = null;
+		try {
+			cn = new Conexion();
+			cn.Open();
+			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
+					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId, baja_Ctas as baja"
+					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
+					+ " WHERE numeroCuenta_Ctas = ? ";
+			
+			PreparedStatement ps = cn.prepare(query);
+			ps.setInt(1, numeroCuenta);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				cuenta = new Cuenta();
+				TipoCuenta tipoCuenta = new TipoCuenta();
+				
+				cuenta.setCbu(rs.getString("cbu"));
+				cuenta.setDni(rs.getString("dni"));
+				cuenta.setFechaCreacion(rs.getString("fecha"));
+				cuenta.setNumero(rs.getInt("numero"));
+				cuenta.setSaldo(rs.getFloat("saldo"));
+				tipoCuenta.setIdTipo(rs.getInt("tipoId"));
+				tipoCuenta.setNombre(rs.getString("tipoNombre"));
+				cuenta.setTipo(tipoCuenta);
+				cuenta.setBaja(rs.getBoolean("baja"));
+
+			}
+			rs.close();
+			cn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return cuenta;
+	}
 	
 }

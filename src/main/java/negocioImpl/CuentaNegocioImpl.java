@@ -69,5 +69,10 @@ CuentaDaoImpl dao = new CuentaDaoImpl();
 	public Cuenta obtenerCuentaPorCBU(String cbu) {
 		return dao.obtenerCuentaPorCBU(cbu);
 	}
+
+	@Override
+	public Cuenta obtenerCuentaPorNumero(int numeroCuenta) {
+		return dao.obtenerCuentaPorNumero(numeroCuenta);
+	}
 	
 }
