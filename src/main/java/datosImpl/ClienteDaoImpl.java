@@ -87,7 +87,7 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String queryCliente = "INSERT INTO CLIENTES (dni_Cl, cuil_Cl, nombre_Cl, apellido_Cl, sexo_Cl, pais_Cl, nacionalidad_Cl, provincia_Cl, localidad_Cl, nacimiento_Cl, domicilio_Cl, mail_Cl, baja_Cl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String queryCliente = "INSERT INTO CLIENTES (dni_Cl, cuil_Cl, nombre_Cl, apellido_Cl, sexo_Cl, paisOrigen_Cl, nacionalidad_Cl, provincia_Cl, localidad_Cl, nacimiento_Cl, domicilio_Cl, mail_Cl, baja_Cl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = cn.prepare(queryCliente);
             ps.setString(1, cliente.getDNI());
             ps.setString(2, cliente.getCUIL());
