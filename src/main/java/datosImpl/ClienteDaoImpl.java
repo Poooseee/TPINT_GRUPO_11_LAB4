@@ -278,7 +278,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	        
 	        String query = "SELECT c.*, " +
 	                "p.nombre_Pa as pais_nombre, p.idPais_Pa as pais_id, " +
-	                "p.nacionalidad_Pa as nacionalidad_nombre, " + // Solo el nombre, no el ID
+	                "p.nacionalidad_Pa as nacionalidad_nombre, " +
 	                "pr.nombre_prov as provincia_nombre, pr.idProvincia_Prov as provincia_id, pr.idPais_Prov as provincia_idPais, " +
 	                "l.nombre_Loc as localidad_nombre, l.idLocalidad_Loc as localidad_id, l.idProvincia_Loc as localidad_idProvincia, " +
 	                "s.sexo_Sex as sexo_nombre, " +
@@ -296,43 +296,17 @@ public class ClienteDaoImpl implements ClienteDao {
 	        
 	        PreparedStatement stmt = cn.prepare(query);
 	        stmt.setString(1, dni);
-	        
-	        // ************ AQUÍ VAN LOS LOGS DE DEPURACIÓN ************
-	        System.out.println("\n🔍 Ejecutando consulta para DNI: " + dni);
-	        System.out.println("📝 Consulta SQL:\n" + query);
-	        
-	        long startTime = System.currentTimeMillis();
 	        ResultSet rs = stmt.executeQuery();
-	        long endTime = System.currentTimeMillis();
-	        
-	        System.out.println("⏱ Tiempo ejecución consulta: " + (endTime - startTime) + "ms");
-	        
-	        if (!rs.next()) {
-	            System.out.println("❌ No se encontraron resultados para DNI: " + dni);
-	        } else {
-	            System.out.println("\n✅ Datos encontrados en BD:");
-	            System.out.println("Nombre: " + rs.getString("nombre_Cl"));
-	            System.out.println("Apellido: " + rs.getString("apellido_Cl"));
-	            System.out.println("DNI: " + rs.getString("DNI_Cl"));
-	            System.out.println("Email: " + rs.getString("mail_Cl"));
-	            System.out.println("Teléfono: " + rs.getString("telefono_TxC"));
-	            //System.out.println("Nacionalidad ID: " + rs.getInt("nacionalidad_id"));
-	            System.out.println("País ID: " + rs.getInt("pais_id"));
-	            
-	            // Necesitamos volver al inicio del ResultSet para procesarlo
-	            rs.beforeFirst();
-	        }
-	     // ************ FIN DE LOS LOGS DE DEPURACIÓN ************
 
 	        if (rs.next()) {
 	            cliente = new Cliente();
 	            
-	            // 1. Mapeo de campos directos
+	            // Mapeo de campos directos
 	            cliente.setDNI(rs.getString("DNI_Cl"));
 	            cliente.setCUIL(rs.getString("CUIL_Cl"));
 	            cliente.setNombre(rs.getString("nombre_Cl"));
 	            cliente.setApellido(rs.getString("apellido_Cl"));
-	            cliente.setSexo(rs.getString("sexo_nombre")); // Cambiado sexo_desc por sexo_nombre
+	            cliente.setSexo(rs.getString("sexo_nombre"));
 	            cliente.setDomicilio(rs.getString("domicilio_Cl"));
 	            cliente.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
 	            cliente.setEmail(rs.getString("mail_Cl"));
@@ -341,27 +315,23 @@ public class ClienteDaoImpl implements ClienteDao {
 	            cliente.setPassword(rs.getString("contraseña_usr"));
 	            cliente.setBaja(rs.getInt("baja_Cl"));
 	            
-	            // 2. Mapeo de Pais (nacionalidad)
+	            // Mapeo de objetos relacionados
 	            Pais nacionalidad = new Pais();
 	            nacionalidad.setNombre(rs.getString("nacionalidad_nombre"));
-	            // Si necesitas un ID para nacionalidad, podrías usar el mismo que pais_id o un valor por defecto
-	            nacionalidad.setId(0); // o rs.getInt("pais_id") si quieres usar el mismo ID
+	            nacionalidad.setId(0);
 	            cliente.setNacionalidad(nacionalidad);
 	            
-	            // 3. Mapeo de Pais (país residencia)
 	            Pais pais = new Pais();
 	            pais.setId(rs.getInt("pais_id"));
-	            pais.setNombre(rs.getString("pais_nombre")); // Cambiado setDescripcion por setNombre
+	            pais.setNombre(rs.getString("pais_nombre"));
 	            cliente.setPais(pais);
 	            
-	            // 4. Mapeo de Provincia
 	            Provincia provincia = new Provincia();
 	            provincia.setId(rs.getInt("provincia_id"));
 	            provincia.setIdPais(rs.getInt("provincia_idPais"));
 	            provincia.setNombre(rs.getString("provincia_nombre"));
 	            cliente.setProvincia(provincia);
 	            
-	            // 5. Mapeo de Localidad
 	            Localidad localidad = new Localidad();
 	            localidad.setId(rs.getInt("localidad_id"));
 	            localidad.setIdProvincia(rs.getInt("localidad_idProvincia"));
@@ -372,7 +342,6 @@ public class ClienteDaoImpl implements ClienteDao {
 	        rs.close();
 	        stmt.close();
 	    } catch (Exception e) {
-	        System.out.println("\n❌ ERROR en obtenerClienteCompleto: " + e.getMessage());
 	        e.printStackTrace();
 	    } finally {
 	        if(cn != null) {
@@ -381,5 +350,4 @@ public class ClienteDaoImpl implements ClienteDao {
 	    }
 	    return cliente;
 	}
-
 }

@@ -44,7 +44,7 @@ public class ClienteNegocioImpl implements ClienteNegocio {
 	@Override
     public Cliente obtenerClienteCompleto(String dni) {
         try {
-            // Validación básica del DNI
+            // Validación del DNI
             if(dni == null || dni.trim().isEmpty()) {
                 throw new IllegalArgumentException("El DNI no puede estar vacío");
             }
@@ -65,7 +65,5 @@ public class ClienteNegocioImpl implements ClienteNegocio {
             return null;
         }
     }
-
-	
 	
 }

@@ -15,7 +15,7 @@ import negocioImpl.CuentaNegocioImpl;
 import negocio.ClienteNegocio;
 import negocioImpl.ClienteNegocioImpl;
 
-@WebServlet(urlPatterns = {"/ServletClientes", "/ServletClientes/perfil"})
+@WebServlet("/ServletClientes")
 public class ServletClientes extends HttpServlet {
     private static final long serialVersionUID = 1L;
     

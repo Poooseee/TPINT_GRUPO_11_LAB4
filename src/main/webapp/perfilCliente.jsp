@@ -173,7 +173,7 @@
             <p>Hola, <%= cliente != null ? cliente.getNombre() : "" %> <%= cliente != null ? cliente.getApellido() : "" %></p>    
         </div>
     </header>
-    <a href="${pageContext.request.contextPath}/menuCliente.jsp" id="volver">🡠 Volver</a>
+    <a href="${pageContext.request.contextPath}/ServletClientes" id="volver">🡠 Volver</a>
     <main>
         <div class="perfilCliente">
             <h1>Perfil</h1>
@@ -225,22 +225,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Sección de depuración 
-        <div style="background: #f0f0f0; padding: 20px; margin: 20px; border: 1px solid #ccc;">
-            <h3>Datos del Cliente (Debug):</h3>
-            <pre>Cliente: <%= cliente %></pre>
-            <%
-            if(cliente != null) {
-            %>
-                <p>Nombre: <%= cliente.getNombre() %></p>
-                <p>Apellido: <%= cliente.getApellido() %></p>
-                <p>DNI: <%= cliente.getDNI() %></p>
-                <p>Nacionalidad: <%= cliente.getNacionalidad() != null ? cliente.getNacionalidad().getNombre() : "null" %></p>
-            <%
-            }
-            %>
-        </div>-->
     </main>
     <footer>
         <h1>Banco Honse, siempre con vos.</h1>

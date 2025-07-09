@@ -98,7 +98,7 @@
     
     <div id="div-nav">
       <div class="perfil">
-            <a href="${pageContext.request.contextPath}/ServletClientes/perfil">
+            <a href="${pageContext.request.contextPath}/ServletPerfilCliente">
     			<img src="${pageContext.request.contextPath}/imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil">
 			</a>
       </div>
