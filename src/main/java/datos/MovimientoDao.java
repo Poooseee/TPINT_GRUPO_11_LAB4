@@ -1,13 +1,9 @@
 package datos;
 
-import java.util.ArrayList;
-
 import entidades.Movimiento;
+import entidades.Transferencia;
 
 public interface MovimientoDao {
-
-	ArrayList<Movimiento> filtrar(String dniCliente, String fecha, String nroCuenta, String importe, String tipo);
-
-	ArrayList<Movimiento> obtenerPorCliente(String dniCliente);
-
+	
+	public 	int realizarTransferencia(Movimiento movimientoEntrada, Movimiento movimientoSalida , Transferencia transferencia);
 }

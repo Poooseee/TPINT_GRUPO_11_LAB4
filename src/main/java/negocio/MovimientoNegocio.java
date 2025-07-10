@@ -1,14 +1,9 @@
 package negocio;
 
-import java.util.ArrayList;
-
 import entidades.Movimiento;
+import entidades.Transferencia;
 
 public interface MovimientoNegocio {
-
-	ArrayList<Movimiento> obtenerMovimientosPorCliente(String dniCliente);
-
-	ArrayList<Movimiento> filtrarMovimientos(String dniCliente, String fecha, String nroCuenta, String importe,
-			String tipo);
-
+	public int realizarTransferencia(Movimiento movimientoEntrada, Movimiento movimientoSalida , Transferencia transferencia);
+		
 }

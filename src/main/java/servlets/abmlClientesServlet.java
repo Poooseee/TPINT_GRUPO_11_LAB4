@@ -53,6 +53,7 @@ public class abmlClientesServlet extends HttpServlet {
     	 request.setAttribute("paisSeleccionado", paisSeleccionado);
          request.setAttribute("listaPaises", listaPaises);
     }
+    
     private void atributoListaPaisesFiltro(HttpServletRequest request) {
    	 PaisNegocioImpl paisNeg = new PaisNegocioImpl();
 	 List<Pais> listaPaises = paisNeg.obtenerPaises();
@@ -64,6 +65,7 @@ public class abmlClientesServlet extends HttpServlet {
 	 request.setAttribute("paisSeleccionadoFiltro", paisSeleccionado);
      request.setAttribute("listaPaises", listaPaises);
     }
+    
     private void atributoListaProvinciasAlta(HttpServletRequest request) {
     	ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
     	 List<Provincia> listaProvinciasAlta = new ArrayList<>();
@@ -115,6 +117,7 @@ public class abmlClientesServlet extends HttpServlet {
     	request.setAttribute("listaLocalidadesAlta", listaLocalidadesAlta);
     	request.setAttribute("localidadSeleccionada", localidadSeleccionada);
     }
+    
     private void atributoListaLocalidadesFiltro(HttpServletRequest request) {
     	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
     	List<Localidad> listaLocalidadesAlta = new ArrayList<>();
@@ -138,13 +141,13 @@ public class abmlClientesServlet extends HttpServlet {
     	
     	// obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
     	atributoListaPaises(request);
-    	atributoListaPaisesFiltro(request);
+    	//atributoListaPaisesFiltro(request);
     	// obtiene lista de provincias dependiendo del pais seleccionado en alta
     	atributoListaProvinciasAlta(request);
-    	atributoListaProvinciasFiltro(request);
+    	//atributoListaProvinciasFiltro(request);
     	// obtiene lista de localidades dependiendo del pais y provincia seleccionado en alta
     	atributoListaLocalidadesAlta(request);
-    	atributoListaLocalidadesFiltro(request);
+    	//atributoListaLocalidadesFiltro(request);
     	// Negocios
         
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
@@ -179,11 +182,11 @@ public class abmlClientesServlet extends HttpServlet {
         List<Cliente> filtrados = new ArrayList<>();
 
         // Demás filtros
-        String dni = request.getParameter("txtDni");
-        String cuil = request.getParameter("txtCuil");
-        String nombre = request.getParameter("txtNombre");
-        String apellido = request.getParameter("txtApellido");
-        String sexo = request.getParameter("ddlSexo");
+        String dni = request.getParameter("txtDniFiltro");
+        String cuil = request.getParameter("txtCuilFiltro");
+        String nombre = request.getParameter("txtNombreFiltro");
+        String apellido = request.getParameter("txtApellidoFiltro");
+        String sexo = request.getParameter("ddlSexoFiltro");
         String localidadFiltro = request.getParameter("ddlLocalidadFiltro");
         String fechaNac = request.getParameter("txtFechaDeNacimiento");
 
@@ -222,7 +225,78 @@ public class abmlClientesServlet extends HttpServlet {
         RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
         rd.forward(request, response);
     }
-	
+	private int agregarCliente(HttpServletRequest request) {
+		Cliente cliente = new Cliente();
+		Usuario user = new Usuario();
+		int filas = 0;
+		ClienteNegocio negCli = new ClienteNegocioImpl();
+		// la funcion carga los objetos pasados como parametro
+		cargarClienteYusuarioConDatosDelFormAlta(request,cliente,user);
+		 filas = negCli.agregar(cliente, user);
+		return filas;
+		
+	}
+	private void cargarClienteYusuarioConDatosDelFormAlta(HttpServletRequest request,Cliente cliente,Usuario user) {
+	PaisNegocioImpl paisNeg = new PaisNegocioImpl();
+	ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
+	LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
+		
+		//obtenemos todo lo del form 
+	    cliente.setDNI(request.getParameter("txtDni"));
+	    cliente.setCUIL(request.getParameter("txtCuil"));
+	    cliente.setNombre(request.getParameter("txtNombre"));
+	    cliente.setApellido(request.getParameter("txtApellido"));
+	    cliente.setSexo(request.getParameter("ddlSexo"));
+		
+		String nomNac = request.getParameter("ddlNacionalidad");
+		String nomPais = request.getParameter("ddlPais");
+		Pais paisNac = new Pais(); //PARA NACIONALIDAD
+		Pais paisRe = new Pais(); //PARA PAIS DE RESIDENCIA
+		paisNac = paisNeg.obtenerPaisxNacionalidad(nomNac);
+		paisRe = paisNeg.obtenerPaisxNombre(nomPais);
+		
+		cliente.setNacionalidad(paisNac);
+		cliente.setPais(paisRe);
+		
+		// provincia
+		String nomProv = request.getParameter("ddlProvincia");
+		Provincia prov = new Provincia();
+		prov = provNeg.obtenerProvinciaPorNombre(nomProv);
+		cliente.setProvincia(prov);
+		
+		// localidad
+		String nomLoc = request.getParameter("ddlLocalidad");
+		Localidad loc = new Localidad();
+		loc = locNeg.obtenerLocalidadPorNombre(nomLoc);
+		cliente.setLocalidad(loc);
+		
+		cliente.setDomicilio(request.getParameter("txtDomicilio"));
+		
+		String fechaNac = request.getParameter("txtFechaDeNacimiento");
+		Date fechaDeNac = null;
+		try {
+	        fechaDeNac = Date.valueOf(fechaNac);
+	    } catch (IllegalArgumentException e) {
+	      e.printStackTrace();
+	    }
+		cliente.setFechaNacimiento(fechaDeNac);
+		
+		cliente.setEmail(request.getParameter("txtCorreo"));
+		cliente.setTelefono(request.getParameter("txtTelefono"));
+		cliente.setBaja(0);
+		user.setNickUsuario(request.getParameter("txtUsuario"));
+		user.setContraseñaUsuario(request.getParameter("txtContrasenia"));
+		user.setTipoUsuario("CLIENTE");
+	}
+	private void limpiarAtributosPaisYProvincia(HttpServletRequest request) {
+		request.setAttribute("paisSeleccionado",null);
+		request.setAttribute("provSeleccionada",null);
+	}
+	private void cargarTodosLosClientes(HttpServletRequest request) {
+		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
+        List<Cliente> listaClientes = clienteNeg.listar();
+		request.setAttribute("listaClientes", listaClientes);
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -238,230 +312,46 @@ public class abmlClientesServlet extends HttpServlet {
 		atributoListaLocalidadesAlta(request);
 		atributoListaLocalidadesFiltro(request);
 		
-		int filas = 0;
-		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
-		Cliente c = new Cliente();
-		Pais p = new Pais();
-		PaisNegocioImpl pNeg = new PaisNegocioImpl();
 		
-		
+
 		//RECUPERAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
-		// obtiene y guarda en un objeto los valores de los parametros del form
-	    Cliente valoresDeLosControles = guardarCamposDelAltaEnAtributos(request);
+	    Cliente valoresDeLosControles = obtenerValoresIngresadosDelFormAlta(request);
 	    //REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
-	    // setea atributos
-		enviarValoresRecuperadosDelAlta(request,valoresDeLosControles);
+	    cargarAtributosParaElFormAlta(request,valoresDeLosControles);
 	
-		List<Cliente> listaClientes = clienteNeg.listar();
 		
-		PaisNegocioImpl paisNeg = new PaisNegocioImpl();
-		ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
-		LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
-		
-		    request.setAttribute("listaClientes", listaClientes);
 
 		
-		//Si se hizo click en agregar
+	
 		if(request.getParameter("btnAgregarCliente") != null) {
-		    //creamos un booleano en false y un mensaje de error vacio para ir llenando
-		    boolean hayErrores = false;
-		    String mensajeError = "";
 			
-			//obtenemos todo lo del form 
-			String DNI = request.getParameter("txtDni");
-			String CUIL = request.getParameter("txtCuil");
-			String nombre = request.getParameter("txtNombre");
-			String apellido = request.getParameter("txtApellido");
-			String sexo = request.getParameter("ddlSexo");
-			
-			String nomNac = request.getParameter("ddlNacionalidad");
-			String nomPais = request.getParameter("ddlPais");
-			Pais paisNac = new Pais(); //PARA NACIONALIDAD
-			Pais paisRe = new Pais(); //PARA PAIS DE RESIDENCIA
-			paisNac = pNeg.obtenerPaisxNacionalidad(nomNac);
-			paisRe = pNeg.obtenerPaisxNombre(nomPais);
-			
-			String nomProv = request.getParameter("ddlProvincia");
-			Provincia prov = new Provincia();
-			prov = provNeg.obtenerProvinciaPorNombre(nomProv);
-			
-			String nomLoc = request.getParameter("ddlLocalidad");
-			Localidad loc = new Localidad();
-			loc = locNeg.obtenerLocalidadPorNombre(nomLoc);
-			
-			String domicilio = request.getParameter("txtDomicilio");
-			String fechaNac = request.getParameter("txtFechaDeNacimiento");
-	    	Date fechaDeNac = null;
-	    	
-	    	if (fechaNac != null && !fechaNac.trim().isEmpty()) {
-	    	    try {
-	    	        fechaDeNac = Date.valueOf(fechaNac);
-	    	    } catch (IllegalArgumentException e) {
-	    	        mensajeError += "* La fecha de nacimiento no tiene un formato válido.<br>";
-	    	        hayErrores = true;
-	    	    }
-	    	} 
-	    	else {
-	    	    mensajeError += "* Debe seleccionar una fecha de nacimiento.<br>";
-	    	    hayErrores = true;
-	    	}
-	    	
-			String mail = request.getParameter("txtCorreo");
-			String telefono  = request.getParameter("txtTelefono");
-			String nick  = request.getParameter("txtUsuario");
-			String contrasenia  = request.getParameter("txtContrasenia");
-			String reContrasenia = request.getParameter("txtContrasenia2");
-
-		    
-		    if(DNI == null || DNI.trim().isEmpty()) {
-		        mensajeError += "* El DNI es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(DNI != null && NaN(DNI.trim())){
-		        mensajeError += "* El DNI debe estar formado solo por números.<br>";
-		        hayErrores = true;
-		    }
-
-		    if(CUIL == null || CUIL.trim().isEmpty()) {
-		        mensajeError += "* El CUIL es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(CUIL != null && NaN(CUIL.trim())){
-		        mensajeError += "* El CUIL debe estar formado solo por números.<br>";
-		        hayErrores = true;
-		    }
-
-		    if(nombre == null || nombre.trim().isEmpty()) {
-		        mensajeError += "* El nombre es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(nombre != null && !NaN(nombre.trim())){
-		        mensajeError += "* El nombre debe estar formado solo por letras.<br>";
-		        hayErrores = true;
-		    }
-
-		    if(apellido == null || apellido.trim().isEmpty()) {
-		        mensajeError += "* El apellido es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(apellido != null && !NaN(apellido.trim())){
-		        mensajeError += "* El apellido debe estar formado solo por letras.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(sexo == null || sexo.trim().isEmpty()) {
-		    	mensajeError += "* Debe seleccionar un sexo.<br>";
-		    	hayErrores = true;
-		    }
-		    
-		    if(nomNac == null || nomNac.trim().isEmpty()) {
-		        mensajeError += "* Debe seleccionar una nacionalidad.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(nomProv == null || nomProv.trim().isEmpty()) {
-		        mensajeError += "* Debe seleccionar una provincia.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(nomLoc == null || nomLoc.trim().isEmpty()) {
-		        mensajeError += "* Debe seleccionar una localidad.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(mail == null || mail.trim().isEmpty()) {
-		        mensajeError += "* El mail es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(telefono == null || telefono.trim().isEmpty()) {
-		        mensajeError += "* El telefono es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(nick == null || nick.trim().isEmpty()) {
-		        mensajeError += "* El usuario es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(contrasenia == null || contrasenia.trim().isEmpty()) {
-		        mensajeError += "* La contraseña es obligatoria.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(reContrasenia == null || reContrasenia.trim().isEmpty()) {
-		        mensajeError += "* Repetir la contraseña es obligatorio.<br>";
-		        hayErrores = true;
-		    }
-		    
-		    if(reContrasenia != null && !reContrasenia.trim().isEmpty() && contrasenia != null && !contrasenia.trim().isEmpty()) {
-			    if (!contrasenia.equals(reContrasenia)) {
-			        mensajeError += "* Las contraseñas no coinciden.<br>";
-			        hayErrores = true;
-			    }
-		    }
-
-		    if(hayErrores) {
-		    	//SI HAY ERRORES SETEAMOS EL MENSAJE DE ERROR A LA REQUEST
-		    	request.setAttribute("mensajeError", mensajeError);
-		    	request.setAttribute("hayError", hayErrores);
-		    }else {
-		    	//SI NO HAY ERRORES...INSERTAR
-		    	
-		    	Cliente cliente = new Cliente();
-		    	Usuario user = new Usuario();
-		    	
-		    	cliente.setDNI(DNI);
-		    	cliente.setCUIL(CUIL);
-		    	cliente.setNombre(nombre);
-		    	cliente.setApellido(apellido);
-		    	cliente.setSexo(sexo);
-		    	cliente.setNacionalidad(paisNac);
-		    	cliente.setPais(paisRe);
-		    	cliente.setProvincia(prov);
-		    	cliente.setLocalidad(loc);
-		    	cliente.setDomicilio(domicilio);
-		    	cliente.setFechaNacimiento(fechaDeNac);
-		    	cliente.setEmail(mail);
-		    	cliente.setTelefono(telefono);
-		    	cliente.setBaja(0);
-		    	user.setNickUsuario(nick);
-		    	user.setContraseñaUsuario(contrasenia);
-		    	user.setTipoUsuario("CLIENTE");
-		    	
-		    	//obtenemos las filas
-		    	filas = clienteNeg.agregar(cliente, user);	
-		    	
-		    	//SETEAMOS LAS FILAS A LA REQUEST
-		    	request.setAttribute("listaClientes", listaClientes);
-		    	request.setAttribute("cantFilas", filas);
-		    }
-		    
+			int filas = agregarCliente(request);
+			if(filas == 1) {
+				Cliente vacio = new Cliente();
+				// reutilizo funcion y limpio los inputs 
+				cargarAtributosParaElFormAlta(request,vacio);
+				limpiarAtributosPaisYProvincia(request);
+				
+			}
+			request.setAttribute("cantFilas", filas);			 
 		}
-		
+
 		if(request.getParameter("btnEliminarCliente") != null) {
+			ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 		    String DNI = request.getParameter("listDNI");
-
 		    int filasE = clienteNeg.eliminar(DNI);
-
 		    request.setAttribute("cantFilasE", filasE);
-		    request.setAttribute("listaClientes", clienteNeg.listar());
+		   
 		}
 		
-		if(request.getParameter("btnAgregarCliente") != null) {
-			
-		}
+		
 		if(request.getParameter("btnModificar")!=null) {
 			
 			boolean modificado = modificarCliente(request);
 			request.setAttribute("resultadoModificar", modificado);
-			request.setAttribute("listaClientes", clienteNeg.listar());
 			
 		}
+		cargarTodosLosClientes(request);
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 		
@@ -472,7 +362,8 @@ public class abmlClientesServlet extends HttpServlet {
 		rd.forward(request, response);
 		
 	}
-	private Cliente guardarCamposDelAltaEnAtributos(HttpServletRequest request) {
+	// obtenerValoresIngresadosDelFormAlta
+	private Cliente obtenerValoresIngresadosDelFormAlta(HttpServletRequest request) {
 		PaisNegocioImpl pNeg = new PaisNegocioImpl();
 		Cliente c = new Cliente();
 		Pais p = new Pais();
@@ -501,7 +392,7 @@ public class abmlClientesServlet extends HttpServlet {
 		c.setNick(request.getParameter("txtUsuario"));
 		return c;
 	}
-	private void enviarValoresRecuperadosDelAlta(HttpServletRequest request,Cliente c) {
+	private void cargarAtributosParaElFormAlta(HttpServletRequest request,Cliente c) {
 		  request.setAttribute("dniIngresado", c.getDNI());
 		    request.setAttribute("cuilIngresado", c.getCUIL());
 		    request.setAttribute("nombreIngresado", c.getNombre());

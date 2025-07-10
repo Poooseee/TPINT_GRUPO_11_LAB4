@@ -68,7 +68,10 @@
   padding-right: 2em;
   gap: 2em;
 }
-
+#imgPerfilLogo{
+	width: 75px;
+   border-radius: 100%;
+}
 #admin-interaccion a{
   text-decoration: none;
   color: black;
@@ -86,7 +89,9 @@
     <header>
       <div id="informacion">
         <div id="logo">
-          <img src="./imgs/logo_Honse-sinNombre.png" alt="Logo">
+	        <a href="ServletClientes">
+	          <img src="./imgs/logo_Honse-sinNombre.png" alt="Logo">
+	        </a>
         </div>
         <div id="admin-interaccion">
           <div id="nombre-admin">
@@ -99,7 +104,7 @@
     <div id="div-nav">
       <div class="perfil">
             <a href="${pageContext.request.contextPath}/ServletPerfilCliente">
-    			<img src="${pageContext.request.contextPath}/imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil">
+    			<img id="imgPerfilLogo" src="${pageContext.request.contextPath}/imgs/logoPerfilDefault.png" alt="imgPerfil">
 			</a>
       </div>
     </div>

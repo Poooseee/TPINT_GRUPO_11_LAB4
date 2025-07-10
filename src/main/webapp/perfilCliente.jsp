@@ -33,13 +33,7 @@
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     
-    header {
-        display: flex;
-        justify-content: space-between;
-        width: 80%;
-        margin: 1% auto;
-        align-items: center;
-    }
+   
     
     h1 {
         text-align: center;
@@ -165,15 +159,8 @@
     }
 </style>
 <body>
-    <header>
-        <div class="inicio">
-            <a href="${pageContext.request.contextPath}/menuCliente.jsp">
-                <img src="${pageContext.request.contextPath}/imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco">
-            </a>
-            <p>Hola, <%= cliente != null ? cliente.getNombre() : "" %> <%= cliente != null ? cliente.getApellido() : "" %></p>    
-        </div>
-    </header>
-    <a href="${pageContext.request.contextPath}/ServletClientes" id="volver">🡠 Volver</a>
+    <%@ include file="./HeaderCliente.jsp" %>
+    <a href="ServletClientes" id="volver">🡠 Volver</a>
     <main>
         <div class="perfilCliente">
             <h1>Perfil</h1>
