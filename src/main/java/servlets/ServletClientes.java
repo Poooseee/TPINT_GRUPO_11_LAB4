@@ -10,9 +10,7 @@ import javax.servlet.http.*;
 import entidades.Cliente;
 import entidades.Cuenta;
 import entidades.Usuario;
-import negocio.CuentaNegocio;
 import negocioImpl.CuentaNegocioImpl;
-import negocio.ClienteNegocio;
 import negocioImpl.ClienteNegocioImpl;
 
 @WebServlet("/ServletClientes")

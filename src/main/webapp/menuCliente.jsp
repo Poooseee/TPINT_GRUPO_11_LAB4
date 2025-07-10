@@ -167,7 +167,7 @@
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
-                <a href="movimientosCliente.jsp">Ir a movimientos</a>
+                <a href="${pageContext.request.contextPath}/ServletMovimientos">Ir a movimientos</a>
             </div>
             
 		<div class="saldoInferior">

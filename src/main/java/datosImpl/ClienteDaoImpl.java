@@ -282,14 +282,15 @@ public class ClienteDaoImpl implements ClienteDao {
 	                "pr.nombre_prov as provincia_nombre, pr.idProvincia_Prov as provincia_id, pr.idPais_Prov as provincia_idPais, " +
 	                "l.nombre_Loc as localidad_nombre, l.idLocalidad_Loc as localidad_id, l.idProvincia_Loc as localidad_idProvincia, " +
 	                "s.sexo_Sex as sexo_nombre, " +
-	                "txc.telefono_TxC, " +
+	                "t.telefono_Tel as telefono, " +
 	                "u.nick_usr, u.contraseña_usr " +
 	                "FROM CLIENTES c " +
 	                "LEFT JOIN PAISES p ON c.pais_Cl = p.idPais_Pa " +
 	                "LEFT JOIN PROVINCIAS pr ON c.provincia_Cl = pr.idProvincia_Prov " +
 	                "LEFT JOIN LOCALIDADES l ON c.localidad_Cl = l.idLocalidad_Loc " +
 	                "LEFT JOIN SEXOS s ON c.sexo_Cl = s.sexo_Sex " +
-	                "LEFT JOIN TELEFONOSXCLIENTES txc ON c.DNI_Cl = txc.DNI_TxC " +
+	                "LEFT JOIN TELEFONOSXCLIENTES tx ON c.DNI_Cl = tx.DNI_TxC " +
+	                "LEFT JOIN TELEFONOS t ON tx.idTelefono_TxC = t.idTelefono_Tel " +
 	                "LEFT JOIN USUARIOSXCLIENTES uxc ON c.DNI_Cl = uxc.DNI_UxC " +
 	                "LEFT JOIN USUARIOS u ON uxc.idUsuario_UxC = u.idUsuario_Usr " +
 	                "WHERE c.DNI_Cl = ?";
@@ -310,7 +311,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	            cliente.setDomicilio(rs.getString("domicilio_Cl"));
 	            cliente.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
 	            cliente.setEmail(rs.getString("mail_Cl"));
-	            cliente.setTelefono(rs.getString("telefono_TxC"));
+	            cliente.setTelefono(rs.getString("telefono"));
 	            cliente.setNick(rs.getString("nick_usr"));
 	            cliente.setPassword(rs.getString("contraseña_usr"));
 	            cliente.setBaja(rs.getInt("baja_Cl"));
