@@ -300,5 +300,31 @@ public class CuentaDaoImpl implements CuentaDao {
 		
 		return cuenta;
 	}
+	@Override
+	public Boolean existeCuenta(int numeroCuenta) {
+		Boolean existe = false;
+		
+		try {
+			cn = new Conexion();
+			cn.Open();
+			
+			String existeQuery="SELECT * FROM db_tp.cuentas WHERE numeroCuenta_Ctas = ? AND baja_Ctas = false";
+			
+			PreparedStatement ps = cn.prepare(existeQuery);
+			ps.setInt(1, numeroCuenta);
+			
+			ResultSet rs = ps.executeQuery();
+			  if (rs.next()) {
+			       existe = true;
+			   }
+			  
+			  cn.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();		
+		}
+		
+		return existe;
+	}
 	
 }

@@ -41,6 +41,7 @@ public class ServletTransferencias extends HttpServlet {
 		String cbuPreviamenteSeleccionado = request.getParameter("cbuSeleccionado");
 		String numeroCuenta = String.valueOf(request.getParameter("numeroCuenta"));
     	System.out.println(cbuPreviamenteSeleccionado+ "cbu"+numeroCuenta);
+    	
     	if(cbuPreviamenteSeleccionado !=null) {
     		Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbuPreviamenteSeleccionado);
         	float saldo = cuenta.getSaldo();
@@ -58,71 +59,51 @@ public class ServletTransferencias extends HttpServlet {
 		
 		//HACER CLICK EN TRANSFERIR
 		if(request.getParameter("btnTransferir")!=null) {
-			System.out.println("SE PULSO TRANSFERIR");
+			
+			//Obtenemos las cuentas
+			String numeroCuentaOrigen = request.getParameter("numeroCuenta").trim();
+			String numeroCuentaDestino = request.getParameter("nCta").trim();
+			Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaOrigen));
+			Cuenta cuentaDestino = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaDestino));
+			
+			
 			//Primero, validar que la cuenta tenga el saldo suficiente,
-			//Para eso validamos que el importe de la cuenta sea mayor o igual al importe del input
 			try {
 				
 				float saldoDisponible = Float.parseFloat(request.getParameter("saldoCuentaSeleccionada")) ;
 				float importeATransferir = Float.parseFloat(request.getParameter("importe"));
 				
-				if(importeATransferir > saldoDisponible) {
-					throw new SaldoInsuficienteExcepcion();
-				};
-				System.out.println("SALDO DISPONIBLE "+ saldoDisponible);
-				System.out.println("SALDO A ENVIAR "+ importeATransferir);
+				if(importeATransferir > saldoDisponible) throw new SaldoInsuficienteExcepcion();
 				
 			}catch(Exception e) {
 				
-				request.setAttribute("errorSaldo", e.getMessage());
-				
-				String numeroCuentaOrigen = request.getParameter("numeroCuenta").trim();
-				Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaOrigen));
-				request.setAttribute("saldoCuentaSeleccionada", cuentaOrigen.getSaldo());
-				request.setAttribute("cbuSeleccionado", cuentaOrigen.getCbu());
-				request.setAttribute("numeroCuenta", cuentaOrigen.getNumero());
-				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/transferenciasCliente.jsp");
-				dispatcher.forward(request, response);
-				
-				System.out.println("ERROR DE SALDO");
+				devolverYDespacharConError("Saldo insuficiente",response,request,cuentaOrigen);
 				return;
 			}
 			
-			//Ahora si, SI TIENE EL DINERO SUFICIENTE:
+			//SI TIENE EL DINERO SUFICIENTE:
 			
-			//1.Obtenemos el importe
+			//1.Obtenemos el importe a transferir
 			float importeATransferir = Float.parseFloat(request.getParameter("importe"));
 			String importeString = String.valueOf(importeATransferir);
 			
-			//2.Obtenemos las cuentas
-			String numeroCuentaOrigen = request.getParameter("numeroCuenta").trim();
-			String numeroCuentaDestino = request.getParameter("nCta").trim();
 			
-			//validamos que no transfiera a la misma cuenta
+			//2. validamos que no transfiera a la misma cuenta
 			if(numeroCuentaOrigen.equals(numeroCuentaDestino)) {
-				
-				request.setAttribute("mismaCuenta","No puede realizar transferencias a la misma cuenta");
-				
-				Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaOrigen));
-				
-				request.setAttribute("saldoCuentaSeleccionada", cuentaOrigen.getSaldo());
-				request.setAttribute("cbuSeleccionado", cuentaOrigen.getCbu());
-				request.setAttribute("numeroCuenta", cuentaOrigen.getNumero());
-				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/transferenciasCliente.jsp");
-				dispatcher.forward(request, response);
+				devolverYDespacharConError("No puede realizar una transferencia a la misma cuenta",response,request,cuentaOrigen);
 				return;
 			}
 			
+			//3. validamos que exista la cuenta
+			if(!cuentaNegocio.existeCuenta(Integer.parseInt(numeroCuentaDestino))) {
+				devolverYDespacharConError("Cuenta de Destinto inexsistente",response,request,cuentaOrigen);
+				return;
+			}
 			
-			Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaOrigen));
-			Cuenta cuentaDestino = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaDestino));
-			
-			//3.Obtenemos la fecha
+			//4.Obtenemos la fecha
 			Date fechaMovimiento = Date.valueOf(LocalDate.now());
 			
-			//4. Instaciamos el movimiento de ENTRADA con todos su datos
+			//5. Instaciamos el movimiento de ENTRADA con todos su datos
 			String detalleMovimientoEntrada = "Transferencia recibida. Cuenta de Origen:" + cuentaOrigen.getNumero()+". Importe: $"+importeString;
 			
 			Movimiento movimientoEntrada = new Movimiento();
@@ -133,7 +114,7 @@ public class ServletTransferencias extends HttpServlet {
 			movimientoEntrada.setImporte(importeATransferir);
 			movimientoEntrada.setTipo( new TipoMovimiento(4,"Transferencia"));
 			
-			//5. Instanciamos el movimiento de SALIDA con todos sus datos
+			//6. Instanciamos el movimiento de SALIDA con todos sus datos
 			
 			String detalleMovimientoSalida = "Transferencia enviada. Cuenta de Destino:" + cuentaDestino.getNumero()+". Importe: $"+importeString;
 			
@@ -145,33 +126,28 @@ public class ServletTransferencias extends HttpServlet {
 			movimientoSalida.setImporte(importeATransferir);
 			movimientoSalida.setTipo( new TipoMovimiento(4,"Transferencia"));
 			
-			//6. Instanciar el objeto de TRANSFERENCIA
+			//7. Instanciar el objeto de TRANSFERENCIA
 			Transferencia transferencia = new Transferencia();
 			transferencia.setNumeroCuentaOrigen(cuentaOrigen.getNumero());
 			transferencia.setNumeroCuentaDestino(cuentaDestino.getNumero());
 			transferencia.setImporte(importeATransferir);
 			
-			//7. Enviar la transferencia
+			//8. Enviar la transferencia
 			try {
 				int filas = movimientoNegocio.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
 				
-				//Si todo sale bien, se hicieron 3 inserciones y 2 modificaciones, por ende 5 filas afectadas
+				//Deberian ser 5
 				if(filas != 5) {
 					throw new TransferenciaConErrorExcepcion();	
 				}
 				
 			}catch(Exception e) {
-				request.setAttribute("errorTransferencia", e.getMessage());
-
-				request.setAttribute("saldoCuentaSeleccionada", cuentaOrigen.getSaldo());
-				request.setAttribute("cbuSeleccionado", cuentaOrigen.getCbu());
-				request.setAttribute("numeroCuenta", cuentaOrigen.getNumero());
-				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/transferenciasCliente.jsp");
-				dispatcher.forward(request, response);
+				devolverYDespacharConError("Error en la transferencia",response,request,cuentaOrigen);
 				return;
 			}
 			
+			
+			//9. Despachar todos los atributos necesarios
 			request.setAttribute("TransferenciaRealizada", "Transferencia Realizada de Forma Correcta");
 			Cuenta cuentaActualizada = cuentaNegocio.obtenerCuentaPorNumero(cuentaOrigen.getNumero());
 
@@ -184,5 +160,16 @@ public class ServletTransferencias extends HttpServlet {
 			dispatcher.forward(request, response);
 		}
 	}
+	
+	
+	public void devolverYDespacharConError(String errorMessage,HttpServletResponse response, HttpServletRequest request, Cuenta cuentaOrigen) throws ServletException, IOException {
+		request.setAttribute("ErrorMessage", errorMessage);
 
+		request.setAttribute("saldoCuentaSeleccionada", cuentaOrigen.getSaldo());
+		request.setAttribute("cbuSeleccionado", cuentaOrigen.getCbu());
+		request.setAttribute("numeroCuenta", cuentaOrigen.getNumero());
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/transferenciasCliente.jsp");
+		dispatcher.forward(request, response);
+	}
 }
