@@ -2,10 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ page import="entidades.Usuario" %>
 <%@ page import="entidades.Movimiento" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="entidades.Cuenta" %>
+<%@ page import="java.util.List" %>
 
 <% //Obtener lista de movimientos desde el Servlet
-    ArrayList<Movimiento> movimientos = (ArrayList<Movimiento>) request.getAttribute("movimientos");
+    List<Object[]> movimientosConCuentas = (List<Object[]>) request.getAttribute("movimientosConCuentas");
 %>
 
 <!DOCTYPE html>
@@ -14,7 +15,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="imgs/logo_Honse-nombre.png" type="image/png">
+    <link rel="stylesheet" type="text/css"
+  	href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script type="text/javascript" charset="utf8"
+  src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <title>Movimientos - Banco Honse</title>
+    
     <style>
 
     body{
@@ -258,33 +265,38 @@
         
         <div class="contenedor-tabla">
             <table class="tabla-clientes">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Número de cuenta (CBU)</th>
-                        <th>Detalle</th>
-                        <th>Importe</th>
-                        <th>Tipo de movimiento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if(movimientos != null && !movimientos.isEmpty()) { 
-                        for(Movimiento m : movimientos) { %>
-                        <tr>
-                            <td><%= m.getFecha() %></td>
-                            <td><%= m.getNroCuenta() %></td>
-                            <td><%= m.getDetalle() %></td>
-                            <td>$<%= String.format("%,.2f", m.getImporte()) %></td>
-                            <td><%= m.getTipo() %></td>
-                        </tr>
-                    <%  } 
-                       } else { %>
-                        <tr>
-                            <td colspan="5" class="no-movimientos">No se encontraron movimientos</td>
-                        </tr>
-                    <% } %>
-                </tbody>
-            </table>
+			    <thead>
+			        <tr>
+			            <th>Fecha</th>
+			            <th>Nro de Cuenta</th>
+			            <th>CBU</th>
+			            <th>Detalle</th>
+			            <th>Importe</th>
+			            <th>Tipo de movimiento</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <% if(movimientosConCuentas != null && !movimientosConCuentas.isEmpty()) { 
+			            for(Object[] fila : movimientosConCuentas) { 
+			                Movimiento m = (Movimiento)fila[0];
+			                Cuenta c = (Cuenta)fila[1];
+			            %>
+			            <tr>
+			                <td><%= m.getFecha() %></td>
+			                <td><%= m.getNumeroCuenta() %></td>
+			                <td><%= c.getCbu() %></td>
+			                <td><%= m.getDetalle() %></td>
+			                <td>$<%= String.format("%,.2f", m.getImporte()) %></td>
+			                <td><%= m.getTipo().getDescripcion() %></td>
+			            </tr>
+			        <%  } 
+			           } else { %>
+			            <tr>
+			                <td colspan="6" class="no-movimientos">No se encontraron movimientos</td>
+			            </tr>
+			        <% } %>
+			    </tbody>
+			</table>
         </div>
     </main>
     

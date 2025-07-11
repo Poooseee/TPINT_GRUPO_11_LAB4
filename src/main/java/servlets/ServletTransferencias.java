@@ -18,7 +18,7 @@ import entidades.Movimiento;
 import entidades.TipoMovimiento;
 import entidades.Transferencia;
 import negocioImpl.CuentaNegocioImpl;
-import negocioImpl.MovimentoNegocioImpl;
+import negocioImpl.MovimientoNegocioImpl;
 
 /**
  * Servlet implementation class ServletTransferencias
@@ -28,7 +28,7 @@ public class ServletTransferencias extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
     private CuentaNegocioImpl cuentaNegocio = new CuentaNegocioImpl();
-    private MovimentoNegocioImpl movimientoNegocio = new MovimentoNegocioImpl();
+    private MovimientoNegocioImpl movimientoNegocio = new MovimientoNegocioImpl();
 
     public ServletTransferencias() {
         super();

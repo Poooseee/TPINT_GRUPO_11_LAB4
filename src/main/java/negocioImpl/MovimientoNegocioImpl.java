@@ -1,20 +1,35 @@
 package negocioImpl;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import datosImpl.MovimientoDaoImpl;
 import entidades.Movimiento;
+import entidades.Transferencia;
 import negocio.MovimientoNegocio;
 
 public class MovimientoNegocioImpl implements MovimientoNegocio {
-    private MovimientoDaoImpl movimientoDao = new MovimientoDaoImpl();
+	MovimientoDaoImpl dao = new MovimientoDaoImpl();
+	
+	@Override
+	public int realizarTransferencia(Movimiento movimientoEntrada, Movimiento movimientoSalida,
+			Transferencia transferencia) {
+		return dao.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
+	}
 
-    @Override
+    /*@Override
     public ArrayList<Movimiento> obtenerMovimientosPorCliente(String dniCliente) {
-        return movimientoDao.obtenerPorCliente(dniCliente);
-    }
+        return dao.obtenerPorCliente(dniCliente);
+    }*/
 
     @Override
     public ArrayList<Movimiento> filtrarMovimientos(String dniCliente, String fecha, String nroCuenta, String importe, String tipo) {
-        return movimientoDao.filtrar(dniCliente, fecha, nroCuenta, importe, tipo);
+        return dao.filtrar(dniCliente, fecha, nroCuenta, importe, tipo);
     }
+
+    @Override
+    public List<Object[]> obtenerMovimientosConCuenta(String dniCliente) {
+        return dao.obtenerMovimientosConCuenta(dniCliente);
+    }
+
 }

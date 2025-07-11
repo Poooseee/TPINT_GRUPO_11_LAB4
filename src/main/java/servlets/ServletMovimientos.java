@@ -1,7 +1,8 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import entidades.Cliente;
-import entidades.Movimiento;
 import entidades.Usuario;
 import negocioImpl.ClienteNegocioImpl;
 import negocioImpl.MovimientoNegocioImpl;
@@ -24,14 +24,12 @@ public class ServletMovimientos extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            // 1. Verificar sesión
             HttpSession session = request.getSession(false);
             if(session == null || session.getAttribute("usuarioLogueado") == null) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
             
-            // 2. Obtener cliente logueado
             Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
             Cliente cliente = clienteNegocio.obtenerPorUsuarioNick(usuario.getNickUsuario());
             
@@ -39,11 +37,8 @@ public class ServletMovimientos extends HttpServlet {
                 throw new ServletException("No se encontraron datos del cliente");
             }
             
-            // 3. Obtener movimientos (sin filtros inicialmente)
-            ArrayList<Movimiento> movimientos = movimientoNegocio.obtenerMovimientosPorCliente(cliente.getDNI());
-            
-            // 4. Enviar datos a la vista
-            request.setAttribute("movimientos", movimientos);
+            List<Object[]> movimientosConCuentas = movimientoNegocio.obtenerMovimientosConCuenta(cliente.getDNI());
+            request.setAttribute("movimientosConCuentas", movimientosConCuentas);
             request.getRequestDispatcher("/movimientosCliente.jsp").forward(request, response);
             
         } catch (Exception e) {
