@@ -1,6 +1,5 @@
 package negocioImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import datosImpl.MovimientoDaoImpl;
@@ -17,19 +16,15 @@ public class MovimientoNegocioImpl implements MovimientoNegocio {
 		return dao.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
 	}
 
-    /*@Override
-    public ArrayList<Movimiento> obtenerMovimientosPorCliente(String dniCliente) {
-        return dao.obtenerPorCliente(dniCliente);
-    }*/
-
-    @Override
-    public ArrayList<Movimiento> filtrarMovimientos(String dniCliente, String fecha, String nroCuenta, String importe, String tipo) {
-        return dao.filtrar(dniCliente, fecha, nroCuenta, importe, tipo);
-    }
-
     @Override
     public List<Object[]> obtenerMovimientosConCuenta(String dniCliente) {
         return dao.obtenerMovimientosConCuenta(dniCliente);
+    }
+    
+    @Override
+    public List<Object[]> filtrarMovimientosConCuenta(String dniCliente, String fecha, 
+        String nroCuenta, String importe, String tipo) {
+        return dao.filtrar(dniCliente, fecha, nroCuenta, importe, tipo);
     }
 
 }

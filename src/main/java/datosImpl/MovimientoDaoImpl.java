@@ -130,11 +130,13 @@ public class MovimientoDaoImpl implements MovimientoDao{
 
 	@Override
 	public List<Object[]> obtenerMovimientosConCuenta(String dniCliente) {
-	    List<Object[]> resultados = new ArrayList<>();
+		//lista de objetos
+		List<Object[]> resultados = new ArrayList<>();
 	    try {
 	        cn = new Conexion();
 	        cn.Open();
 	        
+	        //Consulta filtrada por DNI
 	        String query = "SELECT m.*, c.*, tm.descripcion_TMovs " +
 	                      "FROM MOVIMIENTOS m " +
 	                      "JOIN CUENTAS c ON m.numeroCuenta_Movs = c.numeroCuenta_Ctas " +
@@ -187,81 +189,105 @@ public class MovimientoDaoImpl implements MovimientoDao{
 
 
 	@Override
-	public ArrayList<Movimiento> filtrar(String dniCliente, String fecha, String nroCuenta, String importe,
-			String tipo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Object[]> filtrar(String dniCliente, String fecha, String nroCuenta, String importe, String tipo) {
+	    List<Object[]> resultados = new ArrayList<>();
+	    try {
+	        cn = new Conexion();
+	        cn.Open();
+	        
+	        StringBuilder query = new StringBuilder(
+	            "SELECT m.*, c.*, tm.descripcion_TMovs " +
+	            "FROM MOVIMIENTOS m " +
+	            "JOIN CUENTAS c ON m.numeroCuenta_Movs = c.numeroCuenta_Ctas " +
+	            "JOIN TIPOS_DE_MOVIMIENTOS tm ON m.tipoMovimiento_Movs = tm.idTipoMov_TMovs " +
+	            "WHERE m.DNI_Movs = ? "
+	        );
+	        
+	        // Filtro por fecha
+	        if(fecha != null && !fecha.isEmpty()) {
+	            query.append("AND DATE(m.fecha_Movs) = ? ");
+	        }
+	        
+	        // Filtro por número de cuenta
+	        if(nroCuenta != null && !nroCuenta.isEmpty()) {
+	            query.append("AND c.numeroCuenta_Ctas = ? ");
+	        }
+	        
+	        // Filtro por importe
+	        if(importe != null && !importe.isEmpty()) {
+	            switch(importe) {
+	                case "0a10k":
+	                    query.append("AND m.importe_Movs BETWEEN 0 AND 10000 ");
+	                    break;
+	                case "10ka50k":
+	                    query.append("AND m.importe_Movs BETWEEN 10000 AND 50000 ");
+	                    break;
+	                case "50ka100k":
+	                    query.append("AND m.importe_Movs BETWEEN 50000 AND 100000 ");
+	                    break;
+	                case "+100k":
+	                    query.append("AND m.importe_Movs > 100000 ");
+	                    break;
+	            }
+	        }
+	        
+	        // Filtro por tipo de movimiento
+	        if(tipo != null && !tipo.isEmpty()) {
+	            query.append("AND m.tipoMovimiento_Movs = ? ");
+	        }
+	        
+	        query.append("ORDER BY m.fecha_Movs DESC");
+	        
+	        PreparedStatement stmt = cn.prepare(query.toString());
+	        int paramIndex = 1;
+	        stmt.setString(paramIndex++, dniCliente);
+	        
+	        if(fecha != null && !fecha.isEmpty()) {
+	            stmt.setDate(paramIndex++, java.sql.Date.valueOf(fecha));
+	        }
+	        
+	        if(nroCuenta != null && !nroCuenta.isEmpty()) {
+	            stmt.setInt(paramIndex++, Integer.parseInt(nroCuenta));
+	        }
+	        
+	        if(tipo != null && !tipo.isEmpty()) {
+	            stmt.setInt(paramIndex++, Integer.parseInt(tipo));
+	        }
+	        
+	        ResultSet rs = stmt.executeQuery();
+	        
+	        while(rs.next()) {
+	            Movimiento movimiento = new Movimiento();
+	            movimiento.setDniMovimiento(rs.getInt("DNI_Movs"));
+	            movimiento.setFecha(rs.getDate("fecha_Movs"));
+	            movimiento.setNumeroCuenta(rs.getInt("numeroCuenta_Movs"));
+	            movimiento.setDetalle(rs.getString("detalle_Movs"));
+	            movimiento.setImporte(rs.getFloat("importe_Movs"));
+	            
+	            TipoMovimiento tipoMov = new TipoMovimiento(
+	                rs.getInt("tipoMovimiento_Movs"),
+	                rs.getString("descripcion_TMovs")
+	            );
+	            movimiento.setTipo(tipoMov);
+	            
+	            Cuenta cuenta = new Cuenta();
+	            cuenta.setNumero(rs.getInt("numeroCuenta_Ctas"));
+	            cuenta.setCbu(rs.getString("CBU_Ctas"));
+	            
+	            Object[] fila = {movimiento, cuenta};
+	            resultados.add(fila);
+	        }
+	        
+	        rs.close();
+	        stmt.close();
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        if(cn != null) {
+	            cn.close();
+	        }
+	    }
+	    return resultados;
 	}
-
-    /*@Override
-    public ArrayList<Movimiento> filtrar(String dniCliente, String fecha, String nroCuenta, String importe, String tipo) {
-        ArrayList<Movimiento> movimientos = new ArrayList<>();
-        try {
-            cn = new Conexion();
-            cn.Open();
-            
-            StringBuilder query = new StringBuilder(
-                "SELECT m.idMovimiento_Movs, m.fecha_Movs, c.CBU_Ctas as numero_cuenta, " +
-                "m.detalle_Movs, m.importe_Movs, tm.descripcion_TMovs as tipo_movimiento " +
-                "FROM MOVIMIENTOS m " +
-                "JOIN CUENTAS c ON m.numeroCuenta_Movs = c.numeroCuenta_Ctas " +
-                "JOIN TIPOS_DE_MOVIMIENTOS tm ON m.tipoMovimiento_Movs = tm.idTipoMov_TMovs " +
-                "WHERE m.DNI_Movs = ? "
-            );
-            
-            if(fecha != null && !fecha.isEmpty()) {
-                query.append("AND DATE(m.fecha_Movs) = ? ");
-            }
-            
-            if(nroCuenta != null && !nroCuenta.isEmpty()) {
-                query.append("AND c.CBU_Ctas = ? ");
-            }
-            
-            if(tipo != null && !tipo.isEmpty()) {
-                query.append("AND tm.descripcion_TMovs = ? ");
-            }
-            
-            query.append("ORDER BY m.fecha_Movs DESC");
-            
-            PreparedStatement stmt = cn.prepare(query.toString());
-            int paramIndex = 1;
-            stmt.setString(paramIndex++, dniCliente);
-            
-            if(fecha != null && !fecha.isEmpty()) {
-                stmt.setDate(paramIndex++, Date.valueOf(fecha));
-            }
-            
-            if(nroCuenta != null && !nroCuenta.isEmpty()) {
-                stmt.setString(paramIndex++, nroCuenta);
-            }
-            
-            if(tipo != null && !tipo.isEmpty()) {
-                stmt.setString(paramIndex++, tipo);
-            }
-            
-            ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next()) {
-                Movimiento m = new Movimiento();
-                m.setId(rs.getInt("idMovimiento_Movs"));
-                m.setFecha(rs.getDate("fecha_Movs"));
-                m.setNroCuenta(rs.getString("numero_cuenta"));
-                m.setDetalle(rs.getString("detalle_Movs"));
-                m.setImporte(rs.getFloat("importe_Movs"));
-                m.setTipo(rs.getString("tipo_movimiento"));
-                movimientos.add(m);
-            }
-            
-            rs.close();
-            stmt.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(cn != null) {
-                cn.close();
-            }
-        }
-        return movimientos;
-    }*/
 	
 }

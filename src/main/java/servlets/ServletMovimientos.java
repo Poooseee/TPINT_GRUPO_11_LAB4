@@ -23,13 +23,14 @@ public class ServletMovimientos extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        try {
+        try {// Verificar si existe sesión y usuario logueado
             HttpSession session = request.getSession(false);
             if(session == null || session.getAttribute("usuarioLogueado") == null) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
             
+            //Obtener usuario logueado desde la sesión
             Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
             Cliente cliente = clienteNegocio.obtenerPorUsuarioNick(usuario.getNickUsuario());
             
@@ -37,7 +38,28 @@ public class ServletMovimientos extends HttpServlet {
                 throw new ServletException("No se encontraron datos del cliente");
             }
             
-            List<Object[]> movimientosConCuentas = movimientoNegocio.obtenerMovimientosConCuenta(cliente.getDNI());
+            // Obtener parámetros de filtrado
+            String fecha = request.getParameter("fecha");
+            String nroCuenta = request.getParameter("nCta");
+            String importe = request.getParameter("importe");
+            String tipo = request.getParameter("tipo");
+            
+            //Almacenar resultados
+            List<Object[]> movimientosConCuentas;
+            
+            // Verificar si hay filtros aplicados
+            if((fecha != null && !fecha.isEmpty()) || 
+               (nroCuenta != null && !nroCuenta.isEmpty()) || 
+               (importe != null && !importe.isEmpty()) || 
+               (tipo != null && !tipo.isEmpty())) {
+                
+                movimientosConCuentas = movimientoNegocio.filtrarMovimientosConCuenta(
+                    cliente.getDNI(), fecha, nroCuenta, importe, tipo);
+            } else {
+            	//Obtener todos los movimientos sin filtros
+                movimientosConCuentas = movimientoNegocio.obtenerMovimientosConCuenta(cliente.getDNI());
+            }
+            
             request.setAttribute("movimientosConCuentas", movimientosConCuentas);
             request.getRequestDispatcher("/movimientosCliente.jsp").forward(request, response);
             

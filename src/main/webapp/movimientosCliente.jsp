@@ -245,6 +245,7 @@
                 
                 <label for="importe">Importe:</label>
                 <select id="importe" name="importe">
+                	<option value="">Todos los importes</option>
                     <option value="0a10k">Hasta $10.000</option>
                     <option value="10ka50k">De $10.000 hasta $50.000</option>
                     <option value="50ka100k">De $50.000 hasta $100.000</option>
@@ -252,12 +253,13 @@
                 </select>
                 
                 <label for="tipo">Tipo:</label>
-                <select id="tipo" name="tipo">
-                    <option value="altaCta">Alta de cuenta</option>
-                    <option value="altaPrest">Alta de un préstamo</option>
-                    <option value="pagoPrest">Pago de préstamo</option>
-                    <option value="transferencia">Transferencia</option>
-                </select>
+				<select id="tipo" name="tipo" class="form-control">
+				    <option value="">Todos los tipos</option>
+				    <option value="1" ${param.tipo == '1' ? 'selected' : ''}>Alta de cuenta</option>
+				    <option value="2" ${param.tipo == '2' ? 'selected' : ''}>Alta de un préstamo</option>
+				    <option value="3" ${param.tipo == '3' ? 'selected' : ''}>Pago de préstamo</option>
+				    <option value="4" ${param.tipo == '4' ? 'selected' : ''}>Transferencia</option>
+				</select>
                 
                 <input type="submit" value="Filtrar" name="btnFiltrar" id="btnFiltrar">
             </form>
@@ -290,11 +292,7 @@
 			                <td><%= m.getTipo().getDescripcion() %></td>
 			            </tr>
 			        <%  } 
-			           } else { %>
-			            <tr>
-			                <td colspan="6" class="no-movimientos">No se encontraron movimientos</td>
-			            </tr>
-			        <% } %>
+			           } %>
 			    </tbody>
 			</table>
         </div>
@@ -306,16 +304,17 @@
     
     <!-- Script de DataTables -->
     <script>
-      $(document).ready(function() {
-        $('.tabla-clientes').DataTable({
-          "pageLength": 8,
-          "lengthChange": false,
-          "searching": false,
-          "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-          }
-        });
-      });
-    </script>
+	  $(document).ready(function() {
+	    $('.tabla-clientes').DataTable({
+	      "pageLength": 8,
+	      "lengthChange": false,
+	      "searching": false,
+	      "language": {
+	        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json",
+	        "emptyTable": "<div class='no-movimientos'>No se encontraron movimientos</div>"
+	      }
+	    });
+	  });
+	</script>
 </body>
 </html>
