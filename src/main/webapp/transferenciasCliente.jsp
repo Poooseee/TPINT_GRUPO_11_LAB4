@@ -147,16 +147,8 @@
 							<input type="hidden" name="numeroCuenta" value="<%= numeroCuenta %>">
 							<input type="hidden" name="cbuSeleccionado" value="<%= cbuSeleccionado %>">
 	                    </form> 
-	                    <% if (request.getAttribute("errorSaldo") != null) { %>
-    						<p style="color: red;"><%= request.getAttribute("errorSaldo") %></p>
-						<% } %>
-						
-						<% if (request.getAttribute("errorTransferencia") != null) { %>
-    						<p style="color: red;"><%= request.getAttribute("errorTransferencia") %></p>
-						<% } %>
-						
-						<% if (request.getAttribute("mismaCuenta") != null) { %>
-    						<p style="color: red;"><%= request.getAttribute("mismaCuenta") %></p>
+	                    <% if (request.getAttribute("ErrorMessage") != null) { %>
+    						<p style="color: red;"><%= request.getAttribute("ErrorMessage") %></p>
 						<% } %>
 						
 						<% if (request.getAttribute("TransferenciaRealizada") != null) { %>

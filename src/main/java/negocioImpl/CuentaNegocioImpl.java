@@ -74,5 +74,12 @@ CuentaDaoImpl dao = new CuentaDaoImpl();
 	public Cuenta obtenerCuentaPorNumero(int numeroCuenta) {
 		return dao.obtenerCuentaPorNumero(numeroCuenta);
 	}
+
+	@Override
+	public Boolean existeCuenta(int numeroCuenta) {
+		
+		return dao.existeCuenta(numeroCuenta);
+		
+	}
 	
 }
