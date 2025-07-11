@@ -182,7 +182,7 @@
             		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
             	%>
                 <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>"><img src="imgs/logoTransferencia.png" alt="logoTransferencia"></a>
-                <a href="prestamosCliente.jsp"><img src="imgs/logoPrestamo.png" alt="logoPrestamo"></a>
+                <a href="ServletPrestamos"><img src="imgs/logoPrestamo.png" alt="logoPrestamo"></a>
             </div>
             <div class="btnsAccionesTxt">
                 <h3>Transferencia</h3>
