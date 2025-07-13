@@ -7,6 +7,7 @@ import java.util.List;
 import datos.MovimientoDao;
 import entidades.Cuenta;
 import entidades.Movimiento;
+import entidades.Prestamo;
 import entidades.TipoMovimiento;
 import entidades.Transferencia;
 
@@ -17,31 +18,32 @@ public class MovimientoDaoImpl implements MovimientoDao{
 		
 		int filas = 0;
 		
-		//1. REGISTRAR LA TRANSFERENCIA
 		try {
 			
 			cn=new Conexion();
 			cn.Open();
 			
-			String queryTransfer = "INSERT INTO TRANSFERENCIAS (\r\n"
-					+ "numeroCuentaOrigen_Trans, \r\n"
-					+ "numeroCuentaDestino_Trans, \r\n"
-					+ "importe_Trans) \r\n"
-					+ "VALUES (\r\n"
-					+ " ?, ?, ?);" ;
+			//1. REGISTRAR LA TRANSFERENCIA
 			
-			PreparedStatement ps = cn.prepare(queryTransfer);
-			ps.setInt(1, transferencia.getNumeroCuentaOrigen());
-			ps.setInt(2,transferencia.getNumeroCuentaDestino());
-			ps.setFloat(3,transferencia.getImporte());
-			
-			filas+=ps.executeUpdate();
-			System.out.println("REGISTRAR TRANSFERENCIA" + filas );
+				String queryTransfer = "INSERT INTO TRANSFERENCIAS (\r\n"
+						+ "numeroCuentaOrigen_Trans, \r\n"
+						+ "numeroCuentaDestino_Trans, \r\n"
+						+ "importe_Trans) \r\n"
+						+ "VALUES (\r\n"
+						+ " ?, ?, ?);" ;
+				
+				PreparedStatement ps = cn.prepare(queryTransfer);
+				ps.setInt(1, transferencia.getNumeroCuentaOrigen());
+				ps.setInt(2,transferencia.getNumeroCuentaDestino());
+				ps.setFloat(3,transferencia.getImporte());
+				
+				filas+=ps.executeUpdate();
+				System.out.println("REGISTRAR TRANSFERENCIA" + filas );
 		
 		
-		//2. REGISTRAR MOVIMIENTO DE SALIDA
+			//2. REGISTRAR MOVIMIENTO DE SALIDA
 		
-			//REGISTRAR EN TABLA MOVIMIENTOS
+				//REGISTRAR EN TABLA MOVIMIENTOS
 				String movimientoSalidaQuery = "INSERT INTO MOVIMIENTOS ( \r\n"
 						+ "DNI_Movs, \r\n"
 						+ "numeroCuenta_Movs, \r\n"
@@ -62,7 +64,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				filas+=psMS.executeUpdate();
 				System.out.println("REGISTRAR MOVIMIENTO 1" + filas );
 			
-			//REGISTRAR EN TABLA CUENTAS (DISMINUIR IMPORTE)
+				//REGISTRAR EN TABLA CUENTAS (DISMINUIR IMPORTE)
 				String cuentaSalidaQuery = "UPDATE CUENTAS"
 						+ " SET saldo_Ctas = (saldo_Ctas - ?)"
 						+ " WHERE numeroCuenta_Ctas = ?"
@@ -76,7 +78,10 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				filas+=psCS.executeUpdate();
 				System.out.println("REGISTRAR CUENTA 1" + filas );
 		
-		//3. REGISTRAR MOVIMIENTO DE ENTRADA
+				
+			//3. REGISTRAR MOVIMIENTO DE ENTRADA
+				
+				//REGISTRAR EN TABLA MOVIMIENTOS
 				String movimientoEnrtadaQuery = "INSERT INTO MOVIMIENTOS ( \r\n"
 						+ "DNI_Movs, \r\n"
 						+ "numeroCuenta_Movs, \r\n"
@@ -97,7 +102,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				filas+=psME.executeUpdate();
 				System.out.println("REGISTRAR MOVIEMIENTO 2" + filas );
 			
-			//REGISTRAR EN TABLA CUENTAS (SUMAR IMPORTE)
+				//REGISTRAR EN TABLA CUENTAS (SUMAR IMPORTE)
 				String cuentaEntradaQuery = "UPDATE CUENTAS"
 						+ " SET saldo_Ctas = (saldo_Ctas + ?)"
 						+ " WHERE numeroCuenta_Ctas = ?"
@@ -110,24 +115,84 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				
 				filas+=psCE.executeUpdate();
 				System.out.println("REGISTRAR CUENTA 2" + filas );
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+		    try {
+		        if (cn != null)
+		            cn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+			//EN TEORIA SON 3 INSERT Y 2 MODIFICACIONES, FILAS DEBERIA VALER 5
+			return filas;
+	  }
+	@Override
+	public int insertarPrestamo(Prestamo prestamo, Movimiento movimiento) {
+		int filas = 0;
+		
+		try {
 			
-
-	}catch(Exception e) {
-		e.printStackTrace();
-	}finally {
-	    try {
-	        if (cn != null)
-	            cn.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
-		//EN TEORIA SON 3 INSERT Y 2 MODIFICACIONES, FILAS DEBERIA VALER 5
-		return filas;
-  }
+			cn=new Conexion();
+			cn.Open();
+			
+			//1. INSERTAR EN TABLA PRESTAMOS
+			String prestamoQuery = "INSERT INTO `db_tp`.`prestamos`\r\n"
+					+ "(`DNI_Prest`,\r\n"
+					+ "`cuenta_Prest`,\r\n"
+					+ "`fechaPrestamo_Prest`,\r\n"
+					+ "`importeAPagar_Prest`,\r\n"
+					+ "`importePedido_Prest`,\r\n"
+					+ "`plazoPagos_Prest`,\r\n"
+					+ "`montoPorMes_Prest`,\r\n"
+					+ "`estado_Prest`)\r\n"
+					+ "VALUES (?,?,?,?,?,?,?,?)";
+			
+			PreparedStatement psPr = cn.prepare(prestamoQuery);
+			psPr.setString(1, prestamo.getDni());
+			psPr.setInt(2, prestamo.getCuenta());
+			psPr.setDate(3, prestamo.getFecha());
+			psPr.setFloat(4, prestamo.getImportePagar());
+			psPr.setFloat(5, prestamo.getImportePedido());
+			psPr.setInt(6, prestamo.getPlazoPagos());
+			psPr.setFloat(7, prestamo.getMontoPorMes());
+			psPr.setString(8, prestamo.getEstado());
+			
+			filas+= psPr.executeUpdate();
+			
+			//2. INSERTAR EN LA TABLA MOVIMIENTOS
+			//REGISTRAR EN TABLA MOVIMIENTOS
+			String movimientoPrestamoQuery = "INSERT INTO MOVIMIENTOS ( \r\n"
+					+ "DNI_Movs, \r\n"
+					+ "numeroCuenta_Movs, \r\n"
+					+ "fecha_Movs, \r\n"
+					+ "detalle_Movs, \r\n"
+					+ "importe_Movs, \r\n"
+					+ "tipoMovimiento_Movs) "
+					+ " VALUES (?,?,?,?,?,?);";
+			
+			PreparedStatement psME = cn.prepare(movimientoPrestamoQuery);
+			psME.setInt(1, movimiento.getDniMovimiento());
+			psME.setInt(2, movimiento.getNumeroCuenta());
+			psME.setDate(3, movimiento.getFecha());
+			psME.setString(4, movimiento.getDetalle());
+			psME.setFloat(5, movimiento.getImporte());
+			psME.setInt(6, movimiento.getTipo().getIdTipoMovimiento());
 	
-
-
+			filas+=psME.executeUpdate();
+		}catch(Exception e) {
+			
+		}finally {
+			try {
+		        if (cn != null)
+		            cn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		return filas;
+	}
 	@Override
 	public List<Object[]> obtenerMovimientosConCuenta(String dniCliente) {
 		//lista de objetos
@@ -185,9 +250,6 @@ public class MovimientoDaoImpl implements MovimientoDao{
 	    }
 	    return resultados;
 	}
-
-
-
 	@Override
 	public List<Object[]> filtrar(String dniCliente, String fecha, String nroCuenta, String importe, String tipo) {
 	    List<Object[]> resultados = new ArrayList<>();
@@ -289,5 +351,5 @@ public class MovimientoDaoImpl implements MovimientoDao{
 	    }
 	    return resultados;
 	}
-	
+
 }

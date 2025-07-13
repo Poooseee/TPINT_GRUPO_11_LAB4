@@ -67,20 +67,22 @@ public class ServletTransferencias extends HttpServlet {
 			Cuenta cuentaDestino = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaDestino));
 			
 			
-			//Primero, validar que la cuenta tenga el saldo suficiente,
+			//Primero, validar que la cuenta tenga el saldo suficiente
 			try {
 				
 				float saldoDisponible = Float.parseFloat(request.getParameter("saldoCuentaSeleccionada")) ;
 				float importeATransferir = Float.parseFloat(request.getParameter("importe"));
 				
 				if(importeATransferir > saldoDisponible) throw new SaldoInsuficienteExcepcion();
-				
-			}catch(Exception e) {
-				
-				devolverYDespacharConError("Saldo insuficiente",response,request,cuentaOrigen);
-				return;
+       
+			} catch (SaldoInsuficienteExcepcion e) {
+			    devolverYDespacharConError(e.getMessage(), response, request, cuentaOrigen);
+			    return;
+			} catch (Exception e) {
+			    devolverYDespacharConError("Error al procesar la transferencia.", response, request, cuentaOrigen);
+			    return;
 			}
-			
+
 			//SI TIENE EL DINERO SUFICIENTE:
 			
 			//1.Obtenemos el importe a transferir
@@ -104,7 +106,7 @@ public class ServletTransferencias extends HttpServlet {
 			Date fechaMovimiento = Date.valueOf(LocalDate.now());
 			
 			//5. Instaciamos el movimiento de ENTRADA con todos su datos
-			String detalleMovimientoEntrada = "Transferencia recibida. Cuenta de Origen:" + cuentaOrigen.getNumero()+". Importe: $"+importeString;
+			String detalleMovimientoEntrada = "Transferencia recibida. Cuenta de Origen:" + cuentaOrigen.getNumero();
 			
 			Movimiento movimientoEntrada = new Movimiento();
 			movimientoEntrada.setDniMovimiento(Integer.parseInt(cuentaDestino.getDni()));
@@ -116,7 +118,7 @@ public class ServletTransferencias extends HttpServlet {
 			
 			//6. Instanciamos el movimiento de SALIDA con todos sus datos
 			
-			String detalleMovimientoSalida = "Transferencia enviada. Cuenta de Destino:" + cuentaDestino.getNumero()+". Importe: $"+importeString;
+			String detalleMovimientoSalida = "Transferencia enviada. Cuenta de Destino:" + cuentaDestino.getNumero();
 			
 			Movimiento movimientoSalida = new Movimiento();
 			movimientoSalida.setDniMovimiento(Integer.parseInt(cuentaOrigen.getDni()));
@@ -141,7 +143,11 @@ public class ServletTransferencias extends HttpServlet {
 					throw new TransferenciaConErrorExcepcion();	
 				}
 				
-			}catch(Exception e) {
+			}catch(TransferenciaConErrorExcepcion e) {
+				devolverYDespacharConError(e.getMessage(),response,request,cuentaOrigen);
+				return;
+			}
+			catch(Exception e) {
 				devolverYDespacharConError("Error en la transferencia",response,request,cuentaOrigen);
 				return;
 			}

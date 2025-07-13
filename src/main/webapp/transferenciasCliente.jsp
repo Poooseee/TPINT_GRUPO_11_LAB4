@@ -130,7 +130,7 @@
     <main>
     		<section id="sectionTransferencia">
 	    		<div id="infoCuenta">
-	    			<h3>Número de Cuenta: <span><%= numeroCuenta%></span></h3>
+	    			<h3>Cuenta: <span><%= numeroCuenta%></span></h3>
 	    			<h3>CBU: <span><%=cbuSeleccionado %></span> </h3>
 	    			<h3>Saldo actual: <span>$<%=saldoCuentaSeleccionada %></span></h3>
 	    		</div>

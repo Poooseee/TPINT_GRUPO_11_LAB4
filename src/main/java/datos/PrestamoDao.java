@@ -1,8 +1,8 @@
 package datos;
 
-import java.util.HashMap;
 import java.util.List;
 
+import entidades.Movimiento;
 import entidades.Prestamo;
 
 public interface PrestamoDao {

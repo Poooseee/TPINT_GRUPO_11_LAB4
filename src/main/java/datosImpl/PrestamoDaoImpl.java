@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import datos.PrestamoDao;
+import entidades.Movimiento;
 import entidades.Prestamo;
 
 public class PrestamoDaoImpl implements PrestamoDao {
@@ -46,7 +47,7 @@ public class PrestamoDaoImpl implements PrestamoDao {
 				prestamo.setImportePedido(rs.getFloat(4));
 				prestamo.setMontoPorMes(rs.getFloat(5));
 				prestamo.setPlazoPagos(rs.getInt(6));
-				prestamo.setFecha(rs.getString(7));
+				prestamo.setFecha(rs.getDate(7));
 				prestamo.setEstado(rs.getString(8));
 				prestamo.setCuenta(rs.getInt(9));
                  listaPrestamos.add(prestamo);
@@ -85,6 +86,7 @@ public class PrestamoDaoImpl implements PrestamoDao {
 		}
 		return cambiar;
 	}
+
 	
 	
 

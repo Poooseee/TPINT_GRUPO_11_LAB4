@@ -4,6 +4,7 @@ import java.util.List;
 
 import datosImpl.MovimientoDaoImpl;
 import entidades.Movimiento;
+import entidades.Prestamo;
 import entidades.Transferencia;
 import negocio.MovimientoNegocio;
 
@@ -26,5 +27,12 @@ public class MovimientoNegocioImpl implements MovimientoNegocio {
         String nroCuenta, String importe, String tipo) {
         return dao.filtrar(dniCliente, fecha, nroCuenta, importe, tipo);
     }
+
+	@Override
+	public boolean insertarPrestamo(Prestamo prestamo, Movimiento movimiento) {
+
+		int filas = dao.insertarPrestamo(prestamo, movimiento);
+		return filas == 2;
+	}
 
 }

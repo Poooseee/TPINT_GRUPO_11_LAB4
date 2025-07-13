@@ -32,10 +32,13 @@
     .inicio p{
         margin: auto;
     }
-
+	#sectionPrestamos{
+	width: 80%;
+	margin: 2em auto;
+	}
     .prestamos{
         background-color: rgba(255, 252, 253, 1);
-        width: 80%;
+        width: 100%;
         margin: 0 auto 3% auto;
         border-radius: 10px;
     }
@@ -107,52 +110,92 @@
         display: inline-block;
         margin-top: 10px;
     }
-
+	#infoCuenta{
+    	width: 50%;
+    	background-color:rgba(255, 252, 253, 1);
+    	padding:1em;
+    	border-radius:10px;
+    	color:black;
+    }
+    #infoCuenta h3{
+    font-weight: 400;
+    }
+    #infoCuenta span{
+    	font-weight: 600;
+    	color:blue;
+    	font-size:1em;
+    }
 </style>
 <body>
     <%@include file="./HeaderCliente.jsp" %>
-    
-    <a href="ServletClientes" id="volver">🡠 Volver</a>
+       
+     <%
+     	String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
+		String saldoCuentaSeleccionada = String.valueOf(request.getAttribute("saldoCuentaSeleccionada"));
+		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
+     %>
+     
+    <a href="ServletClientes?cbuSeleccionado=<%= cbuSeleccionado %>" id="volver">🡠 Volver</a>
     <main>
-            <div class="prestamos">
-                <h1>Préstamo</h1>
-                <div class="pedir">
-                    <form action="ServletPrestamos" method="post" class="formulario">
-                        <%
-	                        Float montoPedido = (Float) request.getAttribute("montoPedido");
-	                        Integer cuotas = (Integer) request.getAttribute("cuotas");
-	                        Float montoTotal = (Float) request.getAttribute("montoTotal");
-	                        Float valorCuota = (Float) request.getAttribute("valorCuota");
-                        	
-	                        
-                        %>
-                        <div class="agrupar">
-                            <label for="montoPedido">*Hasta $75.000.000*</label>
-                            <input type="text" onblur="this.form.submit()" value="<%= (montoPedido != null) ? montoPedido : "" %>" required pattern="^\d{1,8}(\.\d{1,2})?$" title="Solo números con hasta 2 decimales. Usar el punto (.) como separador decimal" id="montoPedido" name="montoPedido" placeholder="Monto a pedir">
-                        </div>
-                        <div class="agrupar">
-                        <label for="cuotas">Cuotas:</label>
-                            <select name="cuotas" id="cuotas" required onchange="this.form.submit()">
-							  <% 
-							   int[] opciones = {1, 2, 3, 6, 9, 12, 18, 24, 36, 48};
-				               for (int o : opciones) { %>
-				                <option value="<%=o%>" <%= (cuotas != null && cuotas == o) ? "selected" : "" %>>
-				                    <%=o%> cuotas
-				                </option>
-				              <% } %>							
-				            </select></div>
-                        <div class="agrupar">
-                            <label for="totalDevolver">Total a pagar</label>
-                            <input type="text" value="<%= (montoTotal != null) ? montoTotal: "" %>" id="totalDevolver" name="totalDevolver"  disabled>
-                        </div>
-                        <div class="agrupar">
-                            <label for="montoCuotas">Monto por cuota</label>
-                            <input type="text" value="<%= (valorCuota != null) ? valorCuota : "" %>" id="montoCuotas" name="montoCuotas"  disabled>
-                        </div>
-                        <input type="submit" value="Pedir préstamo" name="btnPedir" id="btnTransferir">
-                    </form> 
-                </div>
-            </div>
+    		
+    		<section id="sectionPrestamos">
+                <div id="infoCuenta">
+	    			<h3>Cuenta: <span><%= numeroCuenta%></span></h3>
+	    			<h3>CBU: <span><%=cbuSeleccionado %></span> </h3>
+	    			<h3>Saldo actual: <span>$<%=saldoCuentaSeleccionada %></span></h3>
+	    		</div>
+    			
+	            <div class="prestamos">
+	                <h1>Préstamo</h1>
+	                <div class="pedir">
+	                    <form action="ServletPrestamos" method="post" class="formulario">
+	                        <%
+		                        Float montoPedido = (Float) request.getAttribute("montoPedido");
+		                        Integer cuotas = (Integer) request.getAttribute("cuotas");
+		                        Float montoTotal = (Float) request.getAttribute("montoTotal");
+		                        Float valorCuota = (Float) request.getAttribute("valorCuota");
+
+	                        %>
+	                        <div class="agrupar">
+	                            <label for="montoPedido">*Hasta $75.000.000*</label>
+	                            <input type="text" onblur="this.form.submit()" value="<%= (montoPedido != null) ? montoPedido : "" %>" required pattern="^\d{1,8}(\.\d{1,2})?$" title="Solo números con hasta 2 decimales. Usar el punto (.) como separador decimal" id="montoPedido" name="montoPedido" placeholder="Monto a pedir">
+	                        </div>
+	                        <div class="agrupar">
+	                        <label for="cuotas">Cuotas:</label>
+	                            <select name="cuotas" id="cuotas" required onchange="this.form.submit()">
+								  <% 
+								   int[] opciones = {1, 2, 3, 6, 9, 12, 18, 24, 36, 48};
+					               for (int o : opciones) { %>
+					                <option value="<%=o%>" <%= (cuotas != null && cuotas == o) ? "selected" : "" %>>
+					                    <%=o%> cuotas
+					                </option>
+					              <% } %>							
+					            </select></div>
+	                        <div class="agrupar">
+	                            <label for="montoCuotas">Monto por cuota</label>
+	                            <input type="text" value="<%= (valorCuota != null) ? valorCuota : "" %>" id="montoCuotas" name="montoCuotas"  readOnly>
+	                        </div>
+	                        <div class="agrupar">
+	                            <label for="totalDevolver">Total a pagar</label>
+	                            <input type="text" value="<%= (montoTotal != null) ? montoTotal: "" %>" id="totalDevolver" name="totalDevolver"  readOnly>
+	                        </div>
+	                        <input type="submit" value="Pedir préstamo" name="btnPedir" id="btnTransferir">
+	                    
+	                    	<!-- INPUTS OCULTOS PARA MANDAR TODO AL SERVLET -->
+	                   		<input type="hidden" name="saldoCuentaSeleccionada" value="<%= saldoCuentaSeleccionada %>">
+							<input type="hidden" name="numeroCuenta" value="<%= numeroCuenta %>">
+							<input type="hidden" name="cbuSeleccionado" value="<%= cbuSeleccionado %>">
+	                    </form> 
+	                    <% if (request.getAttribute("ErrorMessage") != null) { %>
+    						<p style="color: red;"><%= request.getAttribute("ErrorMessage") %></p>
+						<% } %>
+						
+						<% if (request.getAttribute("PrestamoRealizado") != null) { %>
+    						<p style="color: green;"><%= request.getAttribute("PrestamoRealizado") %></p>
+						<% } %>
+	                </div>
+	            </div>
+    		</section>
     </main>
 </body>
 </html>

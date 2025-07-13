@@ -181,8 +181,13 @@
             		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
             		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
             	%>
-                <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>"><img src="imgs/logoTransferencia.png" alt="logoTransferencia"></a>
-                <a href="ServletPrestamos"><img src="imgs/logoPrestamo.png" alt="logoPrestamo"></a>
+                <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
+                	<img src="imgs/logoTransferencia.png" alt="logoTransferencia">
+                </a>
+                
+                <a href="ServletPrestamos?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
+                	<img src="imgs/logoPrestamo.png" alt="logoPrestamo">
+                </a>
             </div>
             <div class="btnsAccionesTxt">
                 <h3>Transferencia</h3>
