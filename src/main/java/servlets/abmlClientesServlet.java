@@ -141,89 +141,56 @@ public class abmlClientesServlet extends HttpServlet {
     	
     	// obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
     	atributoListaPaises(request);
-    	//atributoListaPaisesFiltro(request);
+    	atributoListaPaisesFiltro(request);
     	// obtiene lista de provincias dependiendo del pais seleccionado en alta
     	atributoListaProvinciasAlta(request);
-    	//atributoListaProvinciasFiltro(request);
+    	atributoListaProvinciasFiltro(request);
     	// obtiene lista de localidades dependiendo del pais y provincia seleccionado en alta
     	atributoListaLocalidadesAlta(request);
-    	//atributoListaLocalidadesFiltro(request);
+    	atributoListaLocalidadesFiltro(request);
     	// Negocios
-        
-        ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
-        LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
-        ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
 
-        // DATOS PARA FORM DE ALTA 
-       
-
-        // FILTRADO
-        String paisFiltro = request.getParameter("ddlPaisFiltro");
-        String provinciaFiltro = request.getParameter("ddlProvinciaFiltro");
-
-        // Listas para filtros
-       
-        List<Provincia> listaProvinciasFiltro = new ArrayList<>();
-        List<Localidad> listaLocalidadesFiltro = new ArrayList<>();
-
-        if (paisFiltro != null && !paisFiltro.isEmpty()) {
-            listaProvinciasFiltro = provNeg.obtenerProvinciasPorPais(paisFiltro);
-            if (provinciaFiltro != null && !provinciaFiltro.isEmpty()) {
-                listaLocalidadesFiltro = locNeg.obtenerLocalidadesXProvXPais(paisFiltro, provinciaFiltro);
-            }
-        }
-
-       
-        request.setAttribute("listaProvinciasFiltro", listaProvinciasFiltro);
-        request.setAttribute("listaLocalidadesFiltro", listaLocalidadesFiltro);
-
-        // FILTRADO DE CLIENTES
-        List<Cliente> listaClientes = clienteNeg.listar();
-        List<Cliente> filtrados = new ArrayList<>();
-
-        // Demás filtros
-        String dni = request.getParameter("txtDniFiltro");
-        String cuil = request.getParameter("txtCuilFiltro");
-        String nombre = request.getParameter("txtNombreFiltro");
-        String apellido = request.getParameter("txtApellidoFiltro");
-        String sexo = request.getParameter("ddlSexoFiltro");
-        String localidadFiltro = request.getParameter("ddlLocalidadFiltro");
-        String fechaNac = request.getParameter("txtFechaDeNacimiento");
-
-        if ((dni != null && !dni.isEmpty()) || (cuil != null && !cuil.isEmpty()) ||
-            (nombre != null && !nombre.isEmpty()) || (apellido != null && !apellido.isEmpty()) ||
-            (sexo != null && !sexo.isEmpty()) || (paisFiltro != null && !paisFiltro.isEmpty()) ||
-            (provinciaFiltro != null && !provinciaFiltro.isEmpty()) || (localidadFiltro != null && !localidadFiltro.isEmpty()) ||
-            (fechaNac != null && !fechaNac.isEmpty())) {
-
-            for (Cliente c : listaClientes) {
-                boolean coincide = true;
-                if (dni != null && !dni.isEmpty() && !c.getDNI().contains(dni)) coincide = false;
-                if (cuil != null && !cuil.isEmpty() && !c.getCUIL().contains(cuil)) coincide = false;
-                if (nombre != null && !nombre.isEmpty() && !c.getNombre().toLowerCase().contains(nombre.toLowerCase())) coincide = false;
-                if (apellido != null && !apellido.isEmpty() && !c.getApellido().toLowerCase().contains(apellido.toLowerCase())) coincide = false;
-                if (sexo != null && !sexo.isEmpty() && !c.getSexo().equalsIgnoreCase(sexo)) coincide = false;
-                if (paisFiltro != null && !paisFiltro.isEmpty() && c.getPais() != null && !c.getPais().getNombre().equalsIgnoreCase(paisFiltro)) coincide = false;
-                if (provinciaFiltro != null && !provinciaFiltro.isEmpty() && c.getProvincia() != null && !c.getProvincia().getNombre().equalsIgnoreCase(provinciaFiltro)) coincide = false;
-                if (localidadFiltro != null && !localidadFiltro.isEmpty() && c.getLocalidad() != null && !c.getLocalidad().getNombre().equalsIgnoreCase(localidadFiltro)) coincide = false;
-                if (fechaNac != null && !fechaNac.isEmpty()) {
-                    try {
-                        Date fechaParam = Date.valueOf(fechaNac);
-                        if (!c.getFechaNacimiento().equals(fechaParam)) coincide = false;
-                    } catch (IllegalArgumentException e) {
-                    }
-                }
-                if (coincide) filtrados.add(c);
-            }
-        } else {
-            filtrados = listaClientes;
-        }
-
-        request.setAttribute("listaClientes", filtrados);
-
+       listarClientes(request);
         // Enviar
         RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
         rd.forward(request, response);
+    }
+    private Cliente obtenerDatosFiltracion(HttpServletRequest request) {
+    	Cliente datosFiltracion = new Cliente();
+    	
+    	datosFiltracion.setDNI(request.getParameter("txtDniFiltro"));
+         datosFiltracion.setCUIL(request.getParameter("txtCuilFiltro"));
+         datosFiltracion.setNombre(request.getParameter("txtNombreFiltro"));
+         datosFiltracion.setApellido(request.getParameter("txtApellidoFiltro"));
+        datosFiltracion.setSexo(request.getParameter("ddlSexoFiltro"));
+        
+        PaisNegocio negPais = new PaisNegocioImpl();
+        String paisFiltro = request.getParameter("ddlPaisFiltro");
+        Pais pais = negPais.obtenerPaisxNombre(paisFiltro);
+         datosFiltracion.setPais(pais);
+         
+         ProvinciaNegocioImpl negProv = new ProvinciaNegocioImpl();
+         String provinciaFiltro = request.getParameter("ddlProvinciaFiltro");
+         Provincia provincia = negProv.obtenerProvinciaPorNombre(provinciaFiltro);
+         datosFiltracion.setProvincia(provincia);
+         
+         String localidadFiltro = request.getParameter("ddlLocalidadFiltro");
+         LocalidadNegocioImpl negLoc = new LocalidadNegocioImpl();
+         Localidad localidad = negLoc.obtenerLocalidadPorNombre(localidadFiltro);
+         datosFiltracion.setLocalidad(localidad);
+         
+         String fechaNac = request.getParameter("txtFechaDeNacimientoFiltro");
+         if(request.getParameter("txtFechaDeNacimientoFiltro")!=null) {
+        	 datosFiltracion.setFechaNacimiento(Date.valueOf(fechaNac));        	 
+         }
+         
+         return datosFiltracion;
+    }
+    private void listarClientes(HttpServletRequest request) {
+    	Cliente datosFiltracion = obtenerDatosFiltracion(request);
+    	ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
+    	List<Cliente> listaClientes = clienteNeg.listar(datosFiltracion);
+    	request.setAttribute("listaClientes", listaClientes);
     }
 	private int agregarCliente(HttpServletRequest request) {
 		Cliente cliente = new Cliente();
@@ -292,11 +259,7 @@ public class abmlClientesServlet extends HttpServlet {
 		request.setAttribute("paisSeleccionado",null);
 		request.setAttribute("provSeleccionada",null);
 	}
-	private void cargarTodosLosClientes(HttpServletRequest request) {
-		ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
-        List<Cliente> listaClientes = clienteNeg.listar();
-		request.setAttribute("listaClientes", listaClientes);
-	}
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -351,7 +314,7 @@ public class abmlClientesServlet extends HttpServlet {
 			request.setAttribute("resultadoModificar", modificado);
 			
 		}
-		cargarTodosLosClientes(request);
+		listarClientes(request);
 		//DISPATCHER
 		RequestDispatcher rd = request.getRequestDispatcher("/abmlClientes.jsp");
 		

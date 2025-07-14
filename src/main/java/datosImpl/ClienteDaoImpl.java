@@ -13,7 +13,7 @@ public class ClienteDaoImpl implements ClienteDao {
     private Conexion cn;
     
     @Override
-    public List<Cliente> listar() {
+    public List<Cliente> listar(Cliente datosFiltracion) {
         List<Cliente> lista = new ArrayList<>();
         PaisNegocioImpl paNeg = new PaisNegocioImpl();
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
@@ -27,7 +27,37 @@ public class ClienteDaoImpl implements ClienteDao {
             		+ "LEFT JOIN TELEFONOSXCLIENTES TxC ON C.DNI_Cl = TxC.DNI_TxC "
             		+ "LEFT JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
             		+ "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
-            		+ "WHERE U.tipo_Usr = 'CLIENTE';";
+            		+ "WHERE U.tipo_Usr = 'CLIENTE' ";
+           
+            if(datosFiltracion.getDNI() != null && !datosFiltracion.getDNI().isBlank()) {
+            	query+= " AND dni_cl like '%"+datosFiltracion.getDNI()+"%' ";;
+            }
+            if(datosFiltracion.getCUIL()!=null && !datosFiltracion.getCUIL().isBlank()) {
+            	query+= " AND cuil_cl like '%"+datosFiltracion.getCUIL()+"%' ";
+            }
+            if(datosFiltracion.getNombre()!=null && !datosFiltracion.getNombre().isBlank()) {
+            	query+= " AND nombre_cl like '"+datosFiltracion.getNombre()+"%' ";
+            }
+            if(datosFiltracion.getApellido()!=null && !datosFiltracion.getApellido().isBlank()) {
+            	query+= " AND apellido_cl like '"+datosFiltracion.getApellido()+"%' ";
+            }
+            if(datosFiltracion.getSexo()!=null && !datosFiltracion.getSexo().isBlank()) {
+            	query+= " AND sexo_cl like '"+datosFiltracion.getSexo()+"%' ";
+            }
+            if(datosFiltracion.getPais()!=null) {
+            	query+= " AND paisOrigen_cl = "+datosFiltracion.getPais().getId();
+            }
+            if(datosFiltracion.getProvincia()!=null) {
+            	query+= " AND provincia_cl = "+datosFiltracion.getProvincia().getId();
+            }
+            if(datosFiltracion.getLocalidad()!=null) {
+            	query+= " AND localidad_cl = "+datosFiltracion.getLocalidad().getId();
+            }
+            if(datosFiltracion.getFechaNacimiento()!=null) {
+            	System.out.println(datosFiltracion.getFechaNacimiento());
+            	query+= " AND nacimiento_cl like '"+datosFiltracion.getFechaNacimiento()+"%' ";
+            }
+            System.out.println(query);
             ResultSet rs = cn.query(query);
             if(rs==null) {
             System.out.println("RESULTSET NULO EN DAO");
@@ -48,7 +78,7 @@ public class ClienteDaoImpl implements ClienteDao {
                 nacionalidad = paNeg.obtenerPaisxId(idNac);
                 c.setNacionalidad(nacionalidad);
                 
-                int idPa = (rs.getInt("pais_Cl"));
+                int idPa = (rs.getInt("paisOrigen_Cl"));
                 Pais pais = new Pais();
                 pais = paNeg.obtenerPaisxId(idPa);
                 c.setPais(pais);

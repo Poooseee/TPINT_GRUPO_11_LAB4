@@ -11,8 +11,8 @@ public class ClienteNegocioImpl implements ClienteNegocio {
     private ClienteDaoImpl clienteDao = new ClienteDaoImpl();
 
     @Override
-    public List<Cliente> listar() {
-        return clienteDao.listar();
+    public List<Cliente> listar(Cliente datosFiltracion) {
+        return clienteDao.listar(datosFiltracion);
     }
 
     @Override

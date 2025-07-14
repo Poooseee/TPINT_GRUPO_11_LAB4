@@ -5,7 +5,7 @@ import entidades.Cliente;
 import entidades.Usuario;
 
 public interface ClienteNegocio {
-    public List<Cliente> listar();
+    public List<Cliente> listar(Cliente datosFiltracion);
     public int agregar(Cliente cliente, Usuario user);
     public boolean modificar(Cliente cliente);
     public int eliminar(String dni);

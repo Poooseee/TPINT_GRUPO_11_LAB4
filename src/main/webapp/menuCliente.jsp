@@ -127,7 +127,9 @@
     <main>
 	    <div class="cuentas">
 		<%
-			ArrayList <Cuenta> cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
+		ArrayList <Cuenta> cuentas = new ArrayList<>(); 
+		if(request.getAttribute("cuentasCliente") != null)
+			 cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
 			
 		%>
 	     <h2 style=margin-left:15px>Cuentas</h2>
