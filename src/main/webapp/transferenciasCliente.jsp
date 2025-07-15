@@ -16,15 +16,10 @@
         background: linear-gradient(0deg,rgba(44, 144, 170, 1) 0%, rgba(255, 252, 253, 1) 90%);
         background-repeat: no-repeat;
         background-size: cover;
-        height: 98vh;
+        min-height: 100vh;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
-    header{
-        display: flex;
-        justify-content: space-between;
-        width: 80%;
-        margin: 1% auto;
-    }
+    
     h1{
         text-align: center;
     }
@@ -48,9 +43,13 @@
         margin-left: 1%;
         font-size: larger;
     }
+    #sectionTransferencia{
+    	width:80%;
+    	margin:2em auto;
+    }
     .transferencias{
         background-color: rgba(255, 252, 253, 1);
-        width: 80%;
+        width: 100%;
         margin: 0 auto 3% auto;
         border-radius: 10px;
         height: 70vh;
@@ -72,40 +71,96 @@
     .formulario input{
         width: 30em;
         height: 3em;
+        min-width: 20em;
+    	padding: 0.4em;
+    	border-radius: 0.5em;
+    	outline: none;
+    	border: 1px solid darkgray;
+    }
+    #volver {
+        margin-left: 10%;
+        font-size: larger;
+        color: white;
+        background-color: #2C90AA;
+        padding: 8px 15px;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 10px;
+    }
+    #btnTransferir {
+	    width: 100%;
+	    margin: 0 auto;
+	    padding: 1em;
+	    border-radius: 0.5em;
+	    cursor: pointer;
+	    outline: none;
+	    background-color: rgba(77, 180, 187, 0.637);
+	    border: none;
+	    transition: all 0.2s ease;
+    }
+    
+    #btnTransferir:hover {
+    	background-color: rgba(38, 117, 122, 0.637);	
+    }
+    #infoCuenta{
+    	width: 50%;
+    	background-color:rgba(255, 252, 253, 1);
+    	padding:1em;
+    	border-radius:10px;
+    	color:black;
+    }
+    #infoCuenta h3{
+    font-weight: 400;
+    }
+    #infoCuenta span{
+    	font-weight: 600;
+    	color:blue;
+    	font-size:1em;
     }
 </style>
 <body>
-    <header>
-        <div class="inicio">
-            <a href="menuCliente.jsp"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
-             <%
-            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-            String nombreUs = "Invitado";
-            if (usuario != null) {
-                nombreUs = usuario.getNickUsuario();
-            }
-            	%>
-            <p>Hola, <%=nombreUs %></p>    
-        </div>
-        <div class="perfil">
-            <a href="perfilCliente.jsp"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
-        </div>
-    </header>
-    <a href="menuCliente.jsp" id="volver">🡠 Volver</a>
+    <%@include file="./HeaderCliente.jsp" %>
+    
+    <%
+     	String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
+		String saldoCuentaSeleccionada = String.valueOf(request.getAttribute("saldoCuentaSeleccionada"));
+		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
+     %>
+    <a href="ServletClientes?cbuSeleccionado=<%= cbuSeleccionado %>" id="volver">🡠 Volver</a>
     <main>
-            <div class="transferencias">
-                <h1>Transferencia</h1>
-                <div class="transferir">
-                    <form action="transferenciasCliente.jsp" method="post" class="formulario">
-                        <input type="text" id="nCta" name="nCta" placeholder="Número de cuenta">
-                        <input type="text" id="importe" name="importe" placeholder="Importe">
-                        <input type="submit" value="Transferir" name="btnTransferir" id="btnTransferir">
-                    </form> 
-                </div>
-            </div>
+    		<section id="sectionTransferencia">
+	    		<div id="infoCuenta">
+	    			<h3>Cuenta: <span><%= numeroCuenta%></span></h3>
+	    			<h3>CBU: <span><%=cbuSeleccionado %></span> </h3>
+	    			<h3>Saldo actual: <span>$<%=saldoCuentaSeleccionada %></span></h3>
+	    		</div>
+	            <div class="transferencias">
+	                <h1>Transferencia</h1>
+	                <div class="transferir" style="text-align:center;">
+	                    <form action="ServletTransferencias" method="post" class="formulario form-confirm">
+	                        <input type="text" required pattern="^\d{1,20}$" id="nCta" name="nCta" placeholder="Número de cuenta">
+	                        <input type="text" id="importe" required title="Solo números con hasta 2 decimales. Usar el punto (.) como separador decimal" pattern="^\d+(\.\d{1,2})?" name="importe" placeholder="Importe">
+	                        <input type="submit" value="Transferir" name="btnTransferir" id="btnTransferir">
+	                   		
+	                   		<!-- INPUTS OCULTOS PARA MANDAR TODO AL SERVLET -->
+	                   		<input type="hidden" name="saldoCuentaSeleccionada" value="<%= saldoCuentaSeleccionada %>">
+							<input type="hidden" name="numeroCuenta" value="<%= numeroCuenta %>">
+							<input type="hidden" name="cbuSeleccionado" value="<%= cbuSeleccionado %>">
+	                    </form> 
+	                    <% if (request.getAttribute("ErrorMessage") != null) { %>
+    						<p style="color: red;"><%= request.getAttribute("ErrorMessage") %></p>
+						<% } %>
+						
+						<% if (request.getAttribute("TransferenciaRealizada") != null) { %>
+    						<p style="color: green;"><%= request.getAttribute("TransferenciaRealizada") %></p>
+						<% } %>
+	                </div>
+	            </div>
+    		</section>
     </main>
     <footer>
         <h1>Banco Honse, siempre con vos.</h1>
     </footer>
+    <script src="./ConfirmacionForm.js"></script>
 </body>
 </html>

@@ -1,9 +1,11 @@
 package entidades;
 
+import java.sql.Date;
+
 public class Prestamo {
 private int idPrestamo;
 private String dni;
-private String fecha;
+private Date fecha;
 private float importePagar;
 private float importePedido;
 private int plazoPagos;
@@ -27,11 +29,11 @@ public String getDni() {
 public void setDni(String dni) {
 	this.dni = dni;
 }
-public String getFecha() {
+public Date getFecha() {
 	return fecha;
 }
-public void setFecha(String fecha) {
-	this.fecha = fecha;
+public void setFecha(Date fechaPrestamo) {
+	this.fecha = fechaPrestamo;
 }
 public float getImportePagar() {
 	return importePagar;

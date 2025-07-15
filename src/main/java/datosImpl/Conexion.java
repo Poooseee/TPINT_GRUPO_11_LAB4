@@ -9,20 +9,17 @@ import java.sql.Statement;
 
 public class Conexion {
 
-	private String host = "jdbc:mysql://localhost:3306/";
+	private String host = "jdbc:mysql://localhost:3306/DB_TP?useUnicode=true&characterEncoding=UTF-8";
 	private String user = "root";
 	private String pass = "root";
 	//private String pass = "13121401";
-
-	private String dbName = "DB_TP";
-
 	protected Connection connection;
 	
 	public Connection Open(){
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-			this.connection = DriverManager.getConnection(host+dbName, user, pass);
+			this.connection = DriverManager.getConnection(host, user, pass);
 		}
 		catch(Exception e)
 		{

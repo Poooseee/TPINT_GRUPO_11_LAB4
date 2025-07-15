@@ -26,7 +26,7 @@ public class UsuarioDaoImpl implements UsuarioDao {
 			ps.setString(2, usuario.getContraseñaUsuario());
 			
 			ResultSet rs = ps.executeQuery();
-			System.out.println();
+			
 			if(rs.next()) {
 				u = new Usuario();
 				u.setIdUsuario(rs.getInt("id"));
@@ -39,12 +39,16 @@ public class UsuarioDaoImpl implements UsuarioDao {
 			ps.close();
 			cn.close();
 		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		return u;
+	    catch(Exception e) {
+	        System.out.println("\nERROR en UsuarioDaoImpl:");
+	        e.printStackTrace();
+	    }
+	    finally {
+	        if(cn != null) {
+	            cn.close();
+	        }
+	    }
+	    
+	    return u;
 	}
-
 }

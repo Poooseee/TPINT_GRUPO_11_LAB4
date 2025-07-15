@@ -68,17 +68,9 @@
   padding-right: 2em;
   gap: 2em;
 }
-
-#nav-header {
-  display: flex;
-  gap: 1.5em;
-}
-
-#nav-header a {
-  text-decoration: none;
-  color: black;
-  font-weight: 400;
-  font-size: large;
+#imgPerfilLogo{
+	width: 75px;
+   border-radius: 100%;
 }
 #admin-interaccion a{
   text-decoration: none;
@@ -86,35 +78,35 @@
 }
   
 </style>
-<%
-Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-String nombreUs = "Invitado";
-if (usuario != null) {
-    nombreUs = usuario.getNickUsuario();
-}
-
-%>
+	<%
+	Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+	String nombreUs = "Invitado";
+	if (usuario != null) {
+	    nombreUs = usuario.getNickUsuario();
+	}
+	
+	%>
     <header>
       <div id="informacion">
         <div id="logo">
-          <img src="./imgs/logo_Honse-sinNombre.png" alt="Logo">
+	        <a href="ServletClientes">
+	          <img src="./imgs/logo_Honse-sinNombre.png" alt="Logo">
+	        </a>
         </div>
         <div id="admin-interaccion">
           <div id="nombre-admin">
-            <a href="./menuAdministrador.jsp">Administrador ~</a>
-        
-            <p><%=nombreUs%></p>
+            <p>Hola, <%=nombreUs%></p>
           </div>
           <a href="LogoutServlet" id="cerrarSesion">Cerrar Sesión</a>
         </div>
     </div>
+    
     <div id="div-nav">
-      <nav id="nav-header">
-        <a id="a-nav-header" href="abmlClientesServlet">Clientes</a>
-        <a id="a-nav-header" href="ServletCuentas?param=menu">Cuentas</a>
-        <a id="a-nav-header" href="PrestamosServlet">Préstamos</a>
-        <a id="a-nav-header" href="ReportesServlet">Reportes</a>
-      </nav>
+      <div class="perfil">
+            <a href="${pageContext.request.contextPath}/ServletPerfilCliente">
+    			<img id="imgPerfilLogo" src="${pageContext.request.contextPath}/imgs/logoPerfilDefault.png" alt="imgPerfil">
+			</a>
+      </div>
     </div>
   </header>
 

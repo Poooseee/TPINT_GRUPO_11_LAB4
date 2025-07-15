@@ -91,7 +91,6 @@ public class CuentaDaoImpl implements CuentaDao {
 		}
 		return update;
 	}
-	
 	public ArrayList<Cuenta> obtenerCuentas(String dni, Boolean cuentasInactivas) {
 		ArrayList<Cuenta> listaCuentas = new ArrayList<Cuenta>();
 		try {
@@ -106,8 +105,6 @@ public class CuentaDaoImpl implements CuentaDao {
 			}
 			
 			if(cuentasInactivas!=null) {
-				System.out.println("DIFF NULL");
-				System.out.println(cuentasInactivas);
 				if(cuentasInactivas != true) {
 					query+=" AND cuentas.baja_Ctas = FALSE";
 				}
@@ -120,6 +117,7 @@ public class CuentaDaoImpl implements CuentaDao {
 			while(rs.next()) {
 				Cuenta cuenta = new Cuenta();
 				TipoCuenta tipoCuenta = new TipoCuenta();
+				
 				cuenta.setCbu(rs.getString("cbu"));
 				cuenta.setDni(rs.getString("dni"));
 				cuenta.setFechaCreacion(rs.getString("fecha"));
@@ -129,6 +127,7 @@ public class CuentaDaoImpl implements CuentaDao {
 				tipoCuenta.setNombre(rs.getString("tipoNombre"));
 				cuenta.setTipo(tipoCuenta);
 				cuenta.setBaja(rs.getBoolean("baja"));
+				
 				listaCuentas.add(cuenta);
 			}
 			rs.close();
@@ -158,7 +157,6 @@ public class CuentaDaoImpl implements CuentaDao {
 		}
 		return eliminado;
 	}
-	@Override
 	public boolean tieneMenosDe3Cuentas(String dni) {
 		boolean valido = false;
 		int cantidad = 0;
@@ -188,6 +186,145 @@ public class CuentaDaoImpl implements CuentaDao {
 		return cantidad < 3;
 
 	}
+    @Override
+    public Cuenta obtenerCuentaPorDni(String dni) {
+        Cuenta cuenta = null;
+        String query = "SELECT * FROM cuentas WHERE DNI_Ctas = ?"; 
+        cn = new Conexion();
+        try {
+            cn.Open(); 
+            PreparedStatement ps = cn.prepare(query);
+            ps.setString(1, dni);
+            ResultSet rs = ps.executeQuery();
 
+            if (rs.next()) {
+                cuenta = new Cuenta();
+                cuenta.setNumero(rs.getInt("numeroCuenta_Ctas"));
+                cuenta.setDni(rs.getString("DNI_Ctas"));
+                cuenta.setFechaCreacion(rs.getString("fechaCreacion_Ctas"));
+                int tipoCuentaId = rs.getInt("tipoCta_Ctas");
+                TipoCuenta tipoCuenta = obtenerTipoCuentaPorId(tipoCuentaId); 
+                cuenta.setTipo(tipoCuenta);
+                cuenta.setCbu(rs.getString("CBU_Ctas"));
+                cuenta.setSaldo(rs.getFloat("saldo_Ctas"));
+                cuenta.setBaja(rs.getBoolean("baja_Ctas"));
+            }
+            
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        } finally {
+            cn.close();
+        }
+        return cuenta;
+    }
+    private TipoCuenta obtenerTipoCuentaPorId(int tipoCuentaId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+		Cuenta cuenta = null;
+		try {
+			cn = new Conexion();
+			cn.Open();
+			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
+					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId, baja_Ctas as baja"
+					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
+					+ " WHERE CBU_Ctas = ? ";
+			
+			PreparedStatement ps = cn.prepare(query);
+			ps.setString(1, cbu);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				cuenta = new Cuenta();
+				TipoCuenta tipoCuenta = new TipoCuenta();
+				
+				cuenta.setCbu(rs.getString("cbu"));
+				cuenta.setDni(rs.getString("dni"));
+				cuenta.setFechaCreacion(rs.getString("fecha"));
+				cuenta.setNumero(rs.getInt("numero"));
+				cuenta.setSaldo(rs.getFloat("saldo"));
+				tipoCuenta.setIdTipo(rs.getInt("tipoId"));
+				tipoCuenta.setNombre(rs.getString("tipoNombre"));
+				cuenta.setTipo(tipoCuenta);
+				cuenta.setBaja(rs.getBoolean("baja"));
 
+			}
+			rs.close();
+			cn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return cuenta;
+	}
+	@Override
+	public Cuenta obtenerCuentaPorNumero(int numeroCuenta) {
+		Cuenta cuenta = null;
+		try {
+			cn = new Conexion();
+			cn.Open();
+			String query = "SELECT numeroCuenta_Ctas as numero, DNI_Ctas as dni, fechaCreacion_Ctas as fecha, descripcion_TCta as tipoNombre, "
+					+ " CBU_Ctas as cbu, saldo_Ctas as saldo, idTipoCta_TCta as tipoId, baja_Ctas as baja"
+					+ " FROM CUENTAS INNER JOIN tipos_de_cuentas ON cuentas.tipoCta_Ctas = tipos_de_cuentas.idTipoCta_TCta"
+					+ " WHERE numeroCuenta_Ctas = ? ";
+			
+			PreparedStatement ps = cn.prepare(query);
+			ps.setInt(1, numeroCuenta);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				cuenta = new Cuenta();
+				TipoCuenta tipoCuenta = new TipoCuenta();
+				
+				cuenta.setCbu(rs.getString("cbu"));
+				cuenta.setDni(rs.getString("dni"));
+				cuenta.setFechaCreacion(rs.getString("fecha"));
+				cuenta.setNumero(rs.getInt("numero"));
+				cuenta.setSaldo(rs.getFloat("saldo"));
+				tipoCuenta.setIdTipo(rs.getInt("tipoId"));
+				tipoCuenta.setNombre(rs.getString("tipoNombre"));
+				cuenta.setTipo(tipoCuenta);
+				cuenta.setBaja(rs.getBoolean("baja"));
+
+			}
+			rs.close();
+			cn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return cuenta;
+	}
+	@Override
+	public Boolean existeCuenta(int numeroCuenta) {
+		Boolean existe = false;
+		
+		try {
+			cn = new Conexion();
+			cn.Open();
+			
+			String existeQuery="SELECT * FROM db_tp.cuentas WHERE numeroCuenta_Ctas = ? AND baja_Ctas = false";
+			
+			PreparedStatement ps = cn.prepare(existeQuery);
+			ps.setInt(1, numeroCuenta);
+			
+			ResultSet rs = ps.executeQuery();
+			  if (rs.next()) {
+			       existe = true;
+			   }
+			  
+			  cn.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();		
+		}
+		
+		return existe;
+	}
+	
 }

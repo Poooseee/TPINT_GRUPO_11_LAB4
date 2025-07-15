@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
     <%@ page import="entidades.Cliente" %>
     <%@ page import="entidades.Usuario" %>
+    <%@ page import="entidades.Cuenta" %>
+    <%@ page import="java.util.ArrayList" %>
+    
     <%@ page import="javax.servlet.RequestDispatcher" %>
 <!DOCTYPE html>
 <html>
@@ -20,7 +23,7 @@
         background: linear-gradient(0deg,rgba(44, 144, 170, 1) 0%, rgba(255, 252, 253, 1) 90%);
         background-repeat: no-repeat;
         background-size: cover;
-        height: 98vh;
+        min-height: 100dvh;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     a{
@@ -33,12 +36,7 @@
         all: unset;
         cursor: pointer;
     }
-    header{
-        display: flex;
-        justify-content: space-between;
-        width: 80%;
-        margin: 1% auto;
-    }
+
     .inicio{
         display: flex;
     }
@@ -48,20 +46,20 @@
     #logoBanco{
         width: 75px;
     }
-    #imgPerfil{
-        width: 75px;
-        border-radius: 100%;
-    }
+
     .saldo{
         margin: 6% auto 0 auto;
         width: 75%;
         height: 20vh;
         background-color: rgba(255, 252, 253, 1);
         border-radius: 10px;
+        display:flex;
+        flex-direction:column;
     }
     .saldoSuperior{
         display: flex;
         justify-content: space-between;
+        align-items:center;
     }
     .saldoSuperior a{
         margin: 0.5% 1% 0 0;
@@ -70,12 +68,15 @@
         padding-left: 1%;
     }
     .saldoInferior{
-        display: flex;
-        margin-top: 1%;
+      flex-grow: 1;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: 2em;
+	  overflow: hidden;
     }
     .saldoInferior p{
-        padding-left: 1%;
-        padding-right: 4%;
+		
     }
     .btnsAcciones{
         margin: 1% auto 10% auto;
@@ -100,10 +101,10 @@
         margin-right: 1%;
     }
     .cuentas{
-     display: flex;              /* Activa Flexbox */
-     flex-direction: row;        /* (opcional) Alineación horizontal */
-     justify-content: center ;/* Alinea horizontalmente: start, center, end, space-between... */
-     align-items: center;        /* Alineación vertical (en la misma línea) */
+     display: flex;              
+     flex-direction: row;        
+     justify-content: center ;
+     align-items: center;       
      gap: 1rem;  
      margin: 5% auto 0 auto;
         width: 75%;
@@ -120,47 +121,75 @@
 </style>
 <body>
 
-    <header>
-        <div class="inicio">
-            <a href="menuCliente.jsp"><img src="imgs/logo_Honse-sinNombre.png" alt="logoBanco" id="logoBanco"></a>
-            <%
-            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-            String nombreUs = "Invitado";
-            if (usuario != null) {
-                nombreUs = usuario.getNickUsuario();
-            }
-            	%>
-            <p>Hola, <%=nombreUs %></p>    
-        </div>
-        <div class="perfil">
-            <a href="perfilCliente.jsp"><img src="imgs/logoPerfilDefault.png" alt="imgPerfil" id="imgPerfil"></a>
-        </div>
-    </header>
-    <main>
-    <div class="cuentas">
-
-     <h2 style=margin-left:15px>Cuentas</h2>
+    <%@ include file="./HeaderCliente.jsp" %>
     
-     <select>
-     <option>CBU: 12345</option>
-     <option>CBU: 6789</option>
-     </select>
-    </div>
+    
+    <main>
+	    <div class="cuentas">
+		<%
+		ArrayList <Cuenta> cuentas = new ArrayList<>(); 
+		if(request.getAttribute("cuentasCliente") != null)
+			 cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
+			
+		%>
+	     <h2 style=margin-left:15px>Cuentas</h2>
+	    
+	    <form method="post" action="ServletClientes">
+		     <select id="selectCuentas" name="cbuSeleccionado" onchange="this.form.submit()">
+		     	<%
+		     		if(cuentas != null && !cuentas.isEmpty()){
+		     			for(Cuenta cuenta : cuentas){
+		     				String cbu = cuenta.getCbu();
+		     				int numeroCuenta = cuenta.getNumero();
+		                    Boolean seleccionado = false;
+		                    if(request.getParameter("cbuSeleccionado") != null && request.getParameter("cbuSeleccionado").equals(cbu)){
+		                        seleccionado = true;
+		                    }
+		     				%>
+		     					<option value=<%=cbu%> <%=seleccionado? "selected" : "" %>><%= numeroCuenta +" - "+ cbu %></option>
+		     				<%
+		     			}
+		     		}else{
+		     			%>
+		     				<option value="-">Aún tiene cuentas</option>
+		     			<%
+		     		}
+		     	%>
+		     </select>
+		</form>
+	    </div>
+    
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
-                <a href="movimientosCliente.jsp">Ir a movimientos</a>
+                <a href="${pageContext.request.contextPath}/ServletMovimientos">Ir a movimientos</a>
             </div>
-            <div class="saldoInferior">
-                <p>*Ingresar saldo de la cuenta en la BD*</p>
-                <button><img src="imgs/logoOcultar.png" alt="logoOcultar"></button>    
-            </div>
+            <%
+				String saldoCuentaSeleccionada =  String.valueOf(request.getAttribute("saldoCuentaSeleccionada")) ;
+            	if(saldoCuentaSeleccionada == null) saldoCuentaSeleccionada = "00.0";
+            %>
+		<div class="saldoInferior">
+		    <p>$<%= saldoCuentaSeleccionada %></p>
+		</div>
+		
         </div>
         
         <div class="btnsAcciones">
             <div class="btnsAccionesImgs">
-                <a href="transferenciasCliente.jsp"><img src="imgs/logoTransferencia.png" alt="logoTransferencia"></a>
-                <a href="prestamosCliente.jsp"><img src="imgs/logoPrestamo.png" alt="logoPrestamo"></a>
+            	<%
+            		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
+            		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
+            		
+            		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
+            		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
+            	%>
+                <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
+                	<img src="imgs/logoTransferencia.png" alt="logoTransferencia">
+                </a>
+                
+                <a href="ServletPrestamos?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
+                	<img src="imgs/logoPrestamo.png" alt="logoPrestamo">
+                </a>
             </div>
             <div class="btnsAccionesTxt">
                 <h3>Transferencia</h3>
