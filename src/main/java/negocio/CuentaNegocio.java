@@ -3,9 +3,10 @@ package negocio;
 import java.util.ArrayList;
 
 import entidades.Cuenta;
+import entidades.Movimiento;
 
 public interface CuentaNegocio {
-public int insert(Cuenta cuenta);
+public int insert(Cuenta cuenta, Movimiento movimiento);
 public int obtenerNuevoNumero();
 public int update(Cuenta cuenta);
 public ArrayList<Cuenta> obtenerListaCuentas(String dni,Boolean cuentasInactivas);

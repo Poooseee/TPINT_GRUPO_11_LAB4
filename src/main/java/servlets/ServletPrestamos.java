@@ -102,19 +102,10 @@ public class ServletPrestamos extends HttpServlet {
 			prestamo.setMontoPorMes(montoCuotas);
 			prestamo.setEstado(estadoPrestamo);
 			
-			//Instanciar la entidad Movimiento
-			String detalleMovimiento = "Préstamo solicitado";
-			Movimiento movimiento = new Movimiento();
-			movimiento.setDniMovimiento(Integer.parseInt(DNI));
-			movimiento.setNumeroCuenta(numeroCuenta);
-			movimiento.setFecha(fechaPrestamo);
-			movimiento.setDetalle(detalleMovimiento);
-			movimiento.setImporte(montoPedido);
-			movimiento.setTipo( new TipoMovimiento(2,"Alta de un préstamo"));
 			
 			//Insertar el prestamos en las tablas
 			try {
-				boolean prestamoInsertado = movimientoNegocio.insertarPrestamo(prestamo, movimiento);
+				boolean prestamoInsertado = movimientoNegocio.insertarPrestamo(prestamo);
 				
 				
 				if(!prestamoInsertado) throw new ErrorPrestamoException();

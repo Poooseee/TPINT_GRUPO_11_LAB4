@@ -50,11 +50,13 @@
         width: fit-content;
         padding:1em;
         margin: 0 auto;
+        text-align:center;
     }
     .formulario {
         display: flex;
         flex-direction: column;
         gap: 3em;
+        text-align:left;
     }
     .formulario .agrupar {
         display: flex;
@@ -148,7 +150,7 @@
 	            <div class="prestamos">
 	                <h1>Préstamo</h1>
 	                <div class="pedir">
-	                    <form action="ServletPrestamos" method="post" class="formulario">
+	                    <form action="ServletPrestamos" method="post" class="formulario form-confirm">
 	                        <%
 		                        Float montoPedido = (Float) request.getAttribute("montoPedido");
 		                        Integer cuotas = (Integer) request.getAttribute("cuotas");
@@ -197,5 +199,7 @@
 	            </div>
     		</section>
     </main>
+    
+    <script src="./ConfirmacionForm.js"></script>
 </body>
 </html>

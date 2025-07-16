@@ -129,7 +129,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 			return filas;
 	  }
 	@Override
-	public int insertarPrestamo(Prestamo prestamo, Movimiento movimiento) {
+	public int insertarPrestamo(Prestamo prestamo) {
 		int filas = 0;
 		
 		try {
@@ -160,27 +160,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 			psPr.setString(8, prestamo.getEstado());
 			
 			filas+= psPr.executeUpdate();
-			
-			//2. INSERTAR EN LA TABLA MOVIMIENTOS
-			//REGISTRAR EN TABLA MOVIMIENTOS
-			String movimientoPrestamoQuery = "INSERT INTO MOVIMIENTOS ( \r\n"
-					+ "DNI_Movs, \r\n"
-					+ "numeroCuenta_Movs, \r\n"
-					+ "fecha_Movs, \r\n"
-					+ "detalle_Movs, \r\n"
-					+ "importe_Movs, \r\n"
-					+ "tipoMovimiento_Movs) "
-					+ " VALUES (?,?,?,?,?,?);";
-			
-			PreparedStatement psME = cn.prepare(movimientoPrestamoQuery);
-			psME.setInt(1, movimiento.getDniMovimiento());
-			psME.setInt(2, movimiento.getNumeroCuenta());
-			psME.setDate(3, movimiento.getFecha());
-			psME.setString(4, movimiento.getDetalle());
-			psME.setFloat(5, movimiento.getImporte());
-			psME.setInt(6, movimiento.getTipo().getIdTipoMovimiento());
-	
-			filas+=psME.executeUpdate();
+
 		}catch(Exception e) {
 			
 		}finally {

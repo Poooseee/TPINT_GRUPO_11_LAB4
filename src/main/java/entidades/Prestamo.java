@@ -71,4 +71,11 @@ public int getCuenta() {
 public void setCuenta(int cuenta) {
 	this.cuenta = cuenta;
 }
+
+@Override
+public String toString() {
+	return "Prestamo [idPrestamo=" + idPrestamo + ", dni=" + dni + ", fecha=" + fecha + ", importePagar=" + importePagar
+			+ ", importePedido=" + importePedido + ", plazoPagos=" + plazoPagos + ", montoPorMes=" + montoPorMes
+			+ ", estado=" + estado + ", cuenta=" + cuenta + "]";
+}
 }

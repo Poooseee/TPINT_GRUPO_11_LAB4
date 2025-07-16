@@ -91,7 +91,7 @@
     <% } %>
 
     <br>
-    <a href="">¿No tiene una cuenta? Regístrese aquí</a>
+    
 </main>
 </body>
 </html>

@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -12,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import entidades.Cuenta;
+import entidades.Movimiento;
 import entidades.TipoCuenta;
+import entidades.TipoMovimiento;
 import negocio.CuentaNegocio;
 import negocioImpl.CuentaNegocioImpl;
 import negocio.TipoCuentaNegocio;
@@ -172,10 +176,25 @@ public class ServletCuentas extends HttpServlet {
 	public int agregarCuenta(HttpServletRequest request) {
 		CuentaNegocioImpl negCu = new CuentaNegocioImpl();
 		Cuenta cuenta = cargarCuentaConDatosIngresados(request);
-	
-		return negCu.insert(cuenta);
+		Movimiento movimiento = cargarMovimiento(request);
+		
+		return negCu.insert(cuenta,movimiento);
 	}
 	
+private Movimiento cargarMovimiento(HttpServletRequest request) {
+		Movimiento movimiento = new Movimiento();
+		CuentaNegocio neg = new CuentaNegocioImpl();
+
+		movimiento.setDniMovimiento(Integer.parseInt(request.getParameter("DNI")));
+		movimiento.setNumeroCuenta(neg.obtenerNuevoNumero());
+		movimiento.setFecha( Date.valueOf(LocalDate.now()));
+		movimiento.setDetalle("Alta de Cuenta");
+		movimiento.setImporte(0);
+		movimiento.setTipo(new TipoMovimiento(1,"Alta de Cuenta"));
+		
+		return movimiento;
+	}
+
 private Cuenta cargarCuentaConDatosIngresados(HttpServletRequest request) {
 	
 	CuentaNegocio neg = new CuentaNegocioImpl();
@@ -203,7 +222,6 @@ private int modificarCuenta(HttpServletRequest request) {
 	
 }
 private Cuenta cargarCuentaConDatosDeLaTabla(HttpServletRequest request) {
-	TipoCuentaNegocio negTip = new TipoCuentaNegocioImpl();
 	Cuenta cuenta = new Cuenta();
 	TipoCuenta tipC = new TipoCuenta();
 	
