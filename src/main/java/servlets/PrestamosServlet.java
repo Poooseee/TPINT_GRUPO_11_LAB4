@@ -38,8 +38,7 @@ public class PrestamosServlet extends HttpServlet {
 			
 			System.out.println(prestamosS);
 		}
-		System.out.println("LISTADO" + obtenerListaPrestamos(estado,dni));
-		
+
 		request.setAttribute("filtroEstado", estado);
 		request.setAttribute("filtroDni", dni);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/autorizacionPrest.jsp");

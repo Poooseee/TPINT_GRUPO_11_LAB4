@@ -186,13 +186,16 @@
                 <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
                 	<img src="imgs/logoTransferencia.png" alt="logoTransferencia">
                 </a>
-                
+                <a href="PagoPrestamoServlet?cbuSeleccionado=<%= cbuSeleccionado %>">
+                	<p>Insertar imagen POSE</p>
+                </a>
                 <a href="ServletPrestamos?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
                 	<img src="imgs/logoPrestamo.png" alt="logoPrestamo">
                 </a>
             </div>
             <div class="btnsAccionesTxt">
                 <h3>Transferencia</h3>
+                <h3>Pagá tus préstamos</h3>
                 <h3>Préstamo</h3>
             </div>
         </div>

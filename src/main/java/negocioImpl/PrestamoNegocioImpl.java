@@ -4,6 +4,7 @@ import java.util.List;
 
 import entidades.Prestamo;
 import negocio.PrestamoNegocio;
+import datos.Cuota;
 import datos.PrestamoDao;
 import datosImpl.PrestamoDaoImpl;
 
@@ -16,6 +17,14 @@ PrestamoDao dao = new PrestamoDaoImpl();
 	@Override
 	public boolean cambiarEstado(String estado, int id) {
 		return dao.cambiarEstado(estado, id);
+	}
+	@Override
+	public Prestamo obtenerPrestamo(int id) {
+		return dao.obtenerPrestamo(id);
+	}
+	@Override
+	public List<Cuota> obtenerCuotasPorPrestamo(int idPrestamo) {
+		return dao.obtenerCuotasPorPrestamo(idPrestamo);
 	}
 
 }
