@@ -130,7 +130,10 @@
 		ArrayList <Cuenta> cuentas = new ArrayList<>(); 
 		if(request.getAttribute("cuentasCliente") != null)
 			 cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
-			
+		
+		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
+		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
+		
 		%>
 	     <h2 style=margin-left:15px>Cuentas</h2>
 	    
@@ -162,7 +165,7 @@
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
-                <a href="${pageContext.request.contextPath}/ServletMovimientos">Ir a movimientos</a>
+                <a href="${pageContext.request.contextPath}/ServletMovimientos?cbuSeleccionado=<%= cbuSeleccionado%>">Ir a movimientos</a>
             </div>
             <%
 				String saldoCuentaSeleccionada =  String.valueOf(request.getAttribute("saldoCuentaSeleccionada")) ;
@@ -177,9 +180,6 @@
         <div class="btnsAcciones">
             <div class="btnsAccionesImgs">
             	<%
-            		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
-            		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
-            		
             		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
             		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
             	%>

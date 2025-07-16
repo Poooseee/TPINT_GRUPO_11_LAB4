@@ -4,10 +4,9 @@
 <%@ page import="entidades.Movimiento" %>
 <%@ page import="entidades.Cuenta" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 
-<% //Obtener lista de movimientos desde el Servlet
-    List<Object[]> movimientosConCuentas = (List<Object[]>) request.getAttribute("movimientosConCuentas");
-%>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,6 +32,10 @@
         min-height: 100dvh;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
+    main{
+    width:90%;
+    margin:0 auto;
+    }
     a{
         text-decoration: none;
     }
@@ -43,12 +46,7 @@
         all: unset;
         cursor: pointer;
     }
-    header{
-        display: flex;
-        justify-content: space-between;
-        width: 80%;
-        margin: 1% auto;
-    }
+
         
         #informacion {
             display: flex;
@@ -99,7 +97,7 @@
         }
         
         .contenedor-tabla {
-            width: 90%;
+            width: 100%;
             margin: 2em auto;
             overflow-x: auto;
             padding: 1em;
@@ -148,14 +146,36 @@
         .filtrado {
             display: flex;
             margin: 1em auto;
-            width: 90%;
+            width: 100%;
             justify-content: space-around;
             background: white;
             padding: 1em;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
+        .filtradoCuenta{
+        	width:100%;
+        	margin:0 auto;
+        	display:flex;
+        	justify-content: flex-start;
+        }
+        .cuentafiltrado{
+            width: min-content;
+			padding:1em;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .cuentafiltrado form{
+            display:flex;
+            flex-direction:row;
+            gap:1em;
+        }
+        .cuentafiltrado select {
+       		 padding: 0.5em;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
         .filtrado form {
             display: flex;
             justify-content: space-around;
@@ -229,19 +249,57 @@
 <body>
 
     <%@ include file="./HeaderCliente.jsp" %>
-    
-    <a href="${pageContext.request.contextPath}/ServletClientes" id="volver">🡠 Volver</a>
+    <%
+		ArrayList <Cuenta> cuentas = new ArrayList<>(); 
+		if(request.getAttribute("cuentasCliente") != null)
+			 cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
+		
+		String cbuSeleccionado = (String) request.getAttribute("cbuSeleccionado");
+
+	    List<Object[]> movimientosConCuentas = (List<Object[]>) request.getAttribute("movimientosConCuentas");
+		
+	   	
+	%>
+    <a href="ServletClientes?cbuSeleccionado=<%= cbuSeleccionado %>" id="volver">🡠 Volver</a>
     
     <main>
         <h1>Movimientos</h1>
-        
+        	
+        	<div class="filtradoCuenta">
+        		<div class="cuentafiltrado">
+	        	<form action="ServletMovimientos" method="post">
+	        			<p>Cuenta</p>
+	        		    <select id="selectCuentas" name="cbuSeleccionado" onchange="this.form.submit()">
+					        <%
+					           
+					            if(cuentas != null && !cuentas.isEmpty()){
+					                for(Cuenta cuenta : cuentas){
+					                    String cbu = cuenta.getCbu();
+					                    int numeroCuenta = cuenta.getNumero();
+					                    boolean seleccionado = cbuSeleccionado != null && cbuSeleccionado.equals(cbu);
+					        %>	
+					        			
+					                    <option value="<%=cbu%>" <%=seleccionado ? "selected" : "" %>>
+					                        <%= numeroCuenta + " - " + cbu %>
+					                    </option>
+					        <%
+					                }
+					            } else {
+					        %>
+					                <option value="-">Aún tiene cuentas</option>
+					        <%
+					            }
+					        %>
+					    </select>
+			     
+	        	</form>
+        		</div>
+        	</div>
         <div class="filtrado">
-            <form action="ServletMovimientos" method="get">
+            <form action="ServletMovimientos?cbuSeleccionado=<%=cbuSeleccionado %>" method="post">
+
                 <label for="fecha">Fecha:</label>
                 <input type="date" id="fecha" name="fecha">
-                
-                <label for="nCta">Número de cuenta:</label>
-                <input type="text" id="nCta" name="nCta">
                 
                 <label for="importe">Importe:</label>
                 <select id="importe" name="importe">
