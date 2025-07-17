@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
         <%@ page import="java.util.List" %>
     <%@ page import="entidades.Prestamo" %>
+     <%@ page import="entidades.Cuota" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,7 @@
     text-align:center;
     }
      /* TABLA DE PRESTAMOS*/
-    #tabla{
+    #tabla, #tabla-cuotas{
         background-color: white;
         width: 90%;
         margin: 0 auto;
@@ -30,14 +31,16 @@
         box-shadow: 15px 20px 10px rgba(2, 2, 2, 0.103);
         overflow-x:scroll;
         margin-bottom: 3em;
+        text-align:center;
       }
-      #tabla table {
+
+      #tabla table, #tabla-cuotas table {
           border-collapse: collapse;
           text-align: center;
           width:100%;
         }
 
-    #tabla thead {
+    #tabla thead, #tabla-cuotas thead {
       background-color: #343a40;
       color: white;
       position: sticky;
@@ -46,7 +49,9 @@
     }
 
     #tabla th,
-    #tabla td {
+    #tabla td,
+    #tabla-cuotas th,
+    #tabla-cuotas td {
       border: 1px solid #ddd;
       padding: 8px;
       min-width: 120px;
@@ -61,7 +66,8 @@
       border-radius: 4px;
     }
 
-    #tabla input[type="submit"] {
+    #tabla input[type="submit"],
+    #tabla-cuotas input[type="submit"]{
       padding: 6px 10px;
       border: none;
       border-radius: .5em;
@@ -94,7 +100,7 @@
 	 <a href="ServletClientes?cbuSeleccionado=<%= cbuSeleccionado %>" id="volver">🡠 Volver</a>
 	 <h1>Tus préstamos</h1>
 	 
-	             <div id="tabla">
+	           <div id="tabla">
                 <table id="tabla-prestamos">
                     <thead>
                         <tr>
@@ -139,6 +145,7 @@
                             <td>
                             	<form action="PagoPrestamoServlet?cbuSeleccionado=<%= cbuSeleccionado %>" method="post">
                             		<input type="hidden" name="idPrestamo"  value=<%= prestamo.getIdPrestamo()%>>
+                            		<input type="hidden" name="valorCuota"  value=<%= prestamo.getMontoPorMes() %>>
                             		<input type="submit" name="btnDetalle" value="Ver detalle">
                             	</form>
                             </td>
@@ -157,6 +164,70 @@
                     </tbody>
                 </table>
             </div>
+            <div id="tabla-cuotas">
+            	<%
+            		String error = (String) request.getAttribute("saldoInsuficiente");
+            		if(error!=null){
+            			%>
+            				<p><%=error %></p>
+            			<%
+            		}
+            	%>
+                <table id="table-cuotas">
+                	<thead>
+                		<tr>
+                			<th>Número de cuota</th>
+                			<th>Importe</th>
+                			<th>Estado</th>
+                		</tr>
+                	</thead>
+                	
+                	<tbody>
+                		<%
+                			List<Cuota> listadoCuota = (List<Cuota>) request.getAttribute("listadoCuotas");
+                			
+                			if(listadoCuota != null){
+                				String valorCuota = (String) request.getAttribute("valorCuota");
+                				for(Cuota cuota : listadoCuota){
+                					%>
+                						<tr>
+                							<td><%= cuota.getNumeroCuota() %></td>
+
+                							<td><%= valorCuota %></td>
+
+                							<td>
+                								<%
+                									String backgroundcolor = cuota.isAbonada()?"Gray":"Green";
+                									String texto = cuota.isAbonada()?"Pagada":"Pagar";
+                									Boolean disabled = cuota.isAbonada();
+                									
+                								%>
+                								<form method="post" action="PagoPrestamoServlet">
+                									<input type="hidden" name="cbuSeleccionado" value="<%= cbuSeleccionado %>">
+                									<input type="hidden" name="prestamoCuota" value="<%=cuota.getIdPrestamo() %>">
+                									<input type="hidden" name="valorCuota" value="<%=valorCuota %>">
+                									<input type="hidden" name="numeroCuota" value="<%=cuota.getNumeroCuota() %>">
+                									
+                									<input type="submit" name="btnPagarCuota" style="color:white; background-color:<%=backgroundcolor%>" value="<%=texto%>" <%=disabled?"disabled":"" %> >
+                								</form>
+                							</td>
+                						</tr>
+                					<%
+                				}
+                			}else{
+                				%>
+                				<tr>
+  									<td>No hay prestamos para mostrar.</td>
+		  								<% for (int i = 1; i < 3; i++) { %>
+		   										 <td></td>
+		 								 <% } %>
+						 			</tr>
+                				<%
+                			}
+                		%>
+                	</tbody>
+                </table>
+            </div>
 	 </main>
 	 
 <script src="./ConfirmacionForm.js"></script>
@@ -164,6 +235,18 @@
   $(document).ready(function() {
     $('#tabla-prestamos').DataTable({
       "pageLength": 4,
+      "lengthChange": false,
+      "searching": false,
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    $('#table-cuotas').DataTable({
+      "pageLength": 8,
       "lengthChange": false,
       "searching": false,
       "language": {

@@ -1,4 +1,4 @@
-package datos;
+package entidades;
 
 public class Cuota {
 	private int idPrestamo;

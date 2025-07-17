@@ -128,51 +128,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 			//EN TEORIA SON 3 INSERT Y 2 MODIFICACIONES, FILAS DEBERIA VALER 5
 			return filas;
 	  }
-	@Override
-	public int insertarPrestamo(Prestamo prestamo) {
-		int filas = 0;
-		
-		try {
-			
-			cn=new Conexion();
-			cn.Open();
-			
-			//1. INSERTAR EN TABLA PRESTAMOS
-			String prestamoQuery = "INSERT INTO `db_tp`.`prestamos`\r\n"
-					+ "(`DNI_Prest`,\r\n"
-					+ "`cuenta_Prest`,\r\n"
-					+ "`fechaPrestamo_Prest`,\r\n"
-					+ "`importeAPagar_Prest`,\r\n"
-					+ "`importePedido_Prest`,\r\n"
-					+ "`plazoPagos_Prest`,\r\n"
-					+ "`montoPorMes_Prest`,\r\n"
-					+ "`estado_Prest`)\r\n"
-					+ "VALUES (?,?,?,?,?,?,?,?)";
-			
-			PreparedStatement psPr = cn.prepare(prestamoQuery);
-			psPr.setString(1, prestamo.getDni());
-			psPr.setInt(2, prestamo.getCuenta());
-			psPr.setDate(3, prestamo.getFecha());
-			psPr.setFloat(4, prestamo.getImportePagar());
-			psPr.setFloat(5, prestamo.getImportePedido());
-			psPr.setInt(6, prestamo.getPlazoPagos());
-			psPr.setFloat(7, prestamo.getMontoPorMes());
-			psPr.setString(8, prestamo.getEstado());
-			
-			filas+= psPr.executeUpdate();
 
-		}catch(Exception e) {
-			
-		}finally {
-			try {
-		        if (cn != null)
-		            cn.close();
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		}
-		return filas;
-	}
 	@Override
 	public List<Object[]> obtenerMovimientosConCuenta(String dniCliente) {
 		//lista de objetos
@@ -331,5 +287,67 @@ public class MovimientoDaoImpl implements MovimientoDao{
 	    }
 	    return resultados;
 	}
+	@Override
+	public int pagarCuota(Movimiento movimiento, int numeroCuenta, float importe, int idPrestamo, int numeroCuota) {
+		int filas = 0;
+		
+		try {
+		
+			cn = new Conexion();
+			cn.Open();
+			
+			//CAMBIAR EL ESTADO EN LA TABLA CUOTAS
+			
+			String query = "UPDATE CUOTAS SET abonada_Cuo = TRUE WHERE numeroCuota_Cuo = ? and idPrestamo_Cuo = ?";
+			
+			PreparedStatement ps= cn.prepare(query);
+			ps.setInt(1, numeroCuota);
+			ps.setInt(2, idPrestamo);
+			
+			filas += ps.executeUpdate();
+			
+			//INSERTAR EL MOVIMIENTO
+			String queryMov = " INSERT INTO `db_tp`.`movimientos`\r\n"
+					+ " (`DNI_Movs`,\r\n"
+					+ "`numeroCuenta_Movs`,\r\n"
+					+ "`fecha_Movs`,\r\n"
+					+ "`detalle_Movs`,\r\n"
+					+ "`importe_Movs`,\r\n"
+					+ "`tipoMovimiento_Movs`) "
+					+ " VALUES(?,?,?,?,?,?)";
+			PreparedStatement psMov = cn.prepare(queryMov);
+			psMov.setInt(1, movimiento.getDniMovimiento());
+			psMov.setInt(2, movimiento.getNumeroCuenta());
+			psMov.setDate(3, movimiento.getFecha());
+			psMov.setString(4, movimiento.getDetalle());
+			psMov.setFloat(5, movimiento.getImporte());
+			psMov.setInt(6, movimiento.getTipo().getIdTipoMovimiento());
+			
+			filas+=psMov.executeUpdate();
+			
+			//DESCONTAR LA PLATA AL CLIENTE
+			String queryCliente = "UPDATE CUENTAS SET saldo_Ctas = (saldo_Ctas - ?) WHERE numeroCuenta_Ctas = ?";
+			PreparedStatement psCliente = cn.prepare(queryCliente);
+			psCliente.setFloat(1, importe);
+			psCliente.setInt(2, numeroCuenta);
+			
+			filas+=psCliente.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+		        if (cn != null)
+		            cn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		//si son 3 esta todo OK
+		return filas;
+	}
+
+
 
 }

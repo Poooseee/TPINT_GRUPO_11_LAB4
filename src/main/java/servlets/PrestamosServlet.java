@@ -47,7 +47,7 @@ public class PrestamosServlet extends HttpServlet {
 	}
 private List<Prestamo> obtenerListaPrestamos(String estado , String dni){
     PrestamoNegocio neg = new PrestamoNegocioImpl();
-    return neg.get(estado,dni);
+    return neg.get(estado,dni,"");
 }
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

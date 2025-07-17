@@ -18,6 +18,7 @@ import entidades.Prestamo;
 import entidades.TipoMovimiento;
 import negocioImpl.CuentaNegocioImpl;
 import negocioImpl.MovimientoNegocioImpl;
+import negocioImpl.PrestamoNegocioImpl;
 
 /**
  * Servlet implementation class ServletPrestamos
@@ -27,6 +28,7 @@ public class ServletPrestamos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CuentaNegocioImpl cuentaNegocio = new CuentaNegocioImpl();
     private MovimientoNegocioImpl movimientoNegocio = new MovimientoNegocioImpl();
+    private PrestamoNegocioImpl prestamoNegocio = new PrestamoNegocioImpl();
 	
     public ServletPrestamos() {
         super();
@@ -105,11 +107,11 @@ public class ServletPrestamos extends HttpServlet {
 			
 			//Insertar el prestamos en las tablas
 			try {
-				boolean prestamoInsertado = movimientoNegocio.insertarPrestamo(prestamo);
+				boolean prestamoInsertado = prestamoNegocio.insertarPrestamo(prestamo);
 				
 				
 				if(!prestamoInsertado) throw new ErrorPrestamoException();
-				request.setAttribute("PrestamoRealizado", "Préstamo Realizado de Forma Correcta");
+				request.setAttribute("PrestamoRealizado", "Préstamo Solicitado de Forma Correcta");
 					
 			}catch(ErrorPrestamoException e) {
 				devolverYDespacharConError(e.getMessage(),response,request,cuenta);

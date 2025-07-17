@@ -3,18 +3,18 @@ package datosImpl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import datos.Cuota;
+import com.mysql.jdbc.Statement;
+
 import datos.PrestamoDao;
-import entidades.Movimiento;
+import entidades.Cuota;
 import entidades.Prestamo;
 
 public class PrestamoDaoImpl implements PrestamoDao {
 	private Conexion cn;
 	@Override
-	public List<Prestamo> get(String estado,String dni) {
+	public List<Prestamo> get(String estado,String dni,String numeroCuenta) {
 		
 		List<Prestamo> listaPrestamos = new ArrayList<>();
 		String query ="SELECT idPrestamo_Prest AS id, DNI_Prest AS dni, importeAPagar_Prest AS importePagar,"
@@ -32,6 +32,12 @@ public class PrestamoDaoImpl implements PrestamoDao {
 				query+= primero ? "WHERE DNI_Prest LIKE '%"+dni+"%' " : " AND DNI_Prest LIKE '%"+dni+"%'";
 				primero = false;
 			}
+			if(!numeroCuenta.isBlank()) {
+				query+= primero ? "WHERE cuenta_Prest LIKE '%"+numeroCuenta+"%' " : " AND cuenta_Prest LIKE '%"+numeroCuenta+"%'";
+				primero = false;
+				
+			}
+			
 			
 		
 		cn = new Conexion();
@@ -168,6 +174,68 @@ public class PrestamoDaoImpl implements PrestamoDao {
 		}
 		
 		return listado;
+	}
+	public int insertarPrestamo(Prestamo prestamo) {
+		int filas = 0;
+		
+		try {
+			
+			cn=new Conexion();
+			cn.Open();
+			
+			//1. INSERTAR EN TABLA PRESTAMOS
+			String prestamoQuery = "INSERT INTO `db_tp`.`prestamos`\r\n"
+					+ "(`DNI_Prest`,\r\n"
+					+ "`cuenta_Prest`,\r\n"
+					+ "`fechaPrestamo_Prest`,\r\n"
+					+ "`importeAPagar_Prest`,\r\n"
+					+ "`importePedido_Prest`,\r\n"
+					+ "`plazoPagos_Prest`,\r\n"
+					+ "`montoPorMes_Prest`,\r\n"
+					+ "`estado_Prest`)\r\n"
+					+ "VALUES (?,?,?,?,?,?,?,?)";
+			
+			PreparedStatement psPr = cn.prepare(prestamoQuery,Statement.RETURN_GENERATED_KEYS);
+			psPr.setString(1, prestamo.getDni());
+			psPr.setInt(2, prestamo.getCuenta());
+			psPr.setDate(3, prestamo.getFecha());
+			psPr.setFloat(4, prestamo.getImportePagar());
+			psPr.setFloat(5, prestamo.getImportePedido());
+			psPr.setInt(6, prestamo.getPlazoPagos());
+			psPr.setFloat(7, prestamo.getMontoPorMes());
+			psPr.setString(8, prestamo.getEstado());
+			
+			filas+= psPr.executeUpdate();
+
+			//INSERTAR LAS CUOTAS
+			int idPrestamo = 0;
+			ResultSet rs = psPr.getGeneratedKeys();
+			
+			if(rs.next()) {
+				idPrestamo = rs.getInt(1);
+			}
+			
+			for(int i = 1; i <= prestamo.getPlazoPagos();i++) {
+				String cuotasQuery = "INSERT INTO cuotas (idPrestamo_Cuo, numeroCuota_Cuo, abonada_Cuo) VALUES (?, ?, ?)";
+				PreparedStatement psCuo = cn.prepare(cuotasQuery);
+				psCuo.setInt(1, idPrestamo);
+				psCuo.setInt(2, i);
+				psCuo.setBoolean(3, false);
+				psCuo.executeUpdate();
+			}
+			
+			
+		}catch(Exception e) {
+			
+		}finally {
+			try {
+		        if (cn != null)
+		            cn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		return filas;
 	}
 	
 	
