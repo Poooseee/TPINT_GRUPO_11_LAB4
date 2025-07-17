@@ -104,7 +104,7 @@ public class PagoPrestamoServlet extends HttpServlet {
 			movimiento.setFecha(Date.valueOf(LocalDate.now()));
 			movimiento.setDetalle("Pago de Cuota de Préstamo");
 			movimiento.setImporte(valorCuota);
-			movimiento.setTipo(new TipoMovimiento(2,"Alta de un préstamo"));
+			movimiento.setTipo(new TipoMovimiento(3,"Pago de un prestamo"));
 			
 			Boolean pagada = movimientoNeg.pagarCuota(movimiento, numeroCuenta, valorCuota, idPrestamo, numeroCuota);
 			
