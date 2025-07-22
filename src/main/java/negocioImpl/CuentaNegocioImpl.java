@@ -1,24 +1,24 @@
 package negocioImpl;
 
 import entidades.Cuenta;
+import entidades.Movimiento;
 import negocio.CuentaNegocio;
 import java.util.ArrayList;
 
-import datos.CuentaDao;
 import datosImpl.CuentaDaoImpl;
-import negocio.ClienteNegocio;
+
 
 public class CuentaNegocioImpl implements CuentaNegocio {
 CuentaDaoImpl dao = new CuentaDaoImpl();
 
 
 	@Override
-	public int insert(Cuenta cuenta) {
+	public int insert(Cuenta cuenta,Movimiento movimiento) {
 		ClienteNegocioImpl negCli = new ClienteNegocioImpl();
 		
 		if(!negCli.existe(cuenta.getDni())) return -1;
 		if(!tieneMenosDe3Cuentas(cuenta.getDni())) return -2;
-		if(! dao.insert(cuenta)) return -3;
+		if(dao.insert(cuenta,movimiento)!=2) return -3;
 		
 		//pasó todas las validaciones
 		return 1;

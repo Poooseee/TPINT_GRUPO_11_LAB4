@@ -6,38 +6,65 @@ import java.util.ArrayList;
 
 import datos.CuentaDao;
 import entidades.Cuenta;
+import entidades.Movimiento;
 import entidades.TipoCuenta;
 
 public class CuentaDaoImpl implements CuentaDao {
 	private Conexion cn;
 	@Override
-	public boolean insert(Cuenta cuenta) {
-	    boolean insert = false;
-
-	    String query="INSERT INTO CUENTAS(numeroCuenta_Ctas,DNI_Ctas,fechaCreacion_Ctas,tipoCta_Ctas,"
-	    		+ "CBU_Ctas,saldo_Ctas) VALUES(?,?,?,?,?,?)";
-		cn = new Conexion();
-		cn.Open();
-		 PreparedStatement ps;
+	public int insert(Cuenta cuenta, Movimiento movimiento) {
+	    int filas = 0;
 		try {
-			 ps = cn.prepare(query);
+			cn=new Conexion();
+			cn.Open();
+			
+			//1. INSERTAR EN LA TABLA DE CUENTAS
+			String query="INSERT INTO CUENTAS(numeroCuenta_Ctas,DNI_Ctas,fechaCreacion_Ctas,tipoCta_Ctas,"
+		    		+ "CBU_Ctas,saldo_Ctas) VALUES(?,?,?,?,?,?)";
+			PreparedStatement ps;
+			ps = cn.prepare(query);
 			ps.setInt(1, cuenta.getNumero());
 			ps.setString(2, cuenta.getDni());
 			ps.setString(3, cuenta.getFechaCreacion());
-			System.out.println("idTipo en insert dao "+cuenta.getTipo().getIdTipo());
 			ps.setInt(4,cuenta.getTipo().getIdTipo());
 			ps.setString(5, cuenta.getCbu());
 			ps.setFloat(6, cuenta.getSaldo());
-			insert = ps.executeUpdate() > 0;
 			
-			ps.close();
+			filas+= ps.executeUpdate();
+			
+			//2. INSERTAR EN LA TABLA MOVIMIENTOS
+			
+			String queryM = "INSERT INTO MOVIMIENTOS \r\n"
+					+ "(`DNI_Movs`,\r\n"
+					+ "`numeroCuenta_Movs`,\r\n"
+					+ "`fecha_Movs`,\r\n"
+					+ "`detalle_Movs`,\r\n"
+					+ "`importe_Movs`,\r\n"
+					+ "`tipoMovimiento_Movs`)"
+					+ " VALUES(?,?,?,?,?,?)";
+			
+			PreparedStatement psM;
+			psM = cn.prepare(queryM);
+			psM.setInt(1, movimiento.getDniMovimiento());
+			psM.setInt(2, movimiento.getNumeroCuenta());
+			psM.setDate(3, movimiento.getFecha());
+			psM.setString(4, movimiento.getDetalle());
+			psM.setFloat(5, movimiento.getImporte());
+			psM.setInt(6, movimiento.getTipo().getIdTipoMovimiento());
+			
+			filas+= psM.executeUpdate();
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
-			cn.close();
+			try {
+		        if (cn != null)
+		            cn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
 		}
-		return insert;
+		return filas; 
 	}
 	@Override
 	public int obtenerUltimoNumCuenta() {

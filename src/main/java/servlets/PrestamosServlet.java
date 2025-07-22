@@ -29,6 +29,16 @@ public class PrestamosServlet extends HttpServlet {
 		
 		String estado="",dni ="";
 		request.setAttribute("listaPrestamos", obtenerListaPrestamos(estado,dni));
+		
+		List<Prestamo> listado=obtenerListaPrestamos(estado,dni);
+		
+		for(Prestamo prestamo : listado) {
+			
+			String prestamosS = prestamo.toString();
+			
+			System.out.println(prestamosS);
+		}
+
 		request.setAttribute("filtroEstado", estado);
 		request.setAttribute("filtroDni", dni);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/autorizacionPrest.jsp");
@@ -37,7 +47,7 @@ public class PrestamosServlet extends HttpServlet {
 	}
 private List<Prestamo> obtenerListaPrestamos(String estado , String dni){
     PrestamoNegocio neg = new PrestamoNegocioImpl();
-    return neg.get(estado,dni);
+    return neg.get(estado,dni,"");
 }
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

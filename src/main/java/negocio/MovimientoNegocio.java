@@ -8,8 +8,9 @@ import entidades.Transferencia;
 
 public interface MovimientoNegocio {
 	public int realizarTransferencia(Movimiento movimientoEntrada, Movimiento movimientoSalida , Transferencia transferencia);
-	public boolean insertarPrestamo(Prestamo prestamo,Movimiento movimiento);
 	List<Object[]> obtenerMovimientosConCuenta(String dni);	
 	List<Object[]> filtrarMovimientosConCuenta(String dniCliente, String fecha, 
 	        String nroCuenta, String importe, String tipo);
+	public Boolean pagarCuota(Movimiento movimiento, int numeroCuenta, float importe, int idPrestamo, int numeroCuota);
+
 }

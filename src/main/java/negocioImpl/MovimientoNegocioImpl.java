@@ -29,10 +29,13 @@ public class MovimientoNegocioImpl implements MovimientoNegocio {
     }
 
 	@Override
-	public boolean insertarPrestamo(Prestamo prestamo, Movimiento movimiento) {
-
-		int filas = dao.insertarPrestamo(prestamo, movimiento);
-		return filas == 2;
+	public Boolean pagarCuota(Movimiento movimiento, int numeroCuenta, float importe, int idPrestamo, int numeroCuota) {
+		
+		int filas = dao.pagarCuota(movimiento, numeroCuenta, importe, idPrestamo, numeroCuota);
+		
+		return filas == 3;
 	}
+
+
 
 }

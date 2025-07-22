@@ -130,7 +130,10 @@
 		ArrayList <Cuenta> cuentas = new ArrayList<>(); 
 		if(request.getAttribute("cuentasCliente") != null)
 			 cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
-			
+		
+		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
+		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
+		
 		%>
 	     <h2 style=margin-left:15px>Cuentas</h2>
 	    
@@ -162,7 +165,7 @@
         <div class="saldo">
             <div class="saldoSuperior">
                 <h2>Saldo disponible:</h2>
-                <a href="${pageContext.request.contextPath}/ServletMovimientos">Ir a movimientos</a>
+                <a href="${pageContext.request.contextPath}/ServletMovimientos?cbuSeleccionado=<%= cbuSeleccionado%>">Ir a movimientos</a>
             </div>
             <%
 				String saldoCuentaSeleccionada =  String.valueOf(request.getAttribute("saldoCuentaSeleccionada")) ;
@@ -177,22 +180,22 @@
         <div class="btnsAcciones">
             <div class="btnsAccionesImgs">
             	<%
-            		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
-            		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
-            		
             		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
             		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
             	%>
                 <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
                 	<img src="imgs/logoTransferencia.png" alt="logoTransferencia">
                 </a>
-                
+                <a href="PagoPrestamoServlet?cbuSeleccionado=<%= cbuSeleccionado %>">
+                	<p>Insertar imagen POSE</p>
+                </a>
                 <a href="ServletPrestamos?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
                 	<img src="imgs/logoPrestamo.png" alt="logoPrestamo">
                 </a>
             </div>
             <div class="btnsAccionesTxt">
                 <h3>Transferencia</h3>
+                <h3>Pagá tus préstamos</h3>
                 <h3>Préstamo</h3>
             </div>
         </div>
