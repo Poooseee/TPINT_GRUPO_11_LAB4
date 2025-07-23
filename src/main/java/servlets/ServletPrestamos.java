@@ -60,7 +60,7 @@ public class ServletPrestamos extends HttpServlet {
 		
 		//1. SE DISPARA TERMINAS DE ESCRIBIR EL MONTO O CUANDO SELECCIONA LAS CUOTAS
 		
-		//Obtener el monto a pedir
+		//Obtener el monto a pedir - tira error si no hay nada ingresado
 		float montoAPedir = Float.parseFloat(request.getParameter("montoPedido"));
 			
 		//Obtener la cantidad de cuotas

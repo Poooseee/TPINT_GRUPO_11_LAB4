@@ -68,7 +68,7 @@ public class ServletMovimientos extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-    	//SE DISPARA CUANDO CAMBIAS LA CUENTA DEL DDL
+    	//SE DISPARA CUANDO CAMBIAS LA CUENTA DEL DDL Y AL FILTRAR
     	
     	//1. Obtener y mandar las cuentas del cliente
     	HttpSession session = request.getSession(false);

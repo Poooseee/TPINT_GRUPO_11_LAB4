@@ -90,7 +90,7 @@ public class PagoPrestamoServlet extends HttpServlet {
 				List<Cuota> listadoCuotas = PrestamoNeg.obtenerCuotasPorPrestamo(idPrestamo);
 				request.setAttribute("listadoCuotas", listadoCuotas);
 				request.setAttribute("valorCuota", String.valueOf(valorCuota));
-				request.setAttribute("prestamoSeleccionado", idPrestamo);
+				/*request.setAttribute("prestamoSeleccionado", idPrestamo);*/
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/PagoPrestamos.jsp");
 				dispatcher.forward(request, response);
 			
@@ -119,7 +119,7 @@ public class PagoPrestamoServlet extends HttpServlet {
 			request.setAttribute("listadoCuotas", listadoCuotas);
 			request.setAttribute("valorCuota", String.valueOf(valorCuota));
 			
-			request.setAttribute("prestamoSeleccionado", idPrestamo);
+			/*request.setAttribute("prestamoSeleccionado", idPrestamo);*/
 		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/PagoPrestamos.jsp");

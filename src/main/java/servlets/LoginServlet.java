@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
     			HttpSession session = request.getSession();
     			session.setAttribute("usuarioLogueado", usuario);
     			
-    			System.out.println(usuario.toString());
+    			
     			String tipo = usuario.getTipoUsuario();
     			if(tipo != null && !tipo.trim().isEmpty()) {
     				
@@ -44,26 +44,12 @@ public class LoginServlet extends HttpServlet {
     				}
     				else if(tipo.equals("CLIENTE")){
     					rutaVistaDestino = "/ServletClientes";
-    					/*
-    					ClienteNegocioImpl clienteNeg = new ClienteNegocioImpl();
-    					Cliente cliente = clienteNeg.obtenerPorUsuarioNick(nick); // Usamos el nick directamente
-                    
-	                    if (cliente != null) {
-	                        session.setAttribute("clienteLogueado", cliente);
-	                        // Redirección absoluta para evitar problemas
-	                        response.sendRedirect(request.getContextPath() + "/ServletClientes");
-	                        return;
-	                    } 
-	                    else {
-	                       mensajeError =  "No se encontraron datos del cliente";
-	                    }
-	                    */
     				}
             }
             
-            request.setAttribute("errorLogin", mensajeError);
-            response.sendRedirect(request.getContextPath() + rutaVistaDestino);
         }
+    		request.setAttribute("errorLogin", mensajeError);
+    		response.sendRedirect(request.getContextPath() + rutaVistaDestino);
     	}
 
     }

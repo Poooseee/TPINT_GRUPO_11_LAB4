@@ -62,7 +62,7 @@ public class ServletTransferencias extends HttpServlet {
 			
 			//Obtenemos las cuentas
 			String numeroCuentaOrigen = request.getParameter("numeroCuenta").trim();
-			String numeroCuentaDestino = request.getParameter("nCta").trim();
+			String numeroCuentaDestino = request.getParameter("cuentaDestino").trim();
 			Cuenta cuentaOrigen = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaOrigen));
 			Cuenta cuentaDestino = cuentaNegocio.obtenerCuentaPorNumero(Integer.parseInt(numeroCuentaDestino));
 			
