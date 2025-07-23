@@ -19,49 +19,40 @@ public class ClienteDaoImpl implements ClienteDao {
         ProvinciaNegocioImpl provNeg = new ProvinciaNegocioImpl();
         LocalidadNegocioImpl locNeg = new LocalidadNegocioImpl();
         
-        
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "SELECT C.*, TxC.telefono_TxC, U.nick_usr, U.tipo_Usr, U.contraseña_Usr FROM CLIENTES C "
-            		+ "LEFT JOIN TELEFONOSXCLIENTES TxC ON C.DNI_Cl = TxC.DNI_TxC "
-            		+ "LEFT JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
-            		+ "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
-            		+ "WHERE U.tipo_Usr = 'CLIENTE' ";
-           
+            String query = "SELECT C.*, T.telefono_Tel, U.nick_usr, U.tipo_Usr, U.contraseña_Usr FROM CLIENTES C "
+            	    + "LEFT JOIN TELEFONOSXCLIENTES TxC ON C.DNI_Cl = TxC.DNI_TxC "
+            	    + "LEFT JOIN TELEFONOS T ON TxC.idTelefono_TxC = T.idTelefono_Tel "
+            	    + "LEFT JOIN USUARIOSXCLIENTES UxC ON C.DNI_Cl = UxC.DNI_UxC "
+            	    + "INNER JOIN USUARIOS U ON UxC.idUsuario_UxC = U.idUsuario_Usr "
+            	    + "WHERE U.tipo_Usr = 'CLIENTE'";
+            
             if(datosFiltracion.getDNI() != null && !datosFiltracion.getDNI().isBlank()) {
-            	query+= " AND dni_cl like '%"+datosFiltracion.getDNI()+"%' ";;
+            	query+= " AND DNI_Cl like '%"+datosFiltracion.getDNI()+"%' ";;
             }
             if(datosFiltracion.getCUIL()!=null && !datosFiltracion.getCUIL().isBlank()) {
             	query+= " AND cuil_cl like '%"+datosFiltracion.getCUIL()+"%' ";
             }
             if(datosFiltracion.getNombre()!=null && !datosFiltracion.getNombre().isBlank()) {
-            	query+= " AND nombre_cl like '"+datosFiltracion.getNombre()+"%' ";
+            	query+= " AND nombre_cl like '%"+datosFiltracion.getNombre()+"%' ";
             }
             if(datosFiltracion.getApellido()!=null && !datosFiltracion.getApellido().isBlank()) {
-            	query+= " AND apellido_cl like '"+datosFiltracion.getApellido()+"%' ";
+            	query+= " AND apellido_cl like '%"+datosFiltracion.getApellido()+"%' ";
             }
             if(datosFiltracion.getSexo()!=null && !datosFiltracion.getSexo().isBlank()) {
             	query+= " AND sexo_cl like '"+datosFiltracion.getSexo()+"%' ";
-            }
-            if(datosFiltracion.getPais()!=null) {
-            	query+= " AND paisOrigen_cl = "+datosFiltracion.getPais().getId();
-            }
-            if(datosFiltracion.getProvincia()!=null) {
-            	query+= " AND provincia_cl = "+datosFiltracion.getProvincia().getId();
-            }
-            if(datosFiltracion.getLocalidad()!=null) {
-            	query+= " AND localidad_cl = "+datosFiltracion.getLocalidad().getId();
             }
             if(datosFiltracion.getFechaNacimiento()!=null) {
             	System.out.println(datosFiltracion.getFechaNacimiento());
             	query+= " AND nacimiento_cl like '"+datosFiltracion.getFechaNacimiento()+"%' ";
             }
-            System.out.println(query);
+      
+            System.out.println("DNI: " + datosFiltracion.getDNI());
+            System.out.println("Nombre: " + datosFiltracion.getNombre());
+            
             ResultSet rs = cn.query(query);
-            if(rs==null) {
-            System.out.println("RESULTSET NULO EN DAO");
-            }
             while (rs.next()) {
                 Cliente c = new Cliente();
                 c.setDNI(rs.getString("DNI_Cl"));
@@ -78,7 +69,7 @@ public class ClienteDaoImpl implements ClienteDao {
                 nacionalidad = paNeg.obtenerPaisxId(idNac);
                 c.setNacionalidad(nacionalidad);
                 
-                int idPa = (rs.getInt("paisOrigen_Cl"));
+                int idPa = (rs.getInt("pais_Cl"));
                 Pais pais = new Pais();
                 pais = paNeg.obtenerPaisxId(idPa);
                 c.setPais(pais);
@@ -96,8 +87,8 @@ public class ClienteDaoImpl implements ClienteDao {
                 c.setDomicilio(rs.getString("domicilio_Cl"));
                 c.setFechaNacimiento(rs.getDate("nacimiento_Cl"));
                 c.setEmail(rs.getString("mail_Cl"));
-                c.setTelefono(rs.getString("telefono_TxC"));
-                c.setNick(rs.getString("nick_Usr"));
+                c.setTelefono(rs.getString("telefono_Tel"));
+                c.setNick(rs.getString("nick_usr"));
                 c.setPassword(rs.getString("contraseña_Usr"));
                 c.setBaja(rs.getInt("baja_Cl"));
 
@@ -106,6 +97,7 @@ public class ClienteDaoImpl implements ClienteDao {
             rs.close();
             cn.close();
         } catch (Exception e) {
+        	System.out.println("Cantidad de clientes obtenidos: " + lista.size());
             e.printStackTrace();
         }
         return lista;
@@ -117,7 +109,7 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String queryCliente = "INSERT INTO CLIENTES (dni_Cl, cuil_Cl, nombre_Cl, apellido_Cl, sexo_Cl, paisOrigen_Cl, nacionalidad_Cl, provincia_Cl, localidad_Cl, nacimiento_Cl, domicilio_Cl, mail_Cl, baja_Cl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String queryCliente = "INSERT INTO CLIENTES (dni_Cl, cuil_Cl, nombre_Cl, apellido_Cl, sexo_Cl, pais_Cl, nacionalidad_Cl, provincia_Cl, localidad_Cl, nacimiento_Cl, domicilio_Cl, mail_Cl, baja_Cl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = cn.prepare(queryCliente);
             ps.setString(1, cliente.getDNI());
             ps.setString(2, cliente.getCUIL());
@@ -135,14 +127,21 @@ public class ClienteDaoImpl implements ClienteDao {
             filas = ps.executeUpdate();
             
             String queryTelefono = "INSERT INTO TELEFONOS (telefono_Tel) VALUES (?)";
-            PreparedStatement psTel = cn.prepare(queryTelefono);
+            PreparedStatement psTel = cn.prepare(queryTelefono, Statement.RETURN_GENERATED_KEYS);
             psTel.setString(1, cliente.getTelefono());
             psTel.executeUpdate();
+            int idTelefono = -1;
+            ResultSet rsTel = psTel.getGeneratedKeys();
+            if(rsTel.next()) {
+            	idTelefono = rsTel.getInt(1);
+            }else {
+            	throw new SQLException("No se generó ID de Télefono");
+            }
             
-            String queryTxC = "INSERT INTO TELEFONOSxCLIENTES (dni_TxC, telefono_TxC) VALUES (?, ?)";
+            String queryTxC = "INSERT INTO TELEFONOSxCLIENTES (dni_TxC, idTelefono_TxC) VALUES (?, ?)";
             PreparedStatement psTxC = cn.prepare(queryTxC);
             psTxC.setString(1, cliente.getDNI());
-            psTxC.setString(2, cliente.getTelefono());
+            psTxC.setInt(2, idTelefono);
             psTxC.executeUpdate();
             
             String queryUser = "INSERT INTO USUARIOS (nick_Usr, contraseña_Usr, tipo_Usr) VALUES (?, ?, ?)";
@@ -184,22 +183,37 @@ public class ClienteDaoImpl implements ClienteDao {
         try {
             cn = new Conexion();
             cn.Open();
-            String query = "UPDATE CLIENTES SET CUIL_Cl=?, nombre_Cl=?, apellido_Cl=?, sexo_Cl=?, pais_Cl=?, nacionalidad_Cl=?, provincia_Cl=?, localidad_Cl=?, nacimiento_Cl=?, domicilio_Cl=?, mail_Cl=? WHERE dni_cl = ?";
+            
+            String query = "UPDATE CLIENTES SET nombre_Cl=?, apellido_Cl=?, sexo_Cl=?, pais_Cl=?, nacionalidad_Cl=?, provincia_Cl=?, localidad_Cl=?, nacimiento_Cl=?, domicilio_Cl=?, mail_Cl=? WHERE dni_cl = ?";
             PreparedStatement ps = cn.prepare(query);
-            ps.setString(1, cliente.getCUIL());
-            ps.setString(2, cliente.getNombre());
-            ps.setString(3, cliente.getApellido());
-            ps.setString(4, cliente.getSexo());
-            ps.setInt(5, cliente.getPais().getId());
-            ps.setInt(6, cliente.getNacionalidad().getId());
-            ps.setInt(7, cliente.getProvincia().getId());
-            ps.setInt(8, cliente.getLocalidad().getId());
-            ps.setDate(9, cliente.getFechaNacimiento());
-            ps.setString(10, cliente.getDomicilio());
-            ps.setString(11, cliente.getEmail());
-            ps.setString(12, cliente.getDNI());
+            ps.setString(1, cliente.getNombre());
+            ps.setString(2, cliente.getApellido());
+            ps.setString(3, cliente.getSexo());
+            ps.setInt(4, cliente.getPais().getId());
+            ps.setInt(5, cliente.getNacionalidad().getId());
+            ps.setInt(6, cliente.getProvincia().getId());
+            ps.setInt(7, cliente.getLocalidad().getId());
+            ps.setDate(8, cliente.getFechaNacimiento());
+            ps.setString(9, cliente.getDomicilio());
+            ps.setString(10, cliente.getEmail());
+            ps.setString(11, cliente.getDNI());
             resultado = ps.executeUpdate() > 0;
+            
+            String queryUsr = "UPDATE USUARIOS SET contraseña_Usr=? WHERE nick_Usr = ?";
+            PreparedStatement psUsr = cn.prepare(queryUsr);
+            psUsr.setString(1, cliente.getPassword());
+            psUsr.setString(2, cliente.getNick());
+            resultado = psUsr.executeUpdate() > 0;
+            
+            String queryTel = "UPDATE TELEFONOS T JOIN TELEFONOSXCLIENTES TxC ON T.idTelefono_Tel = TxC.idTelefono_TxC SET T.telefono_Tel = ? WHERE TxC.DNI_TxC = ?";
+            PreparedStatement psTel = cn.prepare(queryTel);
+            psTel.setString(1, cliente.getTelefono());
+            psTel.setString(2, cliente.getDNI());
+            resultado = psTel.executeUpdate() > 0;
+            
             ps.close();
+            psUsr.close();
+            psTel.close();
             cn.close();
         } catch (Exception e) {
             e.printStackTrace();
