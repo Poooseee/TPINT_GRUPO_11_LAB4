@@ -11,8 +11,8 @@ public class Conexion {
 
 	private String host = "jdbc:mysql://localhost:3306/DB_TP?useUnicode=true&characterEncoding=UTF-8";
 	private String user = "root";
-	//private String pass = "root";
-	private String pass = "13121401";
+	private String pass = "root";
+	//private String pass = "13121401";
 	protected Connection connection;
 	
 	public Connection Open(){
