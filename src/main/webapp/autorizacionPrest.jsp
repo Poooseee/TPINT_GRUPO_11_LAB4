@@ -178,7 +178,7 @@
                     if(listaPrestamos != null){
                     	for(Prestamo prestamo : listaPrestamos){
                     %>
-                    <form method="post" class="form-confirm" action="PrestamosServlet">
+                    
                         <tr>
                             <td>
                                 <input name="txtIdPrestamo" type="hidden" value="<%= prestamo.getIdPrestamo() %>">
@@ -225,14 +225,19 @@
 								pendiente = true;
 							}
 							%>
+							<form method="post" class="form-confirm" action="PrestamosServlet">
+							  <input name="txtIdPrestamo" type="hidden" value="<%= prestamo.getIdPrestamo() %>">
                                <input name="btnAutorizar" type="submit" value="Autorizar" style="<%= pendiente ? "background-color:green" : "background-color: grey; cursor:not-allowed" %>" class="btn" <%= pendiente? "" : "disabled" %>>				
+							</form>
 							</td>  
 							<td>
-							<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="<%= pendiente ? "background-color:red" : "background-color: grey; cursor:not-allowed" %>"  <%= pendiente? "" : "disabled" %>>
-							
+							<form method="post" class="form-confirm" action="PrestamosServlet">
+								<input name="txtIdPrestamo" type="hidden" value="<%= prestamo.getIdPrestamo() %>">
+								<input name="btnRechazar" type="submit" value="Rechazar" class="btn" style="<%= pendiente ? "background-color:red" : "background-color: grey; cursor:not-allowed" %>"  <%= pendiente? "" : "disabled" %>>
+							</form>
 							</td>                          
                         </tr>
-                    </form>
+                    
                        <% } %>
                     <% }else{ %>
                           <tr>

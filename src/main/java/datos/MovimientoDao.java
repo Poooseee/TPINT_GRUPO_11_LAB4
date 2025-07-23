@@ -12,4 +12,5 @@ public interface MovimientoDao {
 	List<Object[]> filtrar(String dniCliente, String fecha, String nroCuenta, String importe, String tipo);
 	List<Object[]> obtenerMovimientosConCuenta(String dniCliente);
 	public int pagarCuota(Movimiento movimiento, int numeroCuenta, float importe, int idPrestamo, int numeroCuota);
+	public int altaPrestamoMovimiento(Movimiento movimiento);
 }

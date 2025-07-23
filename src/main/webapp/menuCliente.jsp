@@ -187,7 +187,7 @@
                 	<img src="imgs/logoTransferencia.png" alt="logoTransferencia">
                 </a>
                 <a href="PagoPrestamoServlet?cbuSeleccionado=<%= cbuSeleccionado %>">
-                	<p>Insertar imagen POSE</p>
+                	<img src="imgs/logoPagaPrestamos.png" alt="logoPagaPrestamos" style="transform: scale(0.8);" >
                 </a>
                 <a href="ServletPrestamos?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
                 	<img src="imgs/logoPrestamo.png" alt="logoPrestamo">

@@ -348,6 +348,50 @@ public class MovimientoDaoImpl implements MovimientoDao{
 		return filas;
 	}
 
+	@Override
+	public int altaPrestamoMovimiento(Movimiento movimiento) {
+		int filas = 0;
+		
+		try {
+		
+			cn = new Conexion();
+			cn.Open();
+			
+			//INSERTAR EL MOVIMIENTO
+			String queryMov = " INSERT INTO `db_tp`.`movimientos`\r\n"
+					+ " (`DNI_Movs`,\r\n"
+					+ "`numeroCuenta_Movs`,\r\n"
+					+ "`fecha_Movs`,\r\n"
+					+ "`detalle_Movs`,\r\n"
+					+ "`importe_Movs`,\r\n"
+					+ "`tipoMovimiento_Movs`) "
+					+ " VALUES(?,?,?,?,?,?)";
+			
+			PreparedStatement psMov = cn.prepare(queryMov);
+			psMov.setInt(1, movimiento.getDniMovimiento());
+			psMov.setInt(2, movimiento.getNumeroCuenta());
+			psMov.setDate(3, movimiento.getFecha());
+			psMov.setString(4, movimiento.getDetalle());
+			psMov.setFloat(5, movimiento.getImporte());
+			psMov.setInt(6, movimiento.getTipo().getIdTipoMovimiento());
+			
+			filas+=psMov.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+		        if (cn != null)
+		            cn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		//deberia valer 1
+		return filas;
+	}
+
 
 
 }

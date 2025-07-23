@@ -3,20 +3,32 @@ package negocioImpl;
 import java.util.List;
 
 import entidades.Cuota;
+import entidades.Movimiento;
 import entidades.Prestamo;
 import negocio.PrestamoNegocio;
 import datos.PrestamoDao;
+import datosImpl.MovimientoDaoImpl;
 import datosImpl.PrestamoDaoImpl;
 
 public class PrestamoNegocioImpl implements PrestamoNegocio {
-PrestamoDao dao = new PrestamoDaoImpl();
+PrestamoDaoImpl dao = new PrestamoDaoImpl();
+MovimientoDaoImpl daoMov = new MovimientoDaoImpl();
 	@Override
 	public List<Prestamo> get(String estado,String dni, String numeroCuenta) {
          return dao.get(estado,dni,numeroCuenta);		
 	}
 	@Override
-	public boolean cambiarEstado(String estado, int id) {
-		return dao.cambiarEstado(estado, id);
+	public boolean cambiarEstado(String estado, int id, Movimiento movimiento,boolean aceptado) {
+		
+		Boolean insertado = true;
+		
+		insertado = dao.cambiarEstado(estado, id);
+		
+		if(aceptado) {
+			insertado = daoMov.altaPrestamoMovimiento(movimiento) == 1;			
+		}
+		
+		return insertado;
 	}
 	@Override
 	public Prestamo obtenerPrestamo(int id) {
