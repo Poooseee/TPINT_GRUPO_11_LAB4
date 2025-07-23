@@ -112,7 +112,11 @@ public class ServletPrestamos extends HttpServlet {
 				
 				if(!prestamoInsertado) throw new ErrorPrestamoException();
 				request.setAttribute("PrestamoRealizado", "Préstamo Solicitado de Forma Correcta");
-					
+			    request.setAttribute("montoPedido", null);
+			    request.setAttribute("cuotas", null);
+			    request.setAttribute("valorCuota", null);
+			    request.setAttribute("montoTotal", null);
+			    
 			}catch(ErrorPrestamoException e) {
 				devolverYDespacharConError(e.getMessage(),response,request,cuenta);
 				return;
