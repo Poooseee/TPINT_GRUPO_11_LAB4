@@ -45,7 +45,7 @@ public class ServletClientes extends HttpServlet {
 	    	
 	    	//4.Validar si ya habia un cbu seleccionado, caso positivo mandar ese
 	    	String cbuPreviamenteSeleccionado = request.getParameter("cbuSeleccionado");
-	    	System.out.println(cbuPreviamenteSeleccionado+ "cbu");
+	    	
 	    	if(cbuPreviamenteSeleccionado !=null) {
 	    		Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbuPreviamenteSeleccionado);
 	        	float saldo = cuenta.getSaldo();

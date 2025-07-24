@@ -33,7 +33,7 @@ public class ServletMovimientos extends HttpServlet {
     	// Verificar si existe sesión y usuario logueado
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("usuarioLogueado") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/menuLogin.jsp");
             return;
         }
         

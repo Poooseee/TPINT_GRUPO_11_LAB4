@@ -60,10 +60,14 @@ public class ServletPrestamos extends HttpServlet {
 		//1. SE DISPARA TERMINAS DE ESCRIBIR EL MONTO O CUANDO SELECCIONA LAS CUOTAS
 		
 		//Obtener el monto a pedir - tira error si no hay nada ingresado
-		float montoAPedir = Float.parseFloat(request.getParameter("montoPedido"));
+		float montoAPedir = 0;
+		if(request.getParameter("montoPedido")!=null) {
+			 montoAPedir = Float.parseFloat(request.getParameter("montoPedido"));			
+		}
 			
 		//Obtener la cantidad de cuotas
-		Integer cantidadCuotas = Integer.parseInt(request.getParameter("cuotas"));	
+		Integer cantidadCuotas = 0;
+			cantidadCuotas = Integer.parseInt(request.getParameter("cuotas"));	
 		
 		// Calcular cuota mensual y monto total
 		float valorCuota = calcularValorCuota(montoAPedir, cantidadCuotas);
@@ -128,9 +132,9 @@ public class ServletPrestamos extends HttpServlet {
 		
 		//Setear los atributos necesarios para la cuenta
 		String cbuSeleccionado = request.getParameter("cbuSeleccionado");
-		System.out.println(cbuSeleccionado);
+		
 		Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbuSeleccionado);
-		System.out.println(cuenta);
+		
 		request.setAttribute("saldoCuentaSeleccionada", cuenta.getSaldo());
 		request.setAttribute("cbuSeleccionado", cuenta.getCbu());
 		request.setAttribute("numeroCuenta", cuenta.getNumero());
