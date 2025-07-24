@@ -38,9 +38,9 @@ public class abmlClientesServlet extends HttpServlet {
         super();
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	request.setCharacterEncoding("UTF-8");
-    	response.setCharacterEncoding("UTF-8");
-    	response.setContentType("text/html; charset=UTF-8");
+    	request.setCharacterEncoding("UTF-8"); // interpretar correctamente parámetros entrantes
+    	response.setCharacterEncoding("UTF-8"); // decirle al navegador que use UTF-8
+    	response.setContentType("text/html; charset=UTF-8"); // codificar correctamente la respuesta
     	
     	// obtiene todos los paises, es igual en todos los casos, y setea el pais seleccionado
     	atributoListaPaises(request);
@@ -72,17 +72,11 @@ public class abmlClientesServlet extends HttpServlet {
     	// obtiene lista de localidades dependiendo del pais y provincia seleccionado en alta
     	atributoListaLocalidadesAlta(request);
     	atributoListaLocalidadesList(request);
-    	
-    	
-    	
+
     	//RECUPERAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
     	Cliente valoresDeLosControles = obtenerValoresIngresadosDelFormAlta(request);
     	//REENVIAR LOS CAMPOS LLENOS CUANDO SE RESETEA LA PAG
     	cargarAtributosParaElFormAlta(request,valoresDeLosControles);
-    	
-    	
-    	
-    	
     	
     	if(request.getParameter("btnAgregarCliente") != null) {
     		
@@ -107,7 +101,6 @@ public class abmlClientesServlet extends HttpServlet {
     		String DNI = request.getParameter("listDNI");
     		int filasE = clienteNeg.eliminar(DNI);
     		request.setAttribute("cantFilasE", filasE);
-    		
     	}
     	
     	
@@ -129,9 +122,6 @@ public class abmlClientesServlet extends HttpServlet {
     }
     
     private void atributoListaPaises(HttpServletRequest request) {
-    	if(request.getParameter("btnAgregarCliente")!=null) {
-    		// 
-    	}
     	
     	 PaisNegocioImpl paisNeg = new PaisNegocioImpl();
     	 List<Pais> listaPaises = paisNeg.obtenerPaises();
@@ -349,7 +339,7 @@ public class abmlClientesServlet extends HttpServlet {
 		return c;
 	}
 	private void cargarAtributosParaElFormAlta(HttpServletRequest request,Cliente c) {
-		  request.setAttribute("dniIngresado", c.getDNI());
+		    request.setAttribute("dniIngresado", c.getDNI());
 		    request.setAttribute("cuilIngresado", c.getCUIL());
 		    request.setAttribute("nombreIngresado", c.getNombre());
 		    request.setAttribute("apellidoIngresado", c.getApellido());

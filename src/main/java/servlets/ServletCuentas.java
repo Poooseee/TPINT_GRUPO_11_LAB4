@@ -46,8 +46,7 @@ public class ServletCuentas extends HttpServlet {
 			request.setAttribute("listaTiposCuentas", ListaTiposCuentas);
 			request.setAttribute("dni", dni);
 			request.setAttribute("cuentasInactivas",false);
-			System.out.println("Tipos de cuenta obtenidos: " + ListaTiposCuentas.size());
-			System.out.println("Cuentas obtenidas: " + listaCuentas.size());
+			
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 			dispatcher.forward(request, response);
@@ -112,7 +111,7 @@ public class ServletCuentas extends HttpServlet {
 			String mensajeUpdate = "no se pudo modificar";
 			
 			int resultado = modificarCuenta(request);
-			
+			 
 			switch(resultado) {
 			case -1:
 			{
@@ -166,8 +165,7 @@ public class ServletCuentas extends HttpServlet {
 		request.setAttribute("cuentasInactivas", cuentasInactivas);
 		request.setAttribute("dni", dni);
 		
-		System.out.println(dni);
-		System.out.println(cuentasInactivas);
+		
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/abmlCuentas.jsp");
 		dispatcher.forward(request, response);

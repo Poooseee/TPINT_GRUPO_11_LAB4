@@ -222,7 +222,7 @@
 							<td>
 							<%
 							boolean pendiente = false;
-							if("Pendiente".equals(prestamo.getEstado() )){
+							if("Pendiente".equals(prestamo.getEstado())){
 								pendiente = true;
 							}
 							%>
