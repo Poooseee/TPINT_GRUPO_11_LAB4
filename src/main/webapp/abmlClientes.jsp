@@ -476,13 +476,6 @@
             <button type="submit" name="btnAgregarCliente">Crear</button>
           </div>
         </form>
-
-		<!-- CONDICIONAL MENSAJE DE ERROR -->
-		<% if (request.getAttribute("mensajeError") != null) { %>
-		    <div id="div-agregar-error">
-		        <%= request.getAttribute("mensajeError") %>
-		   </div>
-		<% } %>
 		<!-- CONDICIONAL INSERTAR EN LA DB -->
 		<%
 		int filas = 0; 

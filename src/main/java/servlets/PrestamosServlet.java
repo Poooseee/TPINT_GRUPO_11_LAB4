@@ -33,15 +33,6 @@ public class PrestamosServlet extends HttpServlet {
 		
 		String estado="",dni ="";
 		request.setAttribute("listaPrestamos", obtenerListaPrestamos(estado,dni));
-		
-		List<Prestamo> listado=obtenerListaPrestamos(estado,dni);
-		
-		for(Prestamo prestamo : listado) {
-			
-			String prestamosS = prestamo.toString();
-			
-			System.out.println(prestamosS);
-		}
 
 		request.setAttribute("filtroEstado", estado);
 		request.setAttribute("filtroDni", dni);
