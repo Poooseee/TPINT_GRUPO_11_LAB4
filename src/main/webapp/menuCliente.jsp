@@ -132,7 +132,9 @@
 			 cuentas = (ArrayList<Cuenta>) request.getAttribute("cuentasCliente");
 		
 		String cbuSeleccionado = (String)request.getAttribute("cbuSeleccionado");
-		if(cbuSeleccionado == null) cbuSeleccionado = cuentas.get(0).getCbu();
+		if (cbuSeleccionado == null && cuentas != null && !cuentas.isEmpty()) {
+		    cbuSeleccionado = cuentas.get(0).getCbu();
+		}
 		
 		%>
 	     <h2 style=margin-left:15px>Cuentas</h2>
@@ -169,7 +171,7 @@
             </div>
             <%
 				String saldoCuentaSeleccionada =  String.valueOf(request.getAttribute("saldoCuentaSeleccionada")) ;
-            	if(saldoCuentaSeleccionada == null) saldoCuentaSeleccionada = "00.0";
+            	if(saldoCuentaSeleccionada == null || "null".equals(saldoCuentaSeleccionada)) saldoCuentaSeleccionada = "00.0";
             %>
 		<div class="saldoInferior">
 		    <p>$<%= saldoCuentaSeleccionada %></p>
@@ -177,13 +179,18 @@
 		
         </div>
         
-        <div class="btnsAcciones">
+        <%
+        if(!cuentas.isEmpty()){
+        	%>
+        	<div class="btnsAcciones">
             <div class="btnsAccionesImgs">
             	<%
-            		String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
-            		if(numeroCuenta == null) numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
+            	String numeroCuenta = String.valueOf(request.getAttribute("numeroCuenta"));
+            	if ((numeroCuenta == null || "null".equals(numeroCuenta)) && cuentas != null && !cuentas.isEmpty()) {
+            	    numeroCuenta = String.valueOf(cuentas.get(0).getNumero());
+            	}
             	%>
-                <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&saldoCuentaSeleccionada=<%=saldoCuentaSeleccionada%>&numeroCuenta=<%=numeroCuenta%>">
+                <a href="ServletTransferencias?cbuSeleccionado=<%= cbuSeleccionado %>&numeroCuenta=<%=numeroCuenta%>">
                 	<img src="imgs/logoTransferencia.png" alt="logoTransferencia">
                 </a>
                 <a href="PagoPrestamoServlet?cbuSeleccionado=<%= cbuSeleccionado %>">
@@ -199,6 +206,10 @@
                 <h3>Préstamo</h3>
             </div>
         </div>
+        	<%
+        }
+        %>
+        
     </main>
     <footer>
         <h1>Banco Honse, siempre con vos.</h1>

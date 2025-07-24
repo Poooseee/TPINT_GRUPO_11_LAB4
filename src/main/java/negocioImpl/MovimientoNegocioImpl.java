@@ -12,9 +12,14 @@ public class MovimientoNegocioImpl implements MovimientoNegocio {
 	MovimientoDaoImpl dao = new MovimientoDaoImpl();
 	
 	@Override
-	public int realizarTransferencia(Movimiento movimientoEntrada, Movimiento movimientoSalida,
+	public Boolean realizarTransferencia(Movimiento movimientoEntrada, Movimiento movimientoSalida,
 			Transferencia transferencia) {
-		return dao.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
+		
+		int filas = dao.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
+		if(filas == 5) {
+			return true;
+		}
+		return false;
 	}
 
     @Override

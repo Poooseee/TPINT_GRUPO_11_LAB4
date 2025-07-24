@@ -93,6 +93,7 @@ private List<Prestamo> obtenerListaPrestamos(String estado , String dni){
 	private boolean cambiarEstado(String estado, int id, boolean aceptado) {
 		PrestamoNegocioImpl neg = new PrestamoNegocioImpl();
 		Movimiento movimiento = new Movimiento();
+		Float importePedido = 0f;
 		
 		if(aceptado) {
 			Prestamo prestamo = neg.obtenerPrestamo(id);
@@ -103,10 +104,12 @@ private List<Prestamo> obtenerListaPrestamos(String estado , String dni){
 			movimiento.setNumeroCuenta(prestamo.getCuenta());
 			movimiento.setDetalle("Alta de un préstamo");
 			movimiento.setTipo(new TipoMovimiento(2,"Alta de un préstamo"));
+			
+			importePedido = prestamo.getImportePedido();
 		}
 	
 		
-		return neg.cambiarEstado(estado, id,movimiento,aceptado);
+		return neg.cambiarEstado(estado, id,movimiento,aceptado,importePedido);
 	}
 
 }

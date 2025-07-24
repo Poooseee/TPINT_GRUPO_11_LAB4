@@ -47,8 +47,9 @@ public class LoginServlet extends HttpServlet {
     				}
             }
             
+        }else {
+        	request.setAttribute("errorLogin", mensajeError);
         }
-    		request.setAttribute("errorLogin", mensajeError);
     		response.sendRedirect(request.getContextPath() + rutaVistaDestino);
     	}
 

@@ -41,8 +41,7 @@ public class ServletPrestamos extends HttpServlet {
 		//Al cargar la pagina, validar con que cuenta y que saldo quiere transferir
 				String cbuPreviamenteSeleccionado = request.getParameter("cbuSeleccionado");
 				String numeroCuenta = String.valueOf(request.getParameter("numeroCuenta"));
-		    	System.out.println(cbuPreviamenteSeleccionado+ "cbu"+numeroCuenta);
-		    	
+
 		    	if(cbuPreviamenteSeleccionado !=null) {
 		    		Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbuPreviamenteSeleccionado);
 		        	float saldo = cuenta.getSaldo();

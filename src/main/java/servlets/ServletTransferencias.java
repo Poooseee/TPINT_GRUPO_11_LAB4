@@ -40,8 +40,7 @@ public class ServletTransferencias extends HttpServlet {
 		//Al cargar la pagina, validar con que cuenta y que saldo quiere transferir
 		String cbuPreviamenteSeleccionado = request.getParameter("cbuSeleccionado");
 		String numeroCuenta = String.valueOf(request.getParameter("numeroCuenta"));
-    	System.out.println(cbuPreviamenteSeleccionado+ "cbu"+numeroCuenta);
-    	
+
     	if(cbuPreviamenteSeleccionado !=null) {
     		Cuenta cuenta = cuentaNegocio.obtenerCuentaPorCBU(cbuPreviamenteSeleccionado);
         	float saldo = cuenta.getSaldo();
@@ -87,8 +86,6 @@ public class ServletTransferencias extends HttpServlet {
 			
 			//1.Obtenemos el importe a transferir
 			float importeATransferir = Float.parseFloat(request.getParameter("importe"));
-			String importeString = String.valueOf(importeATransferir);
-			
 			
 			//2. validamos que no transfiera a la misma cuenta
 			if(numeroCuentaOrigen.equals(numeroCuentaDestino)) {
@@ -117,7 +114,6 @@ public class ServletTransferencias extends HttpServlet {
 			movimientoEntrada.setTipo( new TipoMovimiento(4,"Transferencia"));
 			
 			//6. Instanciamos el movimiento de SALIDA con todos sus datos
-			
 			String detalleMovimientoSalida = "Transferencia enviada. Cuenta de Destino:" + cuentaDestino.getNumero();
 			
 			Movimiento movimientoSalida = new Movimiento();
@@ -136,10 +132,10 @@ public class ServletTransferencias extends HttpServlet {
 			
 			//8. Enviar la transferencia
 			try {
-				int filas = movimientoNegocio.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
+				Boolean transferido = movimientoNegocio.realizarTransferencia(movimientoEntrada, movimientoSalida, transferencia);
 				
 				//Deberian ser 5
-				if(filas != 5) {
+				if(!transferido) {
 					throw new TransferenciaConErrorExcepcion();	
 				}
 				

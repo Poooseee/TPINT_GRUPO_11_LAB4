@@ -38,9 +38,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				ps.setFloat(3,transferencia.getImporte());
 				
 				filas+=ps.executeUpdate();
-				System.out.println("REGISTRAR TRANSFERENCIA" + filas );
-		
-		
+
 			//2. REGISTRAR MOVIMIENTO DE SALIDA
 		
 				//REGISTRAR EN TABLA MOVIMIENTOS
@@ -62,7 +60,6 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				psMS.setInt(6, movimientoSalida.getTipo().getIdTipoMovimiento());
 				
 				filas+=psMS.executeUpdate();
-				System.out.println("REGISTRAR MOVIMIENTO 1" + filas );
 			
 				//REGISTRAR EN TABLA CUENTAS (DISMINUIR IMPORTE)
 				String cuentaSalidaQuery = "UPDATE CUENTAS"
@@ -76,8 +73,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				psCS.setInt(3, movimientoSalida.getDniMovimiento());
 				
 				filas+=psCS.executeUpdate();
-				System.out.println("REGISTRAR CUENTA 1" + filas );
-		
+
 				
 			//3. REGISTRAR MOVIMIENTO DE ENTRADA
 				
@@ -100,7 +96,6 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				psME.setInt(6, movimientoEntrada.getTipo().getIdTipoMovimiento());
 				
 				filas+=psME.executeUpdate();
-				System.out.println("REGISTRAR MOVIEMIENTO 2" + filas );
 			
 				//REGISTRAR EN TABLA CUENTAS (SUMAR IMPORTE)
 				String cuentaEntradaQuery = "UPDATE CUENTAS"
@@ -114,7 +109,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 				psCE.setInt(3, movimientoEntrada.getDniMovimiento());
 				
 				filas+=psCE.executeUpdate();
-				System.out.println("REGISTRAR CUENTA 2" + filas );
+				
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -349,7 +344,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 	}
 
 	@Override
-	public int altaPrestamoMovimiento(Movimiento movimiento) {
+	public int altaPrestamoMovimiento(Movimiento movimiento, Float importePedido) {
 		int filas = 0;
 		
 		try {
@@ -357,7 +352,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 			cn = new Conexion();
 			cn.Open();
 			
-			//INSERTAR EL MOVIMIENTO
+			//1. INSERTAR EL MOVIMIENTO
 			String queryMov = " INSERT INTO `db_tp`.`movimientos`\r\n"
 					+ " (`DNI_Movs`,\r\n"
 					+ "`numeroCuenta_Movs`,\r\n"
@@ -377,6 +372,14 @@ public class MovimientoDaoImpl implements MovimientoDao{
 			
 			filas+=psMov.executeUpdate();
 			
+			//2. DAR LA PLATA A LA CUENTA
+			String queryCuenta="UPDATE CUENTAS SET saldo_Ctas = (saldo_Ctas + ?) WHERE numeroCuenta_Ctas = ?";
+			PreparedStatement psCuenta = cn.prepare(queryCuenta);
+			psCuenta.setFloat(1, importePedido);
+			psCuenta.setInt(2, movimiento.getNumeroCuenta());
+			
+			filas+=psCuenta.executeUpdate();
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -388,7 +391,7 @@ public class MovimientoDaoImpl implements MovimientoDao{
 		    }
 		}
 		
-		//deberia valer 1
+		//deberia valer 2
 		return filas;
 	}
 

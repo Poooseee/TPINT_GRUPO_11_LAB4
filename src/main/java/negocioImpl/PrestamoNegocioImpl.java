@@ -18,14 +18,14 @@ MovimientoDaoImpl daoMov = new MovimientoDaoImpl();
          return dao.get(estado,dni,numeroCuenta);		
 	}
 	@Override
-	public boolean cambiarEstado(String estado, int id, Movimiento movimiento,boolean aceptado) {
+	public boolean cambiarEstado(String estado, int id, Movimiento movimiento,boolean aceptado, Float importePedido) {
 		
 		Boolean insertado = true;
 		
 		insertado = dao.cambiarEstado(estado, id);
 		
 		if(aceptado) {
-			insertado = daoMov.altaPrestamoMovimiento(movimiento) == 1;			
+			insertado = daoMov.altaPrestamoMovimiento(movimiento,importePedido) == 2;			
 		}
 		
 		return insertado;

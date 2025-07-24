@@ -160,13 +160,13 @@
                     <thead>
                         <tr>
                             <th>ID Préstamo</th>
+                            <th>Cuenta</th>
                             <th>DNI Cliente</th>
                             <th>Importe a pagar</th>
                             <th>Importe solicitado</th>
                             <th>Monto mensual</th>
                             <th>Plazo en cuotas</th>
                             <th>Fecha</th>
-                            <th>Cuenta</th>
                             <th>Estado</th>
                             <th>Aceptar</th>
                             <th>Rechazar</th>
@@ -183,6 +183,10 @@
                             <td>
                                 <input name="txtIdPrestamo" type="hidden" value="<%= prestamo.getIdPrestamo() %>">
                                 <%= prestamo.getIdPrestamo() %>
+                            </td>
+                            <td>
+                             <input type="hidden" value="<%= prestamo.getCuenta() %>">
+                           		<%= prestamo.getCuenta()%>
                             </td>
                             <td>
                                 <input type="hidden" value="<%= prestamo.getDni()%>">
@@ -208,10 +212,7 @@
                                 <input type="hidden" value="<%= prestamo.getFecha() %>" >
                             	<%= prestamo.getFecha()%>
                             </td>
-                            <td>
-                             <input type="hidden" value="<%= prestamo.getCuenta() %>">
-                           		<%= prestamo.getCuenta()%>
-                            </td>
+
                             <td id="estado-td">
                             
                             <input type="hidden" value="<%= prestamo.getEstado() %>">
