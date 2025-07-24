@@ -138,7 +138,7 @@
 	                <h1>Transferencia</h1>
 	                <div class="transferir" style="text-align:center;">
 	                    <form action="ServletTransferencias" method="post" class="formulario form-confirm">
-	                        <input type="text" required pattern="^\d{1,20}$" title="Solo números. 20 caracteres máximo" id="nCta" name="cuentaDestino" placeholder="Número de cuenta">
+	                        <input type="text" required pattern="^\d{1,8}$" title="Solo números. 8 caracteres máximo" id="nCta" name="cuentaDestino" placeholder="Número de cuenta">
 	                        <input type="text" id="importe" required title="Solo números con hasta 2 decimales. Usar el punto (.) como separador decimal" pattern="^\d+(\.\d{1,2})?" name="importe" placeholder="Importe">
 	                        <input type="submit" value="Transferir" name="btnTransferir" id="btnTransferir">
 	                   		
